@@ -1,0 +1,29 @@
+# general things to ignore
+build/
+dist/
+docs/_sources/
+docs/.doctrees
+.eggs/
+*.egg-info/
+*.egg
+*.py[cod]
+*.__pycache__/
+*.so
+*~
+.idea
+
+# virtualenv
+env/
+venv/
+
+# codecov / coverage
+.coverage
+cov_*
+coverage.xml
+
+# due to using and pytest
+.cache
+.pytest_cache/
+.python-version
+pip
+.mypy_cache/
