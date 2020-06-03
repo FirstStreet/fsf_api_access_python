@@ -55,6 +55,14 @@ class TestLocationDetail:
         location = fs.location.get_detail([190836953, 193139123], "property", csv=True)
         assert len(location) == 2
 
+    def test_mixed_invalid(self):
+        location = fs.location.get_detail([190836953, 000000000], "property")
+        assert len(location) == 2
+
+    def test_mixed_invalid_csv(self):
+        location = fs.location.get_detail([190836953, 000000000], "property", csv=True)
+        assert len(location) == 2
+
 
 class TestLocationSummary:
 
@@ -100,4 +108,12 @@ class TestLocationSummary:
 
     def test_multiple_csv(self):
         location = fs.location.get_summary([190836953, 193139123], "property", csv=True)
+        assert len(location) == 2
+
+    def test_mixed_invalid(self):
+        location = fs.location.get_summary([190836953, 000000000], "property")
+        assert len(location) == 2
+
+    def test_mixed_invalid_csv(self):
+        location = fs.location.get_summary([190836953, 000000000], "property", csv=True)
         assert len(location) == 2

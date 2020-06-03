@@ -35,6 +35,14 @@ class TestHistoricEvent:
         historic = fs.historic.get_event([9, 13], csv=True)
         assert len(historic) == 2
 
+    def test_mixed_invalid(self):
+        historic = fs.historic.get_event([9, 0])
+        assert len(historic) == 2
+
+    def test_mixed_invalid_csv(self):
+        historic = fs.historic.get_event([9, 0], csv=True)
+        assert len(historic) == 2
+
 
 class TestHistoricSummary:
 
@@ -80,4 +88,12 @@ class TestHistoricSummary:
 
     def test_multiple_csv(self):
         historic = fs.historic.get_summary([190836953, 193139123], "property", csv=True)
+        assert len(historic) == 2
+
+    def test_mixed_invalid(self):
+        historic = fs.historic.get_summary([190836953, 000000000], "property")
+        assert len(historic) == 2
+
+    def test_mixed_invalid_csv(self):
+        historic = fs.historic.get_summary([190836953, 000000000], "property", csv=True)
         assert len(historic) == 2

@@ -34,3 +34,11 @@ class TestEnvironmentalEvent:
     def test_multiple_csv(self):
         environmental = fs.environmental.get_precipitation([19117, 19135], csv=True)
         assert len(environmental) == 2
+
+    def test_mixed_invalid(self):
+        environmental = fs.environmental.get_precipitation([19117, 00000])
+        assert len(environmental) == 2
+
+    def test_mixed_invalid_csv(self):
+        environmental = fs.environmental.get_precipitation([19117, 00000], csv=True)
+        assert len(environmental) == 2

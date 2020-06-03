@@ -35,6 +35,14 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance([190836953, 193139123], csv=True)
         assert len(probability) == 2
 
+    def test_mixed_invalid(self):
+        probability = fs.probability.get_chance([190836953, 000000000])
+        assert len(probability) == 2
+
+    def test_mixed_invalid_csv(self):
+        probability = fs.probability.get_chance([190836953, 000000000], csv=True)
+        assert len(probability) == 2
+
 
 class TestProbabilityCount:
 
@@ -78,6 +86,14 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([1867176, 1857780], 'city', csv=True)
         assert len(probability) == 2
 
+    def test_mixed_invalid(self):
+        probability = fs.probability.get_count([1867176, 0000000], 'city')
+        assert len(probability) == 2
+
+    def test_mixed_invalid_csv(self):
+        probability = fs.probability.get_count([1867176, 0000000], 'city', csv=True)
+        assert len(probability) == 2
+
 
 class TestProbabilityCumulative:
 
@@ -105,6 +121,14 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative([190836953, 193139123], csv=True)
         assert len(probability) == 2
 
+    def test_mixed_invalid(self):
+        probability = fs.probability.get_cumulative([190836953, 000000000])
+        assert len(probability) == 2
+
+    def test_mixed_invalid_csv(self):
+        probability = fs.probability.get_cumulative([190836953, 000000000], csv=True)
+        assert len(probability) == 2
+
 
 class TestProbabilityDepth:
 
@@ -130,4 +154,12 @@ class TestProbabilityDepth:
 
     def test_multiple_csv(self):
         probability = fs.probability.get_depth([190836953, 193139123], csv=True)
+        assert len(probability) == 2
+
+    def test_mixed_invalid(self):
+        probability = fs.probability.get_depth([190836953, 000000000])
+        assert len(probability) == 2
+
+    def test_mixed_invalid_csv(self):
+        probability = fs.probability.get_depth([190836953, 000000000], csv=True)
         assert len(probability) == 2

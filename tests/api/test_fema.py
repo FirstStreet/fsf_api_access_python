@@ -54,3 +54,11 @@ class TestFemaNfip:
     def test_multiple_csv(self):
         fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True)
         assert len(fema) == 2
+
+    def test_mixed_invalid(self):
+        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract")
+        assert len(fema) == 2
+
+    def test_mixed_invalid_csv(self):
+        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True)
+        assert len(fema) == 2

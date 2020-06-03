@@ -35,6 +35,14 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail([2739, 2741], csv=True)
         assert len(adaptation) == 2
 
+    def test_mixed_invalid(self):
+        adaptation = fs.adaptation.get_detail([2739, 0000])
+        assert len(adaptation) == 2
+
+    def test_mixed_invalid_csv(self):
+        adaptation = fs.adaptation.get_detail([2739, 0000], csv=True)
+        assert len(adaptation) == 2
+
 
 class TestAdaptationSummary:
 
@@ -80,4 +88,12 @@ class TestAdaptationSummary:
 
     def test_multiple_csv(self):
         adaptation = fs.adaptation.get_summary([190836953, 193139123], "property", csv=True)
+        assert len(adaptation) == 2
+
+    def test_mixed_invalid(self):
+        adaptation = fs.adaptation.get_detail([2739, 0000], "property")
+        assert len(adaptation) == 2
+
+    def test_mixed_invalid_csv(self):
+        adaptation = fs.adaptation.get_detail([2739, 0000], "property", csv=True)
         assert len(adaptation) == 2
