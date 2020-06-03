@@ -1,6 +1,5 @@
 from json import JSONDecodeError
 import pandas as pd
-from firststreet.constants import BASE_URL
 from firststreet.errors import InvalidArgument
 
 
@@ -32,7 +31,13 @@ class Api:
 
         for fsid in fsids:
 
-            endpoint = "/".join([BASE_URL, product, product_subtype, location, str(fsid)])
+            base_url = self._http.options.get('url')
+            version = self._http.version
+
+            if location:
+                endpoint = "/".join([base_url, version, product, product_subtype, location, str(fsid)])
+            else:
+                endpoint = "/".join([base_url, version, product, product_subtype, str(fsid)])
 
             try:
                 response = self._http.endpoint_execute(endpoint)

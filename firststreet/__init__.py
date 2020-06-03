@@ -3,6 +3,7 @@
 # Internal Imports
 from firststreet.api.location import Location
 from firststreet.api.probability import Probability
+from firststreet.api.historic import Historic
 from firststreet.errors import MissingAPIKeyError
 from firststreet.http import Http
 
@@ -37,7 +38,7 @@ class FirstStreet:
         self.http = Http(api_key, options)
         self.location = Location(self.http)
         self.probability = Probability(self.http)
-        # self.historic = Hurricane(self.http)
+        self.historic = Historic(self.http)
         # self.adaptation = Tidal(self.http)
         # self.fema = MVI(self.http)
         # self.environmental = MVI(self.http)
