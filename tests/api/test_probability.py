@@ -15,14 +15,6 @@ class TestProbabilityChance:
         with pytest.raises(InvalidArgument):
             fs.probability.get_chance([], "")
 
-    def test_empty_fsid(self):
-        with pytest.raises(InvalidArgument):
-            fs.location.get_detail([], "property")
-
-    def test_empty_type(self):
-        with pytest.raises(InvalidArgument):
-            fs.location.get_detail([190836953], "")
-
     def test_wrong_fsid_type(self):
         with pytest.raises(TypeError):
             fs.probability.get_chance(190836953)
@@ -52,11 +44,11 @@ class TestProbabilityCount:
 
     def test_empty_fsid(self):
         with pytest.raises(InvalidArgument):
-            fs.location.get_detail([], "property")
+            fs.probability.get_count([], "property")
 
     def test_empty_type(self):
         with pytest.raises(InvalidArgument):
-            fs.location.get_detail([190836953], "")
+            fs.probability.get_count([190836953], "")
 
     def test_wrong_fsid_type(self):
         with pytest.raises(TypeError):
@@ -64,11 +56,11 @@ class TestProbabilityCount:
 
     def test_wrong_fsid_number(self):
         with pytest.raises(NotFoundError):
-            fs.location.get_detail([1867176], "property")
+            fs.probability.get_count([1867176], "property")
 
     def test_incorrect_lookup_type(self):
         with pytest.raises(NotFoundError):
-            fs.location.get_detail([190836953], "city", csv=True)
+            fs.probability.get_count([190836953], "city", csv=True)
 
     def test_single(self):
         probability = fs.probability.get_count([1867176], 'city')
