@@ -3,7 +3,7 @@ import os
 import pytest
 
 import firststreet
-from firststreet.errors import InvalidArgument, NotFoundError
+from firststreet.errors import InvalidArgument
 
 api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
@@ -63,12 +63,14 @@ class TestAdaptationSummary:
             fs.adaptation.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.adaptation.get_summary([1867176], "property")
+        adaptation = fs.adaptation.get_summary([1867176], "property")
+        assert len(adaptation) == 1
+        assert adaptation[0].adaptation is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.adaptation.get_summary([190836953], "city", csv=True)
+        adaptation = fs.adaptation.get_summary([190836953], "city", csv=True)
+        assert len(adaptation) == 1
+        assert adaptation[0].adaptation is None
 
     def test_wrong_adaptation_type(self):
         with pytest.raises(TypeError):
@@ -91,9 +93,9 @@ class TestAdaptationSummary:
         assert len(adaptation) == 2
 
     def test_mixed_invalid(self):
-        adaptation = fs.adaptation.get_detail([2739, 0000], "property")
+        adaptation = fs.adaptation.get_summary([2739, 0000], "property")
         assert len(adaptation) == 2
 
     def test_mixed_invalid_csv(self):
-        adaptation = fs.adaptation.get_detail([2739, 0000], "property", csv=True)
+        adaptation = fs.adaptation.get_summary([2739, 0000], "property", csv=True)
         assert len(adaptation) == 2

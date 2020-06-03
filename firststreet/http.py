@@ -59,9 +59,6 @@ class Http:
                 if response.status != 200 and response.status != 404:
                     raise self._network_error(self.options, json.loads(body).get('error'), rate_limit)
 
-                elif response.status == 404:
-                    raise e.NotFoundError(message=body)
-
                 return body
 
         finally:

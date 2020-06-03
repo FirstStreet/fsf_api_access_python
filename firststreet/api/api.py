@@ -54,8 +54,14 @@ class Api:
                 error = response.get("error")
 
                 if error:
-                    print("")
-                #     todo
+                    if product == 'adaptation' and product_subtype == 'detail':
+                        api_datas.append({'adaptationId': fsid})
+
+                    elif product == 'historical' and product_subtype == 'event':
+                        api_datas.append({'eventId': fsid})
+
+                    else:
+                        api_datas.append({'fsid': fsid})
 
                 else:
                     api_datas.append(response)

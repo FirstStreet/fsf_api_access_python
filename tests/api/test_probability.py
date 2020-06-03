@@ -63,12 +63,14 @@ class TestProbabilityCount:
             fs.probability.get_count(1867176, 'city')
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.probability.get_count([1867176], "property")
+        location = fs.probability.get_count([1867176], "property")
+        assert len(location) == 1
+        assert location[0].count is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.probability.get_count([190836953], "city", csv=True)
+        location = fs.probability.get_count([190836953], "city", csv=True)
+        assert len(location) == 1
+        assert location[0].count is None
 
     def test_single(self):
         probability = fs.probability.get_count([1867176], 'city')

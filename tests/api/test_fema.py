@@ -3,7 +3,7 @@ import os
 import pytest
 
 import firststreet
-from firststreet.errors import InvalidArgument, NotFoundError
+from firststreet.errors import InvalidArgument
 
 api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
@@ -28,12 +28,14 @@ class TestFemaNfip:
             fs.fema.get_nfip(19055950100, "tract")
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.fema.get_nfip([19027], "tract")
+        fema = fs.fema.get_nfip([19027], "tract")
+        assert len(fema) == 1
+        assert fema[0].claimCount is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.fema.get_nfip([19055950100], "county", csv=True)
+        fema = fs.fema.get_nfip([19055950100], "county", csv=True)
+        assert len(fema) == 1
+        assert fema[0].claimCount is None
 
     def test_wrong_fema_type(self):
         with pytest.raises(TypeError):

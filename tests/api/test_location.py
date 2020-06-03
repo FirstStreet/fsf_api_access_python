@@ -3,7 +3,7 @@ import os
 import pytest
 
 import firststreet
-from firststreet.errors import InvalidArgument, NotFoundError
+from firststreet.errors import InvalidArgument
 
 api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
@@ -28,12 +28,14 @@ class TestLocationDetail:
             fs.location.get_detail(190836953, "property")
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.location.get_detail([1867176], "property")
+        location = fs.location.get_detail([1867176], "property")
+        assert len(location) == 1
+        assert location[0].streetNumber is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.location.get_detail([190836953], "city", csv=True)
+        location = fs.location.get_detail([190836953], "city", csv=True)
+        assert len(location) == 1
+        assert location[0].streetNumber is None
 
     def test_wrong_location_type(self):
         with pytest.raises(TypeError):
@@ -83,12 +85,14 @@ class TestLocationSummary:
             fs.location.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.location.get_summary([1867176], "property")
+        location = fs.location.get_summary([1867176], "property")
+        assert len(location) == 1
+        assert location[0].adaptation is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.location.get_summary([190836953], "city", csv=True)
+        location = fs.location.get_summary([190836953], "city", csv=True)
+        assert len(location) == 1
+        assert location[0].adaptation is None
 
     def test_wrong_location_type(self):
         with pytest.raises(TypeError):

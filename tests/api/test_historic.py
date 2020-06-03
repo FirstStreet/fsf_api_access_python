@@ -3,7 +3,7 @@ import os
 import pytest
 
 import firststreet
-from firststreet.errors import InvalidArgument, NotFoundError
+from firststreet.errors import InvalidArgument
 
 api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
@@ -63,12 +63,14 @@ class TestHistoricSummary:
             fs.historic.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):
-        with pytest.raises(NotFoundError):
-            fs.historic.get_summary([1867176], "property")
+        historic = fs.historic.get_summary([1867176], "property")
+        assert len(historic) == 1
+        assert historic[0].historic is None
 
     def test_incorrect_lookup_type(self):
-        with pytest.raises(NotFoundError):
-            fs.historic.get_summary([190836953], "city", csv=True)
+        historic = fs.historic.get_summary([190836953], "city", csv=True)
+        assert len(historic) == 1
+        assert historic[0].historic is None
 
     def test_wrong_historic_type(self):
         with pytest.raises(TypeError):
