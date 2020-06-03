@@ -1,10 +1,19 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 from json import JSONDecodeError
+
+# External Imports
 import pandas as pd
+
+# Internal Imports
 from firststreet.errors import InvalidArgument
 
 
 class Api:
-    """This class receives an FSID, coordinate, or address, and handles the creation of a data summary from the request.
+    """This class receives an FSID, coordinate, or address, and handles the
+        creation of a data summary from the request.
 
         Attributes:
             http (Http): A http class to connect to the First Street Foundation API

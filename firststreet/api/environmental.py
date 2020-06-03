@@ -1,6 +1,9 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 # Internal Imports
 from firststreet.api.api import Api
-from firststreet.models.enviromental_precipitation import EnvironmentalPrecipitation
+from firststreet.models.environmental import EnvironmentalPrecipitation
 
 
 class Environmental(Api):

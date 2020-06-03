@@ -1,3 +1,6 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 # Standard Imports
 import asyncio
 import json

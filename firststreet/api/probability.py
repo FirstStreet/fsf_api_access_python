@@ -1,11 +1,11 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 # Internal Imports
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
-from firststreet.models.probability_depth import ProbabilityDepth
-from firststreet.models.probability_chance import ProbabilityChance
-from firststreet.models.probability_count import ProbabilityCount
-from firststreet.models.probability_count_summary import ProbabilityCountSummary
-from firststreet.models.probability_cumulative import ProbabilityCumulative
+from firststreet.models.probability import ProbabilityChance, ProbabilityCount, ProbabilityCountSummary, \
+    ProbabilityCumulative, ProbabilityDepth
 
 
 class Probability(Api):

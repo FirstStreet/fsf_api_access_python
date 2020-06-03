@@ -1,8 +1,10 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 # Internal Imports
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
-from firststreet.models.adaptation_detail import AdaptationDetail
-from firststreet.models.adaptation_summary import AdaptationSummary
+from firststreet.models.adaptation import AdaptationDetail, AdaptationSummary
 
 
 class Adaptation(Api):

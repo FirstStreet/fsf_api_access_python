@@ -1,8 +1,10 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 # Internal Imports
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
-from firststreet.models.historic_event import HistoricEvent
-from firststreet.models.historic_summary import HistoricSummary
+from firststreet.models.historic import HistoricEvent, HistoricSummary
 
 
 class Historic(Api):

@@ -1,11 +1,14 @@
 """A Python module for interacting with the First Street Foundation API"""
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
-from firststreet.api.location import Location
-from firststreet.api.probability import Probability
-from firststreet.api.historic import Historic
 from firststreet.api.adaptation import Adaptation
 from firststreet.api.environmental import Environmental
+from firststreet.api.fema import Fema
+from firststreet.api.historic import Historic
+from firststreet.api.location import Location
+from firststreet.api.probability import Probability
 from firststreet.errors import MissingAPIKeyError
 from firststreet.http import Http
 
@@ -43,5 +46,4 @@ class FirstStreet:
         self.historic = Historic(self.http)
         self.adaptation = Adaptation(self.http)
         self.environmental = Environmental(self.http)
-        # self.fema = MVI(self.http)
-        # self.environmental = MVI(self.http)
+        self.fema = Fema(self.http)

@@ -1,5 +1,8 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
 RATE_LIMIT = 'Request rate limited. Free for non-commercial use for up to 10 requests per minute! To increase ' \
-         'your rate limit, please contact api@firststreet.com'
+             'your rate limit, please contact api@firststreet.com'
 UNAUTHORIZED = 'Unauthorized Access. invalid API key provided.'
 UNKNOWN = 'Unknown error, please check your request and try again.'
 INTERNAL = 'Internal Server Error.'

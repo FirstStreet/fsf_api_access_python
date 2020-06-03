@@ -1,3 +1,7 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Internal Imports
 from shapely.geometry import shape
 
 
