@@ -2,6 +2,8 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Standard Imports
+import datetime
+import os
 from json import JSONDecodeError
 
 # External Imports
@@ -36,7 +38,7 @@ class Api:
         elif not isinstance(fsids, list):
             raise TypeError("location is not a string")
 
-        api_datas = []
+        api_data = []
 
         for fsid in fsids:
 
@@ -55,23 +57,35 @@ class Api:
 
                 if error:
                     if product == 'adaptation' and product_subtype == 'detail':
-                        api_datas.append({'adaptationId': fsid})
+                        api_data.append({'adaptationId': fsid})
 
                     elif product == 'historical' and product_subtype == 'event':
-                        api_datas.append({'eventId': fsid})
+                        api_data.append({'eventId': fsid})
 
                     else:
-                        api_datas.append({'fsid': fsid})
+                        api_data.append({'fsid': fsid})
 
                 else:
-                    api_datas.append(response)
+                    api_data.append(response)
 
             except JSONDecodeError:
                 print("")
 
-        return api_datas
+        return api_data
 
     @staticmethod
-    def to_csv(data, output_dir="C:/Users/Lyetenth/Documents/FSF/flood_lab/test.csv"):
+    def to_csv(data, product, product_subtype, location_type=None):
+        date = datetime.datetime.today().strftime('%Y_%m_%d_%H_%M_%S')
+
+        if location_type:
+            file_name = "_".join([date, product, product_subtype, location_type]) + ".csv"
+        else:
+            file_name = "_".join([date, product, product_subtype]) + ".csv"
+
+        output_dir = "/".join([os.getcwd(), "data_csv"])
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
         df = pd.DataFrame([vars(o) for o in data])
-        df.to_csv(output_dir)
+        df.to_csv(output_dir + '/' + file_name)

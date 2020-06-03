@@ -30,7 +30,7 @@ class Historic(Api):
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "historic", "event")
 
         return product
 
@@ -55,6 +55,6 @@ class Historic(Api):
         product = [HistoricSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "historic", "summary", location_type)
 
         return product

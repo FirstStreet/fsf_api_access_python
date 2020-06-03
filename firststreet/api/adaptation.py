@@ -30,7 +30,7 @@ class Adaptation(Api):
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "adaptation", "detail")
 
         return product
 
@@ -55,6 +55,6 @@ class Adaptation(Api):
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "adaptation", "summary", location_type)
 
         return product

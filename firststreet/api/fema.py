@@ -38,6 +38,6 @@ class Fema(Api):
         product = [FemaNfip(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "fema", "nfip", location_type)
 
         return product

@@ -39,7 +39,7 @@ class Location(Api):
         product = [LocationDetail(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "location", "detail", location_type)
 
         return product
 
@@ -67,6 +67,6 @@ class Location(Api):
         product = [LocationSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "location", "summary", location_type)
 
         return product

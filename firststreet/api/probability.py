@@ -34,7 +34,7 @@ class Probability(Api):
         product = [ProbabilityDepth(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "probability", "depth")
 
         return product
 
@@ -53,7 +53,7 @@ class Probability(Api):
         product = [ProbabilityChance(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "probability", "chance")
 
         return product
 
@@ -81,7 +81,7 @@ class Probability(Api):
         product = [ProbabilityCount(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "probability", "count", location_type)
 
         return product
 
@@ -107,7 +107,7 @@ class Probability(Api):
         product = [ProbabilityCountSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "probability", "county_summary", location_type)
 
         return product
 
@@ -126,6 +126,6 @@ class Probability(Api):
         product = [ProbabilityCumulative(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product)
+            self.to_csv(product, "probability", "cumulative")
 
         return product
