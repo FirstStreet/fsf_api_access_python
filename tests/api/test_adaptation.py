@@ -9,7 +9,7 @@ api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
 
 
-class TestHistoricEvent:
+class TestAdaptationDetail:
 
     def test_empty(self):
         with pytest.raises(InvalidArgument):
@@ -36,7 +36,7 @@ class TestHistoricEvent:
         assert len(adaptation) == 2
 
 
-class TestHistoricSummary:
+class TestAdaptationSummary:
 
     def test_empty(self):
         with pytest.raises(InvalidArgument):

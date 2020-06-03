@@ -5,6 +5,7 @@ from firststreet.api.location import Location
 from firststreet.api.probability import Probability
 from firststreet.api.historic import Historic
 from firststreet.api.adaptation import Adaptation
+from firststreet.api.environmental import Environmental
 from firststreet.errors import MissingAPIKeyError
 from firststreet.http import Http
 
@@ -41,5 +42,6 @@ class FirstStreet:
         self.probability = Probability(self.http)
         self.historic = Historic(self.http)
         self.adaptation = Adaptation(self.http)
+        self.environmental = Environmental(self.http)
         # self.fema = MVI(self.http)
         # self.environmental = MVI(self.http)
