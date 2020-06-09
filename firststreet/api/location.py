@@ -4,7 +4,9 @@
 # Internal Imports
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
-from firststreet.models.location import LocationDetail, LocationSummary
+from firststreet.models.location import LocationDetailProperty, LocationDetailNeighborhood, LocationDetailCity, \
+    LocationDetailZcta, LocationDetailTract, LocationDetailCounty, LocationDetailCd, \
+    LocationDetailState, LocationSummary
 
 
 class Location(Api):
@@ -30,13 +32,40 @@ class Location(Api):
             TypeError: The location provided is not a string
         """
 
+        # Get data from api and create objects
         if not location_type:
             raise InvalidArgument(location_type)
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
         api_datas = self.call_api(fsids, "location", "detail", location_type)
-        product = [LocationDetail(api_data) for api_data in api_datas]
+
+        if location_type == 'property':
+            product = [LocationDetailProperty(api_data) for api_data in api_datas]
+
+        elif location_type == 'neighborhood':
+            product = [LocationDetailNeighborhood(api_data) for api_data in api_datas]
+
+        elif location_type == 'city':
+            product = [LocationDetailCity(api_data) for api_data in api_datas]
+
+        elif location_type == 'zcta':
+            product = [LocationDetailZcta(api_data) for api_data in api_datas]
+
+        elif location_type == 'tract':
+            product = [LocationDetailTract(api_data) for api_data in api_datas]
+
+        elif location_type == 'county':
+            product = [LocationDetailCounty(api_data) for api_data in api_datas]
+
+        elif location_type == 'cd':
+            product = [LocationDetailCd(api_data) for api_data in api_datas]
+
+        elif location_type == 'state':
+            product = [LocationDetailState(api_data) for api_data in api_datas]
+
+        else:
+            raise NotImplementedError
 
         if csv:
             self.to_csv(product, "location", "detail", location_type)
@@ -63,6 +92,7 @@ class Location(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "location", "summary", location_type)
         product = [LocationSummary(api_data) for api_data in api_datas]
 

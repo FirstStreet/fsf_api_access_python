@@ -30,6 +30,7 @@ class Probability(Api):
             A list of Probability Depth
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "probability", "depth", "property")
         product = [ProbabilityDepth(api_data) for api_data in api_datas]
 
@@ -49,6 +50,7 @@ class Probability(Api):
             A list of Probability Chance
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "probability", "chance", "property")
         product = [ProbabilityChance(api_data) for api_data in api_datas]
 
@@ -77,6 +79,7 @@ class Probability(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "probability", "count", location_type)
         product = [ProbabilityCount(api_data) for api_data in api_datas]
 
@@ -103,6 +106,7 @@ class Probability(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "probability", "depth", location_type)
         product = [ProbabilityCountSummary(api_data) for api_data in api_datas]
 
@@ -122,6 +126,7 @@ class Probability(Api):
             A list of Probability Cumulative
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "probability", "cumulative", "property")
         product = [ProbabilityCumulative(api_data) for api_data in api_datas]
 

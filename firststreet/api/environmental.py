@@ -24,6 +24,7 @@ class Environmental(Api):
             A list of Adaptation Detail
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "environmental", "precipitation", "county")
         product = [EnvironmentalPrecipitation(api_data) for api_data in api_datas]
 

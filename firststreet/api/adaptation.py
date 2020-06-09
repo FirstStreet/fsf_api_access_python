@@ -26,6 +26,7 @@ class Adaptation(Api):
             A list of Adaptation Detail
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "adaptation", "detail", None)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
@@ -51,6 +52,7 @@ class Adaptation(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "adaptation", "summary", location_type)
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 

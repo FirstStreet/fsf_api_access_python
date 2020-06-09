@@ -26,6 +26,7 @@ class Historic(Api):
             A list of Historic Event
         """
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "historic", "event", None)
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
@@ -51,6 +52,7 @@ class Historic(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "historic", "summary", location_type)
         product = [HistoricSummary(api_data) for api_data in api_datas]
 

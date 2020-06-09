@@ -34,6 +34,7 @@ class Fema(Api):
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "fema", "nfip", location_type)
         product = [FemaNfip(api_data) for api_data in api_datas]
 
