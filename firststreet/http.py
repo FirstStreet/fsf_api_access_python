@@ -85,7 +85,7 @@ class Http:
                     return body
 
             except asyncio.TimeoutError:
-                print(retry)
+                print("Timeout error for fsid: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
                 retry += 1
                 await asyncio.sleep(1)
 
