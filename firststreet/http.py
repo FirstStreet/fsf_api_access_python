@@ -9,8 +9,6 @@ import json
 import aiohttp
 
 # Internal Imports
-from aiohttp import ClientSession
-
 import firststreet.errors as e
 
 DEFAULTS = {'host': "https://api.firststreet.org"}
@@ -45,7 +43,7 @@ class Http:
 
     async def endpoint_execute(self, endpoints):
 
-        connector = aiohttp.TCPConnector()
+        connector = aiohttp.TCPConnector(limit_per_host=20)
         session = aiohttp.ClientSession(connector=connector)
 
         ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
@@ -57,33 +55,46 @@ class Http:
     async def execute(self, endpoint, session):
         headers = self.options.get('headers')
 
-        try:
-            async with session.get(endpoint[0], headers=headers) as response:
-                rate_limit = self._parse_rate_limit(response.headers)
-                body = await response.json(content_type=None)
+        retry = 0
+        while retry < 5:
 
-                if response.status != 200 and response.status != 404:
-                    raise self._network_error(self.options, json.loads(body).get('error'), rate_limit)
+            try:
+                async with session.get(endpoint[0], headers=headers) as response:
 
-                error = body.get("error")
-                if error:
-                    fsid = endpoint[1]
-                    product = endpoint[2]
-                    product_subtype = endpoint[3]
+                    rate_limit = self._parse_rate_limit(response.headers)
+                    body = await response.json(content_type=None)
 
-                    if product == 'adaptation' and product_subtype == 'detail':
-                        return {'adaptationId': fsid}
+                    if response.status != 200 and response.status != 404:
+                        raise self._network_error(self.options, json.loads(body).get('error'), rate_limit)
 
-                    elif product == 'historic' and product_subtype == 'event':
-                        return {'eventId': fsid}
+                    error = body.get("error")
+                    if error:
+                        fsid = endpoint[1]
+                        product = endpoint[2]
+                        product_subtype = endpoint[3]
 
-                    else:
-                        return {'fsid': fsid}
+                        if product == 'adaptation' and product_subtype == 'detail':
+                            return {'adaptationId': fsid}
 
-                return body
+                        elif product == 'historic' and product_subtype == 'event':
+                            return {'eventId': fsid}
 
-        except Exception as e:
-            print("Unable to get url {}. {}".format(endpoint, e))
+                        else:
+                            return {'fsid': fsid}
+
+                    return body
+
+            except asyncio.TimeoutError:
+                print(retry)
+                retry += 1
+                await asyncio.sleep(1)
+
+            except aiohttp.ClientError as ex:
+                print("{} error while getting fsid: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
+                return {'fsid': endpoint[1]}
+
+        print("Timeout error after 5 retries for fsid: {} from {}".format(endpoint[1], endpoint[0]))
+        return {'fsid': endpoint[1]}
 
     @staticmethod
     def _parse_rate_limit(headers):
