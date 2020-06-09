@@ -92,8 +92,8 @@ class LocationDetailCounty(LocationDetail):
         self.city = response.get('city')
         self.zcta = response.get('zcta')
         self.fips = response.get('fips')
-        isCoastal = response.get('isCoastal')
-        if isCoastal:
+        is_coastal = response.get('isCoastal')
+        if is_coastal:
             self.isCoastal = True
         else:
             self.isCoastal = False
@@ -132,9 +132,21 @@ class LocationSummary:
 
     def __init__(self, response):
         self.fsid = response.get('fsid')
-        self.floodFactor = response.get('floodFactor')
         self.riskDirection = response.get('riskDirection')
         self.environmentalRisk = response.get('environmentalRisk')
-        self.properties = response.get('properties')
         self.historic = response.get('historic')
         self.adaptation = response.get('adaptation')
+
+
+class LocationSummaryProperty(LocationSummary):
+
+    def __init__(self, response):
+        super().__init__(response)
+        self.floodFactor = response.get('floodFactor')
+
+
+class LocationSummaryOther(LocationSummary):
+
+    def __init__(self, response):
+        super().__init__(response)
+        self.properties = response.get('properties')

@@ -6,7 +6,7 @@ from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
 from firststreet.models.location import LocationDetailProperty, LocationDetailNeighborhood, LocationDetailCity, \
     LocationDetailZcta, LocationDetailTract, LocationDetailCounty, LocationDetailCd, \
-    LocationDetailState, LocationSummary
+    LocationDetailState, LocationSummaryProperty, LocationSummaryOther
 
 
 class Location(Api):
@@ -94,7 +94,12 @@ class Location(Api):
 
         # Get data from api and create objects
         api_datas = self.call_api(fsids, "location", "summary", location_type)
-        product = [LocationSummary(api_data) for api_data in api_datas]
+
+        if location_type == "property":
+            product = [LocationSummaryProperty(api_data) for api_data in api_datas]
+
+        else:
+            product = [LocationSummaryOther(api_data) for api_data in api_datas]
 
         if csv:
             self.to_csv(product, "location", "summary", location_type)

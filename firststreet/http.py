@@ -9,6 +9,8 @@ import json
 import aiohttp
 
 # Internal Imports
+from aiohttp import ClientSession
+
 import firststreet.errors as e
 
 DEFAULTS = {'host': "https://api.firststreet.org"}
@@ -34,35 +36,54 @@ class Http:
         self.options = {'url': request_options.get('host'),
                         'headers': {
                             'Content-Encoding': 'gzip',
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'text/html',
                             'User-Agent': 'python/firststreet',
                             'Accept': 'application/vnd.api+json',
                             'Authorization': 'Bearer %s' % api_key
                         }}
         self.version = SUMMARY_VERSION
 
-    def endpoint_execute(self, endpoint):
-        loop = asyncio.get_event_loop()
-        response = loop.run_until_complete(self.execute(endpoint))
+    async def endpoint_execute(self, endpoints):
 
-        return json.loads(response)
+        connector = aiohttp.TCPConnector()
+        session = aiohttp.ClientSession(connector=connector)
 
-    async def execute(self, endpoint):
-        session = aiohttp.ClientSession()
+        ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
+
+        await session.close()
+
+        return ret
+
+    async def execute(self, endpoint, session):
         headers = self.options.get('headers')
 
         try:
-            async with session.get(endpoint, headers=headers) as response:
+            async with session.get(endpoint[0], headers=headers) as response:
                 rate_limit = self._parse_rate_limit(response.headers)
-                body = await response.text()
+                body = await response.json(content_type=None)
 
                 if response.status != 200 and response.status != 404:
                     raise self._network_error(self.options, json.loads(body).get('error'), rate_limit)
 
+                error = body.get("error")
+                if error:
+                    fsid = endpoint[1]
+                    product = endpoint[2]
+                    product_subtype = endpoint[3]
+
+                    if product == 'adaptation' and product_subtype == 'detail':
+                        return {'adaptationId': fsid}
+
+                    elif product == 'historic' and product_subtype == 'event':
+                        return {'eventId': fsid}
+
+                    else:
+                        return {'fsid': fsid}
+
                 return body
 
-        finally:
-            await session.close()
+        except Exception as e:
+            print("Unable to get url {}. {}".format(endpoint, e))
 
     @staticmethod
     def _parse_rate_limit(headers):
