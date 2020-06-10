@@ -3,7 +3,7 @@ import os
 import pytest
 
 import firststreet
-from firststreet.errors import InvalidArgument, NotFoundError
+from firststreet.errors import InvalidArgument
 
 api_key = os.environ['FSF_API_KEY']
 fs = firststreet.FirstStreet(api_key)
@@ -94,6 +94,41 @@ class TestProbabilityCount:
 
     def test_mixed_invalid_csv(self):
         probability = fs.probability.get_count([1867176, 0000000], 'city', csv=True)
+        assert len(probability) == 2
+
+
+class TestProbabilityCountSummary:
+
+    def test_empty(self):
+        with pytest.raises(InvalidArgument):
+            fs.probability.get_count_summary([], "")
+
+    def test_wrong_fsid_type(self):
+        with pytest.raises(TypeError):
+            fs.probability.get_count_summary(19)
+
+    def test_single(self):
+        probability = fs.probability.get_count_summary([394406220])
+        assert len(probability) == 1
+
+    def test_multiple(self):
+        probability = fs.probability.get_count_summary([394406220, 193139123])
+        assert len(probability) == 2
+
+    def test_single_csv(self):
+        probability = fs.probability.get_count_summary([394406220], csv=True)
+        assert len(probability) == 1
+
+    def test_multiple_csv(self):
+        probability = fs.probability.get_count_summary([394406220, 193139123], csv=True)
+        assert len(probability) == 2
+
+    def test_mixed_invalid(self):
+        probability = fs.probability.get_count_summary([394406220, 000000000])
+        assert len(probability) == 2
+
+    def test_mixed_invalid_csv(self):
+        probability = fs.probability.get_count_summary([394406220, 000000000], csv=True)
         assert len(probability) == 2
 
 

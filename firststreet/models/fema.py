@@ -3,6 +3,11 @@
 
 
 class FemaNfip:
+    """Creates a FEMA NFIP object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.fsid = response.get('fsid')

@@ -6,12 +6,22 @@ from firststreet.models.geometry import Geometry
 
 
 class LocationDetail:
+    """A Location Detail Object parent
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.fsid = response.get('fsid')
 
 
 class LocationDetailProperty(LocationDetail):
+    """Creates a Location Detail Property object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -34,6 +44,11 @@ class LocationDetailProperty(LocationDetail):
 
 
 class LocationDetailNeighborhood(LocationDetail):
+    """Creates a Location Detail Neighborhood object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -47,6 +62,11 @@ class LocationDetailNeighborhood(LocationDetail):
 
 
 class LocationDetailCity(LocationDetail):
+    """Creates a Location Detail City object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -61,6 +81,11 @@ class LocationDetailCity(LocationDetail):
 
 
 class LocationDetailZcta(LocationDetail):
+    """Creates a Location Detail Zcta object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -73,6 +98,11 @@ class LocationDetailZcta(LocationDetail):
 
 
 class LocationDetailTract(LocationDetail):
+    """Creates a Location Detail Tract object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -85,6 +115,11 @@ class LocationDetailTract(LocationDetail):
 
 
 class LocationDetailCounty(LocationDetail):
+    """Creates a Location Detail County object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -105,6 +140,11 @@ class LocationDetailCounty(LocationDetail):
 
 
 class LocationDetailCd(LocationDetail):
+    """Creates a Location Detail Congressional District object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -118,6 +158,11 @@ class LocationDetailCd(LocationDetail):
 
 
 class LocationDetailState(LocationDetail):
+    """Creates a Location Detail State object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -129,6 +174,11 @@ class LocationDetailState(LocationDetail):
 
 
 class LocationSummary:
+    """A Location Summary Object parent
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.fsid = response.get('fsid')
@@ -139,6 +189,11 @@ class LocationSummary:
 
 
 class LocationSummaryProperty(LocationSummary):
+    """Creates a Location Detail Property object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)
@@ -146,6 +201,11 @@ class LocationSummaryProperty(LocationSummary):
 
 
 class LocationSummaryOther(LocationSummary):
+    """Creates a Location Detail Property object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         super().__init__(response)

@@ -6,6 +6,11 @@ from shapely.geometry import shape
 
 
 class Geometry:
+    """Creates a Geometry object given a response
+
+    Args:
+        geometry (dict): A dict of geometry
+    """
 
     def __init__(self, geometry):
 

@@ -2,6 +2,7 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.api import csv_format
 from firststreet.api.api import Api
 from firststreet.models.environmental import EnvironmentalPrecipitation
 
@@ -29,6 +30,6 @@ class Environmental(Api):
         product = [EnvironmentalPrecipitation(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "environmental", "precipitation", "county")
+            csv_format.to_csv(product, "environmental", "precipitation", "county")
 
         return product

@@ -42,6 +42,12 @@ class Http:
         self.version = SUMMARY_VERSION
 
     async def endpoint_execute(self, endpoints):
+        """Asynchronously calls each endpoint and returns the JSON responses
+        Args:
+            endpoints (list): List of endpoints to get
+        Returns:
+            The list of JSON responses corresponding to each endpoint
+        """
 
         connector = aiohttp.TCPConnector(limit_per_host=10)
         session = aiohttp.ClientSession(connector=connector)
@@ -53,6 +59,15 @@ class Http:
         return ret
 
     async def execute(self, endpoint, session):
+        """Executes the endpoint for the given endpoint with the open session
+        Args:
+            endpoint (str): The endpoint to get from
+            session (ClientSession): The open session
+        Returns:
+            The JSON reponse or an empty body if error
+        Raises:
+            _network_error: if an error occurs
+        """
         headers = self.options.get('headers')
 
         retry = 0

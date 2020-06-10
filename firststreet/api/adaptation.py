@@ -2,6 +2,7 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.api import csv_format
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
 from firststreet.models.adaptation import AdaptationDetail, AdaptationSummary
@@ -31,7 +32,7 @@ class Adaptation(Api):
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "adaptation", "detail")
+            csv_format.to_csv(product, "adaptation", "detail")
 
         return product
 
@@ -57,6 +58,6 @@ class Adaptation(Api):
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "adaptation", "summary", location_type)
+            csv_format.to_csv(product, "adaptation", "summary", location_type)
 
         return product

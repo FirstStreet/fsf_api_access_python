@@ -2,6 +2,7 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.api import csv_format
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
 from firststreet.models.historic import HistoricEvent, HistoricSummary
@@ -31,7 +32,7 @@ class Historic(Api):
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "historic", "event")
+            csv_format.to_csv(product, "historic", "event")
 
         return product
 
@@ -57,6 +58,6 @@ class Historic(Api):
         product = [HistoricSummary(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "historic", "summary", location_type)
+            csv_format.to_csv(product, "historic", "summary", location_type)
 
         return product

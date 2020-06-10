@@ -6,6 +6,11 @@ from firststreet.models.geometry import Geometry
 
 
 class AdaptationDetail:
+    """Creates an Adaptation Detail object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.adaptationId = response.get('adaptationId')
@@ -19,6 +24,11 @@ class AdaptationDetail:
 
 
 class AdaptationSummary:
+    """Creates an Adaptation Summary object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.fsid = response.get('fsid')

@@ -6,6 +6,11 @@ from firststreet.models.geometry import Geometry
 
 
 class HistoricEvent:
+    """Creates a Historic Event object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.eventId = response.get('eventId')
@@ -19,6 +24,11 @@ class HistoricEvent:
 
 
 class HistoricSummary:
+    """Creates a Historic Summary object given a response
+
+    Args:
+        response (JSON): A JSON response received from the API
+    """
 
     def __init__(self, response):
         self.fsid = response.get('fsid')

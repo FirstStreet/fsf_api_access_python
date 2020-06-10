@@ -2,6 +2,7 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.api import csv_format
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
 from firststreet.models.location import LocationDetailProperty, LocationDetailNeighborhood, LocationDetailCity, \
@@ -32,12 +33,12 @@ class Location(Api):
             TypeError: The location provided is not a string
         """
 
-        # Get data from api and create objects
         if not location_type:
             raise InvalidArgument(location_type)
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
+        # Get data from api and create objects
         api_datas = self.call_api(fsids, "location", "detail", location_type)
 
         if location_type == 'property':
@@ -68,7 +69,7 @@ class Location(Api):
             raise NotImplementedError
 
         if csv:
-            self.to_csv(product, "location", "detail", location_type)
+            csv_format.to_csv(product, "location", "detail", location_type)
 
         return product
 
@@ -102,6 +103,6 @@ class Location(Api):
             product = [LocationSummaryOther(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "location", "summary", location_type)
+            csv_format.to_csv(product, "location", "summary", location_type)
 
         return product

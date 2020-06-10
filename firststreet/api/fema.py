@@ -2,6 +2,7 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.api import csv_format
 from firststreet.api.api import Api
 from firststreet.errors import InvalidArgument
 from firststreet.models.fema import FemaNfip
@@ -39,6 +40,6 @@ class Fema(Api):
         product = [FemaNfip(api_data) for api_data in api_datas]
 
         if csv:
-            self.to_csv(product, "fema", "nfip", location_type)
+            csv_format.to_csv(product, "fema", "nfip", location_type)
 
         return product
