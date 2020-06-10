@@ -14,7 +14,6 @@ setup(
     version='0.1',
     description='A Python API Client for the First Street Foundation API',
     url='https://github.com/FirstStreet/firststreet-python',
-    author='First Street Foundation',
     project_urls={
         'First Street Foundation Website': 'https://firststreet.org/'
     },
@@ -24,6 +23,6 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     py_modules=[],
     install_requires=requirements,
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     extras_require=extra,
 )
