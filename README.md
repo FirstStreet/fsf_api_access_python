@@ -4,12 +4,20 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 ## Installation
 **NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
 1. Install the source code manager [Git]
-2. Clone the [project repository](https://github.com/FirstStreet/api-access-python) to a directory
+2. Create a new project directory
 3. Open a shell and navigate to the new project directory
     ```sh
     cd /path/to/project
     ```
-4. [Optional] Create and activate a new virtual environment through cmd/terminal to keep clean environments:
+4. Clone the [project repository](https://github.com/FirstStreet/api-access-python) to the new directory
+    ```sh
+    Example File Structure:
+    
+    .
+    ├── fsf_api_access_python
+
+
+5. [Optional] Create and activate a new virtual environment through cmd/terminal to keep clean environments:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -17,15 +25,23 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
    
     .\venv\Scripts\activate
     ```
-5. Run the setup script to install the project requirements
+    
+6. Run the setup script to install the project requirements
     ```sh
-    python setup.py install
+    pip install .\fsf_api_access_python\.
     ```
-6. The project is now setup and can be ran. See below for details on how to extract flood data products from the API
+7. The project is now setup and can be ran. See below for details on how to extract flood data products from the API
+    ```sh
+    Example File Structure:
+    
+    .
+    ├── fsf_api_access_python
+    ├── my_script.py
 
 ## Intializing Client
 **[Reminder] Keep your API key safe, and do not share it with others!**
 ```python
+# Contents of my_script.py
 # Create a new First Street Foundation API Client in a Python Script. 
 import firststreet
 fs = firststreet.FirstStreet("api-key")
