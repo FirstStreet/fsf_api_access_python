@@ -23,7 +23,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```
 6. The project is now setup and can be ran. See below for details on how to extract flood data products from the API
 
-### Intializing Client
+## Intializing Client
 **[Reminder] Keep your API key safe, and do not share it with others!**
 ```python
 # Create a new First Street Foundation API Client in a Python Script. 
@@ -31,6 +31,7 @@ import firststreet
 fs = firststreet.FirstStreet("api-key")
 ```
 
+## Products
 ### Location
 
 The Location API provides `Detail` and `Summary` data for the given FSIDs.
@@ -97,18 +98,18 @@ fs.environmental.<method>
 
 * `get_precipitation`(fsids `list`, csv `bool`) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
 
-### CSV File Output:
+## CSV File Output:
 Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
 
 
-##### CSV File Name:
+### CSV File Name:
 The file name will be in the format of `YYYY_MM_DD_HH_mm_SS_product_subtype_lookup.csv`. 
 
 Ex:
 - `2020_06_10_17_29_49_adaptation_detail.csv`
 - `2020_06_10_17_33_56_adaptation_summary_property.csv`
 
-##### CSV File Content
+### CSV File Content
 The contents of the CSV file will follow similar formats as the `First Street Foundation API - V1.0 Overview and Dictionary`, but all lists will be expanded to a flat file. For any values that are null or not available, <NA> will be used.
 
 Ex: 
@@ -125,7 +126,7 @@ fsid,year,returnPeriod,bin,low,mid,high
 ```
    
    
-### Examples
+## Examples
 **[Reminder] Keep your API key safe, and do not share it with others!**
 1. Single FSID Extraction
     ```python
@@ -160,7 +161,7 @@ fsid,year,returnPeriod,bin,low,mid,high
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
-    fs.adaptation.get_detail([29, 0000], csv=True)
+    fs.adaptation.get_detail([29], csv=True)
     ```
    
    Output File:
