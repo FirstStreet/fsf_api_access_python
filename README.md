@@ -30,12 +30,13 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```sh
     pip install .\fsf_api_access_python\.
     ```
-7. The project is now setup and can be ran. See below for details on how to extract flood data products from the API
+7. The project is now setup and can be ran. Create a new python script `my_script.py` and see below for details on how to extract flood data products from the API.
     ```sh
     Example File Structure:
     
     .
-    ├── fsf_api_access_python
+    ├── fsf_api_access_python.
+    ├── venv
     ├── my_script.py
 
 ## Intializing Client
