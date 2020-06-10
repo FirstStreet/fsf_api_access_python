@@ -20,8 +20,8 @@ def format_probability_chance(data):
     if not df['chance'].isna().values.all():
         df = pd.concat([df.drop(['chance'], axis=1), df['chance'].apply(pd.Series)], axis=1)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['threshold'] = df['threshold'].astype('Int64').apply(str)
@@ -47,10 +47,10 @@ def format_probability_count(data):
     if not df['count'].isna().values.all():
         df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
-        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
@@ -78,8 +78,8 @@ def format_probability_cumulative(data):
     if not df['cumulative'].isna().values.all():
         df = pd.concat([df.drop(['cumulative'], axis=1), df['cumulative'].apply(pd.Series)], axis=1)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['threshold'] = df['threshold'].astype('Int64').apply(str)
@@ -104,8 +104,8 @@ def format_probability_depth(data):
     if not df['depth'].isna().values.all():
         df = pd.concat([df.drop(['depth'], axis=1), df['depth'].apply(pd.Series)], axis=1)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
@@ -130,7 +130,7 @@ def format_environmental_precipitation(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('projected').reset_index(drop=True)
     if not df['projected'].isna().values.all():
         df = pd.concat([df.drop(['projected'], axis=1), df['projected'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['low'] = df['low'].round(3)
@@ -200,7 +200,7 @@ def format_historic_summary(data):
         df = pd.concat([df.drop(['historic'], axis=1), df['historic'].apply(pd.Series)], axis=1)
         df['fsid'] = df['fsid'].astype('Int64').apply(str)
         df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series).drop(0, axis=1)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['eventId'] = df['eventId'].astype('Int64').apply(str)
         df['bin'] = df['bin'].astype('Int64').apply(str)
         df['count'] = df['count'].astype('Int64').apply(str)
@@ -221,6 +221,8 @@ def format_historic_summary(data):
 def format_location_detail_property(data):
 
     df = pd.DataFrame([vars(o) for o in data]).explode('neighborhood').reset_index(drop=True)
+    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
+
     if not df['city'].isna().values.all():
         df = pd.concat([df.drop(['city'], axis=1), df['city'].apply(pd.Series)], axis=1)
         df.rename(columns={'fsid': 'city_fips', 'name': 'city_name'}, inplace=True)
@@ -269,7 +271,7 @@ def format_location_detail_property(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
+    df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['neighborhood_fips'] = df['neighborhood_fips'].astype('Int64').apply(str)
@@ -286,6 +288,7 @@ def format_location_detail_property(data):
 
 def format_location_detail_neighborhood(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('city').reset_index(drop=True)
+    df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
         df = pd.concat([df.drop(['city'], axis=1), df['city'].apply(pd.Series)], axis=1)
@@ -303,8 +306,7 @@ def format_location_detail_neighborhood(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
-    df.columns.values[2] = "name"
+    df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
@@ -314,6 +316,7 @@ def format_location_detail_neighborhood(data):
 def format_location_detail_city(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('zcta') \
         .explode('neighborhood').reset_index(drop=True)
+    df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['zcta'].isna().values.all():
         df = pd.concat([df.drop(['zcta'], axis=1), df['zcta'].apply(pd.Series)], axis=1)
@@ -339,8 +342,7 @@ def format_location_detail_city(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
-    df.columns.values[3] = "name"
+    df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['zipCode'] = df['zipCode'].astype('Int64').apply(str)
     df['neighborhood_fips'] = df['neighborhood_fips'].astype('Int64').apply(str)
@@ -350,6 +352,7 @@ def format_location_detail_city(data):
 
 def format_location_detail_zcta(data):
     df = pd.DataFrame([vars(o) for o in data])
+    df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
         df = pd.concat([df.drop(['city'], axis=1), df['city'].apply(pd.Series)], axis=1)
@@ -367,19 +370,18 @@ def format_location_detail_zcta(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
-    df.columns.values[2] = "name"
+    df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df = df[['fsid', 'name', 'city_fips', 'city_fips',
              'state_fips', 'state_name']]
-    print("")
     return df
 
 
 def format_location_detail_tract(data):
     df = pd.DataFrame([vars(o) for o in data])
+    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
 
     if not df['county'].isna().values.all():
         df = pd.concat([df.drop(['county'], axis=1), df['county'].apply(pd.Series)], axis=1)
@@ -397,19 +399,18 @@ def format_location_detail_tract(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
+    df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    df = df[['fsid', 'fips', 'county_fips', 'county_name',
-             'state_fips', 'state_name']]
-    print("")
+    df = df[['fsid', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name']]
     return df
 
 
 def format_location_detail_county(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('zcta')\
         .explode('cd').reset_index(drop=True)
+    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
         df = pd.concat([df.drop(['city'], axis=1), df['city'].apply(pd.Series)], axis=1)
@@ -443,7 +444,7 @@ def format_location_detail_county(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
+    df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['zipCode'] = df['zipCode'].astype('Int64').apply(str)
@@ -457,6 +458,7 @@ def format_location_detail_county(data):
 
 def format_location_detail_cd(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('county')
+    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
 
     if not df['county'].isna().values.all():
         df = pd.concat([df.drop(['county'], axis=1), df['county'].apply(pd.Series)], axis=1)
@@ -474,12 +476,11 @@ def format_location_detail_cd(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.columns.values[0] = "fsid"
+    df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df = df[['fsid', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name']]
-    print("")
     return df
 
 
@@ -487,7 +488,6 @@ def format_location_detail_state(data):
     df = pd.DataFrame([vars(o) for o in data])
     df['fsid'] = df['fsid'].apply(str)
     df = df[['fsid', 'name', 'fips']]
-    print("")
     return df
 
 
@@ -500,14 +500,20 @@ def format_location_summary_property(data):
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     df['floodFactor'] = df['floodFactor'].astype('Int64').apply(str)
     df = df[['fsid', 'floodFactor', 'riskDirection', 'environmentalRisk', 'historic', 'adaptation']]
-    print("")
     return df
 
 
 def format_location_summary(data):
     df = pd.DataFrame([vars(o) for o in data])
-    df = pd.concat([df.drop(['properties'], axis=1), df['properties'].apply(pd.Series)], axis=1)
-    df.rename(columns={'total': 'propertiesTotal', 'atRisk': 'propertiesAtRisk'}, inplace=True)
+
+    if not df['properties'].isna().values.all():
+        df = pd.concat([df.drop(['properties'], axis=1), df['properties'].apply(pd.Series)], axis=1)
+        df.rename(columns={'total': 'propertiesTotal', 'atRisk': 'propertiesAtRisk'}, inplace=True)
+    else:
+        df.drop(['properties'], axis=1, inplace=True)
+        df['propertiesTotal'] = pd.NA
+        df['propertiesAtRisk'] = pd.NA
+
     df['fsid'] = df['fsid'].apply(str)
     df['riskDirection'] = df['riskDirection'].astype('Int64').apply(str)
     df['environmentalRisk'] = df['environmentalRisk'].astype('Int64').apply(str)
@@ -516,7 +522,6 @@ def format_location_summary(data):
     df['propertiesTotal'] = df['propertiesTotal'].astype('Int64').apply(str)
     df['propertiesAtRisk'] = df['propertiesAtRisk'].astype('Int64').apply(str)
     df = df[['fsid', 'riskDirection', 'environmentalRisk', 'propertiesTotal', 'propertiesAtRisk', 'historic']]
-    print("")
     return df
 
 
@@ -532,5 +537,4 @@ def format_fema_nfip(data):
     df['iccPaid'] = df['iccPaid'].astype('Int64').apply(str)
     df = df[['fsid', 'claimCount', 'policyCount', 'buildingPaid', 'contentPaid', 'buildingCoverage',
              'contentCoverage', 'iccPaid']]
-    print("")
     return df

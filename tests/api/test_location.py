@@ -35,7 +35,7 @@ class TestLocationDetail:
     def test_incorrect_lookup_type(self):
         location = fs.location.get_detail([190836953], "city", csv=True)
         assert len(location) == 1
-        assert location[0].streetNumber is None
+        assert location[0].name is None
 
     def test_wrong_location_type(self):
         with pytest.raises(TypeError):

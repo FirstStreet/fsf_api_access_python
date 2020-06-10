@@ -43,7 +43,7 @@ class Http:
 
     async def endpoint_execute(self, endpoints):
 
-        connector = aiohttp.TCPConnector(limit_per_host=20)
+        connector = aiohttp.TCPConnector(limit_per_host=10)
         session = aiohttp.ClientSession(connector=connector)
 
         ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
