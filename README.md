@@ -9,7 +9,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```sh
     cd /path/to/project
     ```
-4. Clone the [project repository](https://github.com/FirstStreet/api-access-python) to the new directory
+4. Clone the [project repository](https://github.com/FirstStreet/fsf_api_access_python.git) to the new directory
     ```sh
     Example File Structure:
     
