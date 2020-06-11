@@ -49,7 +49,7 @@ class Http:
             The list of JSON responses corresponding to each endpoint
         """
 
-        connector = aiohttp.TCPConnector(limit_per_host=10)
+        connector = aiohttp.TCPConnector()
         session = aiohttp.ClientSession(connector=connector)
 
         ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
@@ -80,7 +80,7 @@ class Http:
                     body = await response.json(content_type=None)
 
                     if response.status != 200 and response.status != 404:
-                        raise self._network_error(self.options, json.loads(body).get('error'), rate_limit)
+                        raise self._network_error(self.options, body.get('error'), rate_limit)
 
                     error = body.get("error")
                     if error:
