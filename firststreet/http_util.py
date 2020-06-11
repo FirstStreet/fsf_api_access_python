@@ -5,6 +5,8 @@
 import asyncio
 
 # External Imports
+import logging
+
 import aiohttp
 
 # Internal Imports
@@ -102,15 +104,15 @@ class Http:
                     return body
 
             except asyncio.TimeoutError:
-                print("Timeout error for fsid: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
+                logging.info("Timeout error for fsid: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
                 retry += 1
                 await asyncio.sleep(1)
 
             except aiohttp.ClientError as ex:
-                print("{} error while getting fsid: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
+                logging.error("{} error while getting fsid: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
                 return {'fsid': endpoint[1]}
 
-        print("Timeout error after 5 retries for fsid: {} from {}".format(endpoint[1], endpoint[0]))
+        logging.error("Timeout error after 5 retries for fsid: {} from {}".format(endpoint[1], endpoint[0]))
         return {'fsid': endpoint[1]}
 
     @staticmethod
