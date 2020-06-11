@@ -1,10 +1,21 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 import argparse
 import os
+import logging
+
+# Internal Imports
+import sys
 
 import firststreet
+from firststreet import MissingAPIKeyError
+from firststreet.util import read_fsid_file
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Description for my parser")
+    parser.add_argument("-a", "--api_key", required=False, default="")
     parser.add_argument("-p", "--product", help="Example: adaptation_detail", required=True, default="")
     parser.add_argument("-i", "--fsids", help="Example: 28,29", required=False, default="")
     parser.add_argument("-l", "--location", help="Example: property", required=False, default="")
@@ -17,13 +28,20 @@ if __name__ == "__main__":
         fsids += list(map(int, argument.fsids.strip().split(",")))
 
     if argument.file:
-        with open(argument.file) as fp:
-            for line in fp:
-                fsids.append(int(line.rstrip('\n')))
+        fsids += read_fsid_file(argument.file)
 
     if argument.product and fsids:
 
-        api_key = os.environ['FSF_API_KEY']
+        if not argument.api_key:
+            env_var_name = 'FSF_APfI_KEY'
+            try:
+                api_key = os.environ[env_var_name]
+            except KeyError:
+                logging.error("`{}` is not set as an Environmental Variable".format(env_var_name))
+                sys.exit()
+        else:
+            api_key = argument.api_key
+
         fs = firststreet.FirstStreet(api_key)
 
         if argument.product == 'adaptation.get_detail':
@@ -66,4 +84,5 @@ if __name__ == "__main__":
             fs.environmental.get_precipitation(fsids, csv=True)
 
         else:
-            print("Product not found")
+            logging.error("Product not found. Please check that the argument"
+                          " provided is correct: {}".format(argument.product))

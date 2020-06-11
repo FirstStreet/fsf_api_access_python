@@ -51,7 +51,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 2. Call one of the methods described below in the `Products` section. See the `Examples` section for examples.
     ```python
-    fs.<product>.<product_subtype>(<fsids>, <lookup_type>)
+    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>)
     ```
 
 ## Method 2: Through the Command Line
@@ -69,8 +69,18 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 - `-p/--product PRODUCT`: [REQUIRED] The product to call from the API
 - `[-i/--fsids FSIDS]`: [OPTIONAL] The FSIDs to search for with the product
-- `[-f/--file FILE]`: [OPTIONAL] A file of FSIDs (one per line) to search for with the product
 - `[-l/--location LOOKUP_TYPE]`: [OPTIONAL] The lookup location type (property, neighborhood, city, zcta, tract, county, cd, state)
+- `[-f/--file FILE]`: [OPTIONAL] A file of FSIDs (one per line) to search for with the product
+
+    Content of a sample text file:
+    ```text
+    541114211
+    540456284
+    541229206
+    540563324
+    541262690
+    540651172
+    ```
 
 ## Products
 ### Location
