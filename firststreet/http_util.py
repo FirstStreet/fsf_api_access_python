@@ -135,7 +135,7 @@ class Http:
         """
         status = int(error.get('code'))
 
-        if not status == '429':
+        if not status == 429:
             message = "Network Error {}: {}".format(status, error.get('message'))
         else:
             message = "Network Error {}: {}. Limit: {}. Remaining: {}. Reset: {}".format(status, error.get('message'),
