@@ -3,7 +3,6 @@
 
 # Standard Imports
 import asyncio
-import json
 
 # External Imports
 import aiohttp
@@ -52,9 +51,11 @@ class Http:
         connector = aiohttp.TCPConnector()
         session = aiohttp.ClientSession(connector=connector)
 
-        ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
+        try:
+            ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
 
-        await session.close()
+        finally:
+            await session.close()
 
         return ret
 
@@ -133,7 +134,14 @@ class Http:
             A First Street error class
         """
         status = int(error.get('code'))
-        message = "Network Error %s: %s" % (status, error.get('message'))
+
+        if not status == '429':
+            message = "Network Error {}: {}".format(status, error.get('message'))
+        else:
+            message = "Network Error {}: {}. Limit: {}. Remaining: {}. Reset: {}".format(status, error.get('message'),
+                                                                                         rate_limit.get('limit'),
+                                                                                         rate_limit.get('remaining'),
+                                                                                         rate_limit.get('reset'))
 
         return {
             401: e.UnauthorizedError(message=message,

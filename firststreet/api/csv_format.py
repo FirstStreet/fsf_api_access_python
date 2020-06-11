@@ -686,7 +686,7 @@ def format_location_detail_county(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('zcta')\
+    df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('zcta') \
         .explode('cd').reset_index(drop=True)
     df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
 
