@@ -401,8 +401,7 @@ def format_historic_event(data):
         df['propertiesTotal'] = pd.NA
         df['propertiesAffected'] = pd.NA
 
-    return df[['eventId', 'name', 'month', 'year', 'returnPeriod', 'type',
-                 'propertiesTotal', 'propertiesAffected']]
+    return df[['eventId', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal', 'propertiesAffected']]
 
 
 def format_historic_summary_property(data):
@@ -730,7 +729,7 @@ def format_location_detail_county(data):
     df['cd_fips'] = df['cd_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     return df[['fsid', 'city_fips', 'city_name', 'zipCode', 'fips', 'isCoastal', 'cd_fips',
-             'cd_name', 'state_fips', 'state_name']]
+               'cd_name', 'state_fips', 'state_name']]
 
 
 def format_location_detail_cd(data):
@@ -844,4 +843,4 @@ def format_fema_nfip(data):
     df['contentCoverage'] = df['contentCoverage'].astype('Int64').apply(str)
     df['iccPaid'] = df['iccPaid'].astype('Int64').apply(str)
     return df[['fsid', 'claimCount', 'policyCount', 'buildingPaid', 'contentPaid', 'buildingCoverage',
-             'contentCoverage', 'iccPaid']]
+               'contentCoverage', 'iccPaid']]

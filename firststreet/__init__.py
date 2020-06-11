@@ -10,7 +10,7 @@ from firststreet.api.historic import Historic
 from firststreet.api.location import Location
 from firststreet.api.probability import Probability
 from firststreet.errors import MissingAPIKeyError
-from firststreet.http import Http
+from firststreet.http_util import Http
 
 
 class FirstStreet:
