@@ -21,7 +21,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```sh
     python -m venv /path/to/new/virtual/environment
    
-    cd /path/to/new/virtual/environment
+    cd /path/to/project
    
     .\venv\Scripts\activate
     ```
