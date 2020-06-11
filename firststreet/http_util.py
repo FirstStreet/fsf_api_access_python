@@ -40,15 +40,16 @@ class Http:
                         }}
         self.version = SUMMARY_VERSION
 
-    async def endpoint_execute(self, endpoints):
+    async def endpoint_execute(self, endpoints, limit=100):
         """Asynchronously calls each endpoint and returns the JSON responses
         Args:
             endpoints (list): List of endpoints to get
+            limit (int): max number of connections to make
         Returns:
             The list of JSON responses corresponding to each endpoint
         """
 
-        connector = aiohttp.TCPConnector()
+        connector = aiohttp.TCPConnector(limit_per_host=limit)
         session = aiohttp.ClientSession(connector=connector)
 
         try:

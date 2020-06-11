@@ -16,19 +16,20 @@ class Adaptation(Api):
             get_summary: Retrieves a list of Adaptation Summary for the given list of IDs
         """
 
-    def get_detail(self, fsids, csv=False):
+    def get_detail(self, fsids, csv=False, limit=100):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Detail objects.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Adaptation Detail
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "adaptation", "detail", None)
+        api_datas = self.call_api(fsids, "adaptation", "detail", None, limit=limit)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
@@ -36,7 +37,7 @@ class Adaptation(Api):
 
         return product
 
-    def get_summary(self, fsids, location_type, csv=False):
+    def get_summary(self, fsids, location_type, csv=False, limit=100):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Summary objects.
 
@@ -44,6 +45,7 @@ class Adaptation(Api):
             fsids (list): A First Street ID
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Adaptation Summary
         """
@@ -54,7 +56,7 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "adaptation", "summary", location_type)
+        api_datas = self.call_api(fsids, "adaptation", "summary", location_type, limit=limit)
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:

@@ -15,7 +15,7 @@ class Fema(Api):
             get_nfip: Retrieves a list of Fema Nfip for the given list of IDs
         """
 
-    def get_nfip(self, fsids, location_type, csv=False):
+    def get_nfip(self, fsids, location_type, csv=False, limit=100):
         """Retrieves fema nfip product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Fema Nfip objects.
 
@@ -23,6 +23,7 @@ class Fema(Api):
             fsids (list): A First Street ID
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Fema Nfip
         Raises:
@@ -36,7 +37,7 @@ class Fema(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "fema", "nfip", location_type)
+        api_datas = self.call_api(fsids, "fema", "nfip", location_type, limit=limit)
         product = [FemaNfip(api_data) for api_data in api_datas]
 
         if csv:

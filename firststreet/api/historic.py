@@ -16,19 +16,20 @@ class Historic(Api):
             get_summary: Retrieves a list of Historic Summary for the given list of IDs
         """
 
-    def get_event(self, fsids, csv=False):
+    def get_event(self, fsids, csv=False, limit=100):
         """Retrieves historic event product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Historic Event objects.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Historic Event
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "historic", "event", None)
+        api_datas = self.call_api(fsids, "historic", "event", None, limit)
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
         if csv:
@@ -36,7 +37,7 @@ class Historic(Api):
 
         return product
 
-    def get_summary(self, fsids, location_type, csv=False):
+    def get_summary(self, fsids, location_type, csv=False, limit=100):
         """Retrieves historic summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Historic Summary objects.
 
@@ -44,6 +45,7 @@ class Historic(Api):
             fsids (list): A First Street ID
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Historic Summary
         """
@@ -54,7 +56,7 @@ class Historic(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "historic", "summary", location_type)
+        api_datas = self.call_api(fsids, "historic", "summary", location_type, limit)
         product = [HistoricSummary(api_data) for api_data in api_datas]
 
         if csv:

@@ -20,19 +20,20 @@ class Probability(Api):
             get_cumulative: Retrieves a list of Probability Depth for the given list of IDs
         """
 
-    def get_depth(self, fsids, csv=False):
+    def get_depth(self, fsids, csv=False, limit=100):
         """Retrieves probability depth product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Probability Depth objects.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Probability Depth
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "probability", "depth", "property")
+        api_datas = self.call_api(fsids, "probability", "depth", "property", limit=limit)
         product = [ProbabilityDepth(api_data) for api_data in api_datas]
 
         if csv:
@@ -40,19 +41,20 @@ class Probability(Api):
 
         return product
 
-    def get_chance(self, fsids, csv=False):
+    def get_chance(self, fsids, csv=False, limit=100):
         """Retrieves probability chance product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Probability Chance objects.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Probability Chance
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "probability", "chance", "property")
+        api_datas = self.call_api(fsids, "probability", "chance", "property", limit=limit)
         product = [ProbabilityChance(api_data) for api_data in api_datas]
 
         if csv:
@@ -60,7 +62,7 @@ class Probability(Api):
 
         return product
 
-    def get_count(self, fsids, location_type, csv=False):
+    def get_count(self, fsids, location_type, csv=False, limit=100):
         """Retrieves probability count product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Probability Count objects.
 
@@ -68,6 +70,7 @@ class Probability(Api):
             fsids (list): A First Street ID
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Probability Count
         Raises:
@@ -81,7 +84,7 @@ class Probability(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "probability", "count", location_type)
+        api_datas = self.call_api(fsids, "probability", "count", location_type, limit=limit)
         product = [ProbabilityCount(api_data) for api_data in api_datas]
 
         if csv:
@@ -89,19 +92,20 @@ class Probability(Api):
 
         return product
 
-    def get_count_summary(self, fsids, csv=False):
+    def get_count_summary(self, fsids, csv=False, limit=100):
         """Retrieves probability Count-Summary product data from the First Street Foundation API given a list of FSIDs
         and returns a list of Probability Count-Summary object.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Probability Count-Summary
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "probability", "count-summary", "property")
+        api_datas = self.call_api(fsids, "probability", "count-summary", "property", limit)
         product = [ProbabilityCountSummary(api_data) for api_data in api_datas]
 
         if csv:
@@ -109,19 +113,20 @@ class Probability(Api):
 
         return product
 
-    def get_cumulative(self, fsids, csv=False):
+    def get_cumulative(self, fsids, csv=False, limit=100):
         """Retrieves probability cumulative product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Probability Cumulative object.
 
         Args:
             fsids (list): A First Street ID
             csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
         Returns:
             A list of Probability Cumulative
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "probability", "cumulative", "property")
+        api_datas = self.call_api(fsids, "probability", "cumulative", "property", limit=limit)
         product = [ProbabilityCumulative(api_data) for api_data in api_datas]
 
         if csv:
