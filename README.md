@@ -30,7 +30,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```sh
     pip install .\fsf_api_access_python\.
     ```
-7. The project is now setup and can be ran. Create a new python script `my_script.py` and see below for details on how to extract flood data products from the API.
+7. The project is now setup and can be ran through one of the two methods below. See `Products` for details on how to extract flood data products from the API.
     ```sh
     Example File Structure:
     
@@ -39,14 +39,38 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ├── venv
     ├── my_script.py
 
-## Intializing Client
+## Method 1: Through the Client
 **[Reminder] Keep your API key safe, and do not share it with others!**
-```python
-# Contents of my_script.py
-# Create a new First Street Foundation API Client in a Python Script. 
-import firststreet
-fs = firststreet.FirstStreet("api-key")
-```
+
+1. Create a new First Street Foundation API Client in a Python Script. 
+    ```python
+    # Contents of my_script.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
+    ```
+
+2. Call one of the methods described below in the `Products` section. See the `Examples` section for examples.
+    ```python
+    fs.<product>.<product_subtype>(<fsids>, <lookup_type>)
+    ```
+
+## Method 2: Through the Command Line
+**[Reminder] Keep your API key safe, and do not share it with others!**
+
+1. [Required] Set an Environmental Variable with the variable_name as `FSF_API_KEY` and the variable_value with the API_KEY.
+
+2. In the project directory, call one of the methods described below in the `Products` section through the command line. See the `Examples` section for examples.
+    ```sh
+    cd /path/to/project
+    python -m firststreet -p <product>.<product_subtype> -i <fsids> -l <lookup_type>
+    ```
+
+##### Command Line Arguments:
+
+- `-p/--product PRODUCT`: [REQUIRED] The product to call from the API
+- `[-i/--fsids FSIDS]`: [OPTIONAL] The FSIDs to search for with the product
+- `[-f/--file FILE]`: [OPTIONAL] A file of FSIDs (one per line) to search for with the product
+- `[-l/--location LOOKUP_TYPE]`: [OPTIONAL] The lookup location type (property, neighborhood, city, zcta, tract, county, cd, state)
 
 ## Products
 ### Location
@@ -54,7 +78,7 @@ fs = firststreet.FirstStreet("api-key")
 The Location API provides `Detail` and `Summary` data for the given FSIDs.
 
 ```python
-fs.location.<method>
+location.<method>
 ```
 
 * `get_detail`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
@@ -65,7 +89,7 @@ fs.location.<method>
 The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for the given FSIDs.
 
 ```python
-fs.probability.<method>
+probability.<method>
 ```
 
 * `get_depth`(fsids `list`, csv `bool`) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
@@ -79,7 +103,7 @@ fs.probability.<method>
 The Historic API provides `Summary` and `Event` data for the given FSIDs.
 
 ```python
-fs.historic.<method>
+historic.<method>
 ```
 
 * `get_event`(fsids `list`, csv `bool`) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
@@ -90,7 +114,7 @@ fs.historic.<method>
 The Adaptation API provides `Summary` and `Project` data for the given FSIDs.
 
 ```python
-fs.adaptation.<method>
+adaptation.<method>
 ```
 
 * `get_project`(fsids `list`, csv `bool`) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
@@ -101,7 +125,7 @@ fs.adaptation.<method>
 The Fema API provides `NFIP` data for the given FSIDs.
 
 ```python
-fs.fema.<method>
+fema.<method>
 ```
 
 * `get_nfip`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
@@ -111,7 +135,7 @@ fs.fema.<method>
 The Environmental API provides `Precipitation` data for the given FSIDs.
 
 ```python
-fs.environmental.<method>
+environmental.<method>
 ```
 
 * `get_precipitation`(fsids `list`, csv `bool`) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
@@ -146,9 +170,9 @@ fsid,year,returnPeriod,bin,low,mid,high
    
 ## Examples
 **[Reminder] Keep your API key safe, and do not share it with others!**
-1. Single FSID Extraction
+1. Single FSID Extraction Through Client:
     ```python
-    # Retrieve a Location Detail Product from the API for fsid: 39035103400
+    # Contents of sample.py
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
@@ -159,9 +183,9 @@ fsid,year,returnPeriod,bin,low,mid,high
     print(probability[0].count)
     ```
 
-2. Multiple FSIDs Extraction
+2. Multiple FSIDs Extraction Through Client:
     ```python
-    # Retrieve a Location Detail Product from the API for fsids: 1912000, 1979140
+    # Contents of sample.py
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
@@ -173,9 +197,9 @@ fsid,year,returnPeriod,bin,low,mid,high
     print(details[1].fsid)
     ```
    
-2. Adaptation detail Extraction to CSV
+3. Adaptation detail Extraction to CSV Through Client:
     ```python
-    # Retrieve an Adaptation Detail Product from the API for adaptationID: 29 and export to a CSV located in data_csv`
+    # Contents of sample.py
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
@@ -195,4 +219,41 @@ fsid,year,returnPeriod,bin,low,mid,high
     29,Riverfront Park,pervious pavement,pluvial,False,500
     ```
 
+4. Single FSID Extraction to CSV Through Command Line:
+    ```sh
+    probability = fs.probability.get_depth -i 390000227)
+    ```
+
+5. Multiple FSIDs Extraction to CSV Through Command Line:
+    ```sh
+    python -m firststreet -p historic.get_summary -i 1912000,1979140 -l property
+    ```
+
+6. Bulk FSIDs Extraction From File to CSV Through Command Line:
+
+    Content of sample.txt:
+    ```text
+    541114211
+    540456284
+    541229206
+    540563324
+    541262690
+    540651172
+    ```
+   
+    ```sh
+    python -m firststreet -p location.get_summary -f sample.txt -l property
+    ```
+   
+   Output File 2020_06_10_20_33_12_location_summary_property.csv:
+    ```csv
+    fsid,floodFactor,riskDirection,environmentalRisk,historic,adaptation
+    541114211,1,0,1,0,0
+    540456284,9,0,1,0,0
+    541229206,9,1,1,0,0
+    540563324,1,0,1,0,0
+    541262690,1,0,1,0,0
+    540651172,1,0,1,0,0
+    ```
+   
 [git]: <https://git-scm.com/downloads>

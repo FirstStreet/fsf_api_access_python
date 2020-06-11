@@ -18,11 +18,11 @@ if __name__ == "__main__":
         fsids += list(map(int, argument.fsids.strip().split(",")))
 
     if argument.file:
-        with open("..\\" + argument.file) as fp:
+        with open(argument.file) as fp:
             for line in fp:
                 fsids.append(int(line.rstrip('\n')))
 
-    if argument.product:
+    if argument.product and fsids:
 
         api_key = os.environ['FSF_API_KEY']
         fs = firststreet.FirstStreet(api_key)
