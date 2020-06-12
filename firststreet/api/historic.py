@@ -21,7 +21,7 @@ class Historic(Api):
         returns a list of Historic Event objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:
@@ -42,7 +42,7 @@ class Historic(Api):
         returns a list of Historic Summary objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make

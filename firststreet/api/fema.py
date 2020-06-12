@@ -20,7 +20,7 @@ class Fema(Api):
         returns a list of Fema Nfip objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make

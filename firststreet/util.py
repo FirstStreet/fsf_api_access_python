@@ -14,7 +14,7 @@ def read_fsid_file(file_name):
 
     fsids = []
 
-    with open("../" + file_name) as fp:
+    with open(file_name) as fp:
 
         count = 1
         for line in fp:

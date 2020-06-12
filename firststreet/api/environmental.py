@@ -19,7 +19,7 @@ class Environmental(Api):
         and returns a list of Environmental Precipitation objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:

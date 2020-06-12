@@ -25,7 +25,7 @@ class Probability(Api):
         returns a list of Probability Depth objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:
@@ -46,7 +46,7 @@ class Probability(Api):
         returns a list of Probability Chance objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:
@@ -67,7 +67,7 @@ class Probability(Api):
         returns a list of Probability Count objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -97,7 +97,7 @@ class Probability(Api):
         and returns a list of Probability Count-Summary object.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:
@@ -118,7 +118,7 @@ class Probability(Api):
         returns a list of Probability Cumulative object.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:

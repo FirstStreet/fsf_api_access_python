@@ -21,13 +21,12 @@ class Adaptation(Api):
         returns a list of Adaptation Detail objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
         Returns:
             A list of Adaptation Detail
         """
-
         # Get data from api and create objects
         api_datas = self.call_api(fsids, "adaptation", "detail", None, limit=limit)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
@@ -42,7 +41,7 @@ class Adaptation(Api):
         returns a list of Adaptation Summary objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make

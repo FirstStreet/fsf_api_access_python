@@ -23,7 +23,7 @@ class Location(Api):
         returns a list of Location Detail objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -79,7 +79,7 @@ class Location(Api):
         returns a list of Location Summary objects.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make

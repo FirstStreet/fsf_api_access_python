@@ -5,7 +5,10 @@
 import asyncio
 
 # Internal Imports
+import os
+
 from firststreet.errors import InvalidArgument
+from firststreet.util import read_fsid_file
 
 
 class Api:
@@ -25,7 +28,7 @@ class Api:
         Street Foundation API.
 
         Args:
-            fsids (list): A First Street ID
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             product (str): The overall product to call
             product_subtype (str): The product subtype (if suitable)
             location (str/None): The location lookup type (if suitable)
@@ -33,6 +36,11 @@ class Api:
         Returns:
             A list of JSON responses
         """
+        if not isinstance(fsids, list):
+            if os.path.isfile(fsids):
+                fsids = read_fsid_file(fsids)
+            else:
+                raise InvalidArgument("File provided is not a list or a valid file. Please check the file name.")
 
         if not fsids:
             raise InvalidArgument(fsids)
