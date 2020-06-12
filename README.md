@@ -3,6 +3,16 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 ## Installation
 **NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
+1. Go to the Python page (https://www.python.org/downloads/) and download then install Python version 3. **Make sure that the checkbox is checked for Python to be added to the PATH**
+
+    ![Screenshot](doc/images/1.1.1.png)
+    
+    ![Screenshot](doc/images/1.1.2.png)
+    
+    ![Screenshot](doc/images/1.1.3.png)
+    
+    ![Screenshot](doc/images/1.1.4.png)
+    
 1. Install the source code manager [Git]
 2. Open `git bash` and create then navigate to a new project directory
 
@@ -221,7 +231,7 @@ environmental.<method>
    
 ## Examples
 **[Reminder] Keep your API key safe, and do not share it with others!**
-1. Single FSID Extraction Through Client:
+1. Single FSID Extraction Through the Client:
     ```python
     # Contents of sample.py
     import firststreet
@@ -234,7 +244,7 @@ environmental.<method>
     print(probability[0].count)
     ```
 
-2. Multiple FSIDs Extraction Through Client:
+2. Multiple FSIDs Extraction Through the Client:
     ```python
     # Contents of sample.py
     import firststreet
@@ -248,7 +258,7 @@ environmental.<method>
     print(details[1].fsid)
     ```
    
-3. Adaptation detail Extraction to CSV Through Client:
+3. Adaptation detail Extraction to CSV Through the Client:
     ```python
     # Contents of sample.py
     import firststreet
@@ -269,18 +279,32 @@ environmental.<method>
     29,Riverfront Park,pervious pavement,fluvial,False,500
     29,Riverfront Park,pervious pavement,pluvial,False,500
     ```
+   
+4. Multiple FSIDs Extraction Using a File Through the Client:
+    ```python
+    # Contents of sample.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
+    
+    fsids = [1912000, 1979140]
+    details = fs.location.get_detail(fsids, "property")
+    
+    print(details[0].fsid)
+    print(details[0].route)
+    print(details[1].fsid)
+    ```
 
-4. Single FSID Extraction to CSV Through Command Line:
+4. Single FSID Extraction to CSV Through the Command Line:
     ```sh
     probability = fs.probability.get_depth -i 390000227)
     ```
 
-5. Multiple FSIDs Extraction to CSV Through Command Line:
+5. Multiple FSIDs Extraction to CSV Through the Command Line:
     ```sh
     python -m firststreet -p historic.get_summary -i 1912000,1979140 -l property
     ```
 
-6. Bulk FSIDs Extraction From File to CSV Through Command Line:
+6. Bulk FSIDs Extraction From File to CSV Through the Command Line:
 
     Content of sample.txt:
     ```text
