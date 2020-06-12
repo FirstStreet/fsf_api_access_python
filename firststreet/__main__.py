@@ -33,7 +33,7 @@ if __name__ == "__main__":
     if argument.product and fsids:
 
         if not argument.api_key:
-            env_var_name = 'FSF_APfI_KEY'
+            env_var_name = 'FSF_API_KEY'
             try:
                 api_key = os.environ[env_var_name]
             except KeyError:
