@@ -30,7 +30,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.3.1.png)
 
-4. [Optional] Open a console and create and activate a new virtual environment in the project directory:
+4. [Optional] Open or close and re-open a new console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -45,8 +45,12 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
 5. Run the setup script to install the project requirements
     ```sh
+    cd /path/to/project
+   
     pip install .\fsf_api_access_python\.
     ```
+    
+    ![Screenshot](doc/images/1.5.2.png)
     
     ![Screenshot](doc/images/1.5.1.png)
     
