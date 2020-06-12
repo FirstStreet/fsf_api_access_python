@@ -66,31 +66,10 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ├── venv
     ├── my_script.py
 
-## Method 1: Through the Client
+## Method 1: Through the Command Line
 **[Reminder] Keep your API key safe, and do not share it with others!**
 
-1. Create a new Python script and initialize a First Street Foundation API Client. 
-    ```python
-    # Contents of my_script.py
-    import firststreet
-    fs = firststreet.FirstStreet("api-key")
-    ```
-    
-2. Call one of the methods described below in the `Products` section with the required arguments. See the `Examples` section for more examples.
-    ```python
-    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>)
-    ```
-    
-    ![Screenshot](doc/images/2.2.1.png)
-    
-3. Run the python script.
-
-    ![Screenshot](doc/images/2.3.1.png)
-
-## Method 2: Through the Command Line
-**[Reminder] Keep your API key safe, and do not share it with others!**
-
-1. [Required] Set an Environmental Variable with the variable_name as `FSF_API_KEY` and the variable_value with the API_KEY.
+1. [Required] Set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY`.
     
     ![Screenshot](doc/images/3.1.1.png)
     
@@ -106,6 +85,34 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/3.2.1.png)
     
+
+## Method 2: Through the Client
+**[Reminder] Keep your API key safe, and do not share it with others!**
+
+1. Create a new Python script (by using notepad or any other text editor) and initialize a First Street Foundation API Client. 
+    ```python
+    # Contents of my_script.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
+    ```
+    
+2. Call one of the methods described below in the `Products` section with the required arguments. See the `Examples` section for more examples.
+    ```python
+    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>, <csv: boolean>)
+    ```
+    
+    ![Screenshot](doc/images/2.2.1.png)
+    
+    OR
+    
+    ![Screenshot](doc/images/2.2.2.png)
+    
+    ![Screenshot](doc/images/2.2.3.png)
+    
+3. Run the python script.
+
+    ![Screenshot](doc/images/2.3.1.png)
+
 
 ##### Command Line Arguments:
 
@@ -125,7 +132,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
     Example: ```-f sample.txt```
 
-    Content of a sample text file:
+    Content of a sample text file. Note that the file must be in the same directory as the project:
     ```text
     541114211
     540456284
@@ -136,6 +143,35 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```
   
     ![Screenshot](doc/images/4.4.1.png)
+    
+    ![Screenshot](doc/images/4.4.2.png)
+
+## Updating the Project to the Newest Version:
+If an update is made to this project, you will need to pull the changes from github and reinstall this project.
+
+1. Open `git bash` and create then navigate to the existing project directory. Then navigate into the project directory, and run:
+
+    ```git
+    git pull
+    ```
+
+    If the response is `Already up to date.`, then you have the latest version of the project already.
+
+    ![Screenshot](doc/images/6.1.1.png)
+
+2. Open a new console, navigate to the project, and re-run the setup script to re-install the project:
+
+    ```shell script
+    cd /path/to/project
+   
+    .\venv\Scripts\activate
+   
+    pip install .\fsf_api_access_python\.
+    ```
+
+    ![Screenshot](doc/images/6.1.2.png)
+
+3. The project should now be updated to the newest version.
 
 ## CSV File Output:
 Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
@@ -303,7 +339,7 @@ environmental.<method>
 
 4. Single FSID Extraction to CSV Through the Command Line:
     ```sh
-    probability = fs.probability.get_depth -i 390000227)
+    python -m firststreet -p fs.probability.get_depth -i 390000227
     ```
 
 5. Multiple FSIDs Extraction to CSV Through the Command Line:
