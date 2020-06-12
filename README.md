@@ -13,14 +13,17 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.1.4.png)
     
-1. Install the source code manager [Git]
-2. Open `git bash` and create then navigate to a new project directory
+2. Install the source code manager [Git]
+
+    ![Screenshot](doc/images/1.2.3.png)
+    
+3. Open `git bash` and create then navigate to a new project directory
 
     ![Screenshot](doc/images/1.2.1.png)
     
     ![Screenshot](doc/images/1.2.2.png)
     
-3. Clone the project repository (https://github.com/FirstStreet/fsf_api_access_python.git) to the new directory
+4. Clone the project repository (https://github.com/FirstStreet/fsf_api_access_python.git) to the new directory
     ```sh
     Example File Structure:
     
@@ -30,7 +33,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.3.1.png)
 
-4. [Optional] Open or close and re-open a new console and create and activate a new virtual environment in the project directory:
+5. [Optional] Open or close and re-open a new console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -43,7 +46,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.4.2.png)
     
-5. Run the setup script to install the project requirements
+6. Run the setup script to install the project requirements
     ```sh
     cd /path/to/project
    
@@ -54,7 +57,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.5.1.png)
     
-6. The project is now setup and can be ran through one of the two methods below. See `Products` for additional details on how to extract flood data products from the API.
+7. The project is now setup and can be ran through one of the two methods below. See `Products` for additional details on how to extract flood data products from the API.
     ```sh
     Example File Structure:
     
