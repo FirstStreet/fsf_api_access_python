@@ -540,7 +540,7 @@ def format_location_detail_neighborhood(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('city').reset_index(drop=True)
+    df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('county').reset_index(drop=True)
     df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
@@ -550,6 +550,14 @@ def format_location_detail_neighborhood(data):
         df.drop(['city'], axis=1, inplace=True)
         df['city_fips'] = pd.NA
         df['city_name'] = pd.NA
+
+    if not df['county'].isna().values.all():
+        df = pd.concat([df.drop(['county'], axis=1), df['county'].apply(pd.Series)], axis=1)
+        df.rename(columns={'fsid': 'county_fips', 'name': 'county_name'}, inplace=True)
+    else:
+        df.drop(['county'], axis=1, inplace=True)
+        df['county_fips'] = pd.NA
+        df['county_name'] = pd.NA
 
     if not df['state'].isna().values.all():
         df = pd.concat([df.drop(['state'], axis=1), df['state'].apply(pd.Series)], axis=1)
@@ -562,8 +570,10 @@ def format_location_detail_neighborhood(data):
     df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
+    df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'name', 'city_fips', 'city_name', 'subtype', 'state_fips', 'state_name']]
+    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'subtype',
+               'state_fips', 'state_name']]
 
 
 def format_location_detail_city(data):
@@ -574,7 +584,7 @@ def format_location_detail_city(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('zcta') \
+    df = pd.DataFrame([vars(o) for o in data]).explode('zcta').explode('county') \
         .explode('neighborhood').reset_index(drop=True)
     df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
@@ -585,6 +595,14 @@ def format_location_detail_city(data):
         df.drop(['zcta'], axis=1, inplace=True)
         df['zipCode'] = pd.NA
         df['zcta_name'] = pd.NA
+
+    if not df['county'].isna().values.all():
+        df = pd.concat([df.drop(['county'], axis=1), df['county'].apply(pd.Series)], axis=1)
+        df.rename(columns={'fsid': 'county_fips', 'name': 'county_name'}, inplace=True)
+    else:
+        df.drop(['county'], axis=1, inplace=True)
+        df['county_fips'] = pd.NA
+        df['county_name'] = pd.NA
 
     if not df['neighborhood'].isna().values.all():
         df = pd.concat([df.drop(['neighborhood'], axis=1), df['neighborhood'].apply(pd.Series)], axis=1)
@@ -605,9 +623,11 @@ def format_location_detail_city(data):
     df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['zipCode'] = df['zipCode'].astype('Int64').apply(str)
+    df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['neighborhood_fips'] = df['neighborhood_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name', 'state_fips', 'state_name']]
+    return df[['fsid', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name',
+               'county_fips', 'county_name', 'state_fips', 'state_name']]
 
 
 def format_location_detail_zcta(data):
@@ -618,7 +638,7 @@ def format_location_detail_zcta(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data])
+    df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('county')
     df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
@@ -628,6 +648,14 @@ def format_location_detail_zcta(data):
         df.drop(['city'], axis=1, inplace=True)
         df['city_fips'] = pd.NA
         df['city_name'] = pd.NA
+
+    if not df['county'].isna().values.all():
+        df = pd.concat([df.drop(['county'], axis=1), df['county'].apply(pd.Series)], axis=1)
+        df.rename(columns={'fsid': 'county_fips', 'name': 'county_name'}, inplace=True)
+    else:
+        df.drop(['county'], axis=1, inplace=True)
+        df['county_fips'] = pd.NA
+        df['county_name'] = pd.NA
 
     if not df['state'].isna().values.all():
         df = pd.concat([df.drop(['state'], axis=1), df['state'].apply(pd.Series)], axis=1)
@@ -640,8 +668,9 @@ def format_location_detail_zcta(data):
     df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
+    df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'name', 'city_fips', 'city_fips', 'state_fips', 'state_name']]
+    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips', 'state_name']]
 
 
 def format_location_detail_tract(data):

@@ -16,7 +16,7 @@ class TestEnvironmentalEvent:
             fs.environmental.get_precipitation([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.environmental.get_precipitation(19117)
 
     def test_single(self):

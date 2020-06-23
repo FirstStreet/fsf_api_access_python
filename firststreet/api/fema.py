@@ -1,6 +1,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api import csv_format
 from firststreet.api.api import Api
@@ -42,5 +45,7 @@ class Fema(Api):
 
         if csv:
             csv_format.to_csv(product, "fema", "nfip", location_type)
+
+        logging.info("Fema Nfip Data Ready.")
 
         return product

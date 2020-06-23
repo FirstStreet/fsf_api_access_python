@@ -1,6 +1,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api import csv_format
 from firststreet.api.api import Api
@@ -35,7 +38,7 @@ class Location(Api):
         """
 
         if not location_type:
-            raise InvalidArgument(location_type)
+            raise InvalidArgument("No loocation type provided: {}".format(location_type))
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 
@@ -72,6 +75,8 @@ class Location(Api):
         if csv:
             csv_format.to_csv(product, "location", "detail", location_type)
 
+        logging.info("Location Detail Data Ready.")
+
         return product
 
     def get_summary(self, fsids, location_type, csv=False, limit=100):
@@ -106,5 +111,7 @@ class Location(Api):
 
         if csv:
             csv_format.to_csv(product, "location", "summary", location_type)
+
+        logging.info("Location Summary Data Ready.")
 
         return product

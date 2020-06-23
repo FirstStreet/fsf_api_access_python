@@ -1,6 +1,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api import csv_format
 from firststreet.api.api import Api
@@ -34,6 +37,8 @@ class Adaptation(Api):
         if csv:
             csv_format.to_csv(product, "adaptation", "detail")
 
+        logging.info("Adaptation Detail Data Ready.")
+
         return product
 
     def get_summary(self, fsids, location_type, csv=False, limit=100):
@@ -60,5 +65,7 @@ class Adaptation(Api):
 
         if csv:
             csv_format.to_csv(product, "adaptation", "summary", location_type)
+
+        logging.info("Adaptation Summary Data Ready.")
 
         return product

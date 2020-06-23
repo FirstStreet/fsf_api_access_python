@@ -16,7 +16,7 @@ class TestProbabilityChance:
             fs.probability.get_chance([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.probability.get_chance(190836953)
 
     def test_single(self):
@@ -59,7 +59,7 @@ class TestProbabilityCount:
             fs.probability.get_count([190836953], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.probability.get_count(1867176, 'city')
 
     def test_wrong_fsid_number(self):
@@ -104,7 +104,7 @@ class TestProbabilityCountSummary:
             fs.probability.get_count_summary([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.probability.get_count_summary(19)
 
     def test_single(self):
@@ -139,7 +139,7 @@ class TestProbabilityCumulative:
             fs.probability.get_cumulative([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.probability.get_cumulative(190836953)
 
     def test_single(self):
@@ -174,7 +174,7 @@ class TestProbabilityDepth:
             fs.probability.get_depth([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.probability.get_depth(190836953)
 
     def test_single(self):

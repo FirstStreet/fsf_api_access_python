@@ -24,7 +24,7 @@ class TestLocationDetail:
             fs.location.get_detail([190836953], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.location.get_detail(190836953, "property")
 
     def test_wrong_fsid_number(self):
@@ -81,7 +81,7 @@ class TestLocationSummary:
             fs.location.get_summary([190836953], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.location.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):

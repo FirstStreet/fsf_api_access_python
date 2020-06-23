@@ -37,8 +37,11 @@ class Api:
             A list of JSON responses
         """
         if not isinstance(fsids, list):
-            if os.path.isfile(fsids):
-                fsids = read_fsid_file(fsids)
+            if isinstance(fsids, str):
+                if os.path.isfile(fsids):
+                    fsids = read_fsid_file(fsids)
+                else:
+                    raise InvalidArgument("File provided is not a list or a valid file. Please check the file name.")
             else:
                 raise InvalidArgument("File provided is not a list or a valid file. Please check the file name.")
 

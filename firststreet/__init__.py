@@ -2,6 +2,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api.adaptation import Adaptation
 from firststreet.api.environmental import Environmental
@@ -19,7 +22,8 @@ class FirstStreet:
 
         Attributes:
             api_key (str): A string specifying the API key.
-            options (dict): A dict that has the url used in the request header
+            version (str): The version to call the API with
+            log (bool): To log the outputs on info level
         Example:
         ```python
             import os
@@ -32,15 +36,16 @@ class FirstStreet:
             MissingAPIError: If the API is not provided
     """
 
-    def __init__(self, api_key=None, options=None):
+    def __init__(self, api_key=None, version=None, log=True):
 
         if not api_key:
             raise MissingAPIKeyError('Missing API Key.')
 
-        if options is None:
-            options = {}
+        if log:
+            logging.basicConfig(level=logging.INFO,
+                                format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 
-        self.http = Http(api_key, options)
+        self.http = Http(api_key, version)
         self.location = Location(self.http)
         self.probability = Probability(self.http)
         self.historic = Historic(self.http)

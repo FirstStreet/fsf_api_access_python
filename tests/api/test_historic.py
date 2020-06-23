@@ -16,8 +16,8 @@ class TestHistoricEvent:
             fs.historic.get_event([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
-            fs.historic.get_event(9)
+        with pytest.raises(InvalidArgument):
+            fs.historic.get_event("9")
 
     def test_single(self):
         historic = fs.historic.get_event([9])
@@ -59,7 +59,7 @@ class TestHistoricSummary:
             fs.historic.get_summary([190836953], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.historic.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):

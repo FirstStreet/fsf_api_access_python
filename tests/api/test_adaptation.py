@@ -16,7 +16,7 @@ class TestAdaptationDetail:
             fs.adaptation.get_detail([], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.adaptation.get_detail(2739)
 
     def test_single(self):
@@ -59,7 +59,7 @@ class TestAdaptationSummary:
             fs.adaptation.get_summary([190836953], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(InvalidArgument):
             fs.adaptation.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):
@@ -89,7 +89,7 @@ class TestAdaptationSummary:
         assert len(adaptation) == 1
 
     def test_multiple_csv(self):
-        adaptation = fs.adaptation.get_summary([190836953, 193139123], "property", csv=True)
+        adaptation = fs.adaptation.get_summary([395133768, 193139123], "property", csv=True)
         assert len(adaptation) == 2
 
     def test_mixed_invalid(self):

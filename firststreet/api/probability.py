@@ -1,6 +1,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api import csv_format
 from firststreet.api.api import Api
@@ -39,6 +42,8 @@ class Probability(Api):
         if csv:
             csv_format.to_csv(product, "probability", "depth")
 
+        logging.info("Probability Depth Data Ready.")
+
         return product
 
     def get_chance(self, fsids, csv=False, limit=100):
@@ -59,6 +64,8 @@ class Probability(Api):
 
         if csv:
             csv_format.to_csv(product, "probability", "chance")
+
+        logging.info("Probability Chance Data Ready.")
 
         return product
 
@@ -90,6 +97,8 @@ class Probability(Api):
         if csv:
             csv_format.to_csv(product, "probability", "count", location_type)
 
+        logging.info("Probability Count Data Ready.")
+
         return product
 
     def get_count_summary(self, fsids, csv=False, limit=100):
@@ -111,6 +120,8 @@ class Probability(Api):
         if csv:
             csv_format.to_csv(product, "probability", "count-summary")
 
+        logging.info("Probability Count-Summary Data Ready.")
+
         return product
 
     def get_cumulative(self, fsids, csv=False, limit=100):
@@ -131,5 +142,7 @@ class Probability(Api):
 
         if csv:
             csv_format.to_csv(product, "probability", "cumulative")
+
+        logging.info("Probability Cumulative Data Ready.")
 
         return product

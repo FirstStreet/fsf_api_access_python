@@ -1,6 +1,9 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Standard Imports
+import logging
+
 # Internal Imports
 from firststreet.api import csv_format
 from firststreet.api.api import Api
@@ -32,5 +35,7 @@ class Environmental(Api):
 
         if csv:
             csv_format.to_csv(product, "environmental", "precipitation", "county")
+
+        logging.info("Environmental Precipitation Data Ready.")
 
         return product

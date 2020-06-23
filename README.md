@@ -1,7 +1,7 @@
 # First Street Foundation API Access Documentation (Python)
 The First Street Foundation API Access (Python) is a wrapper used to bulk extract flood data from the First Street Foundation API
 
-## Installation
+# Installation
 **NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
 1. Go to the Python page (https://www.python.org/downloads/) and download then install Python version 3. **Make sure that the checkbox is checked for Python to be added to the PATH**
 
@@ -33,7 +33,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/1.3.1.png)
 
-5. [Optional] Open or close and re-open a new console and create and activate a new virtual environment in the project directory:
+5. [Optional] Open a new console or close and re-open a console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -66,7 +66,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ├── venv
     ├── my_script.py
 
-## Method 1: Through the Command Line
+# Method 1: Through the Command Line
 **[Reminder] Keep your API key safe, and do not share it with others!**
 
 1. [Required] Set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY`.
@@ -85,40 +85,19 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/3.2.1.png)
     
-
-## Method 2: Through the Client
-**[Reminder] Keep your API key safe, and do not share it with others!**
-
-1. Create a new Python script (by using notepad or any other text editor) and initialize a First Street Foundation API Client. 
-    ```python
-    # Contents of my_script.py
-    import firststreet
-    fs = firststreet.FirstStreet("api-key")
-    ```
-    
-2. Call one of the methods described below in the `Products` section with the required arguments. See the `Examples` section for more examples.
-    ```python
-    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>, <csv: boolean>)
-    ```
-    
-    ![Screenshot](doc/images/2.2.1.png)
-    
-    OR
-    
-    ![Screenshot](doc/images/2.2.2.png)
-    
-    ![Screenshot](doc/images/2.2.3.png)
-    
-3. Run the python script.
-
-    ![Screenshot](doc/images/2.3.1.png)
-
-
-##### Command Line Arguments:
+##### Command Line Argument Details:
 
 - `-p/--product PRODUCT`: [REQUIRED] The product to call from the API
 
     Example: ```-p location.get_detail```
+    
+- `[-api_key/--api_key API_KEY]`: [OPTIONAL] If step 1 is skipped or unavailable, this argument can take the `API_KEY` instead.
+
+    Example: ```-a XXXXXXXXXXXXXXXXXXX```
+    
+- `[-v/--version VERSION]`: [OPTIONAL] The version of the API to call. Defaults to the current version.
+
+    Example: ```-v v1```
     
 - `[-i/--fsids FSIDS]`: [OPTIONAL] The FSIDs to search for with the product
 
@@ -127,6 +106,14 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 - `[-l/--location LOOKUP_TYPE]`: [OPTIONAL] The lookup location type (property, neighborhood, city, zcta, tract, county, cd, state)
 
     Example: ```-l property```
+    
+- `[-limit/--limit LIMIT]`: [OPTIONAL] The max number of connections to make the the API at the same time. Defaults to 100 connections
+
+    Example: ```-limit 20```
+    
+- `[-log/--log LOG]`: [OPTIONAL] To log info output to the console or not. Defaults to True
+
+    Example: ```-l False```
     
 - `[-f/--file FILE]`: [OPTIONAL] A file of FSIDs (one per line) to search for with the product
 
@@ -146,65 +133,45 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     
     ![Screenshot](doc/images/4.4.2.png)
 
-## Updating the Project to the Newest Version:
-If an update is made to this project, you will need to pull the changes from github and reinstall this project.
+## Method 2: Through the Client
+**[Reminder] Keep your API key safe, and do not share it with others!**
 
-1. Open `git bash` and create then navigate to the existing project directory. Then navigate into the project directory, and run:
-
-    ```git
-    git pull
+1. Create a new Python script (by using notepad or any other text editor) and initialize a First Street Foundation API Client. 
+    ```python
+    # Contents of my_script.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
     ```
-
-    If the response is `Already up to date.`, then you have the latest version of the project already.
-
-    ![Screenshot](doc/images/6.1.1.png)
-
-2. Open a new console, navigate to the project, and re-run the setup script to re-install the project:
-
-    ```shell script
-    cd /path/to/project
-   
-    .\venv\Scripts\activate
-   
-    pip install .\fsf_api_access_python\.
+    #### Client Initialization Details
+    
+    ```python
+    firststreet.FirstStreet(api_key, [version], [log])
     ```
+    
+    #### Arguments
+    * api_key `string`: The assigned API key to access the API.
+    * version `string= v1`: The version of the API to access. Defaults to the current version.
+    * log `bool= True`: Setting for whether to log info or not. Defaults to True.
 
-    ![Screenshot](doc/images/6.1.2.png)
+2. Call one of the methods described below in the `Products` section with the required arguments. See the `Examples` section for more examples.
+    ```python
+    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>, <csv: boolean>)
+    ```
+    
+    ![Screenshot](doc/images/2.2.1.png)
+    
+    OR
+    
+    ![Screenshot](doc/images/2.2.2.png)
+    
+    ![Screenshot](doc/images/2.2.3.png)
+    
+3. Run the python script.
 
-3. The project should now be updated to the newest version.
+    ![Screenshot](doc/images/2.3.1.png)
 
-## CSV File Output:
-Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
-
-
-### CSV File Name:
-The file name will be in the format of `YYYY_MM_DD_HH_mm_SS_product_subtype_lookup.csv`. 
-
-Ex:
-- `2020_06_10_17_29_49_adaptation_detail.csv`
-- `2020_06_10_17_33_56_adaptation_summary_property.csv`
-
-### CSV File Content
-The contents of the CSV file will follow similar formats as the `First Street Foundation API - V1.0 Overview and Dictionary`, but all lists will be expanded to a flat file. For any values that are null or not available, `<NA>` will be used.
-
-Ex: 
-```csv
-fsid,year,returnPeriod,bin,low,mid,high
-7935,2020,20,20,<NA>,2,<NA>
-7935,2020,20,50,<NA>,1,<NA>
-7935,2020,20,55,<NA>,2,<NA>
-7935,2020,20,65,<NA>,2,<NA>
-7935,2020,20,75,<NA>,2,<NA>
-7935,2020,20,95,<NA>,1,<NA>
-7935,2020,20,100,<NA>,1,<NA>
-...
-```
-![Screenshot](doc/images/5.2.1.png)
-
-![Screenshot](doc/images/5.2.2.png)
-
-## Products
-### Location
+# Products
+#### Location
 
 The Location API provides `Detail` and `Summary` data for the given FSIDs.
 
@@ -212,10 +179,10 @@ The Location API provides `Detail` and `Summary` data for the given FSIDs.
 location.<method>
 ```
 
-* `get_detail`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_detail`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
+* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file
 
-### Probability
+#### Probability
 
 The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for the given FSIDs.
 
@@ -223,13 +190,13 @@ The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for t
 probability.<method>
 ```
 
-* `get_depth`(fsids `list`, csv `bool`) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
-* `get_chance`(fsids `list`, csv `bool`) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file
-* `get_count_summary`(fsids `list`, csv `bool`) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file
-* `get_cumulative`(fsids `list`, csv `bool`) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file
-* `get_count`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file
+* `get_depth`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
+* `get_chance`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file
+* `get_count_summary`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file
+* `get_cumulative`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file
+* `get_count`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file
 
-### Historic
+#### Historic
 
 The Historic API provides `Summary` and `Event` data for the given FSIDs.
 
@@ -237,10 +204,10 @@ The Historic API provides `Summary` and `Event` data for the given FSIDs.
 historic.<method>
 ```
 
-* `get_event`(fsids `list`, csv `bool`) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_event`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
+* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
 
-### Adaptation
+#### Adaptation
 
 The Adaptation API provides `Summary` and `Project` data for the given FSIDs.
 
@@ -248,10 +215,10 @@ The Adaptation API provides `Summary` and `Project` data for the given FSIDs.
 adaptation.<method>
 ```
 
-* `get_project`(fsids `list`, csv `bool`) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_project`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
+* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
 
-### Fema
+#### Fema
 
 The Fema API provides `NFIP` data for the given FSIDs.
 
@@ -259,9 +226,9 @@ The Fema API provides `NFIP` data for the given FSIDs.
 fema.<method>
 ```
 
-* `get_nfip`(fsids `list`, location_type `string`, csv `bool`) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
+* `get_nfip`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
 
-### Environmental
+#### Environmental
 
 The Environmental API provides `Precipitation` data for the given FSIDs.
 
@@ -269,10 +236,9 @@ The Environmental API provides `Precipitation` data for the given FSIDs.
 environmental.<method>
 ```
 
-* `get_precipitation`(fsids `list`, csv `bool`) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
+* `get_precipitation`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
    
-   
-## Examples
+# Examples
 **[Reminder] Keep your API key safe, and do not share it with others!**
 1. Single FSID Extraction Through the Client:
     ```python
@@ -373,5 +339,65 @@ environmental.<method>
     541262690,1,0,1,0,0
     540651172,1,0,1,0,0
     ```
+
+
+# CSV File Output:
+Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
+
+
+#### CSV File Name:
+The file name will be in the format of `YYYY_MM_DD_HH_mm_SS_product_subtype_lookup.csv`. 
+
+Ex:
+- `2020_06_10_17_29_49_adaptation_detail.csv`
+- `2020_06_10_17_33_56_adaptation_summary_property.csv`
+
+#### CSV File Content
+The contents of the CSV file will follow similar formats as the `First Street Foundation API - V1.0 Overview and Dictionary`, but all lists will be expanded to a flat file. For any values that are null or not available, `<NA>` will be used.
+
+Ex: 
+```csv
+fsid,year,returnPeriod,bin,low,mid,high
+7935,2020,20,20,<NA>,2,<NA>
+7935,2020,20,50,<NA>,1,<NA>
+7935,2020,20,55,<NA>,2,<NA>
+7935,2020,20,65,<NA>,2,<NA>
+7935,2020,20,75,<NA>,2,<NA>
+7935,2020,20,95,<NA>,1,<NA>
+7935,2020,20,100,<NA>,1,<NA>
+...
+```
+![Screenshot](doc/images/5.2.1.png)
+
+![Screenshot](doc/images/5.2.2.png)
+
+# Updating the Project to the Newest Version:
+If an update is made to this project, you will need to pull the changes from github and reinstall this project.
+
+1. Open `git bash` and create then navigate to the existing project directory. Then navigate into the project directory, and run:
+
+    ```git
+    git pull
+    ```
+
+    If the response is `Already up to date.`, then you have the latest version of the project already.
+
+    ![Screenshot](doc/images/6.1.1.png)
+
+2. Open a new console, navigate to the project, and re-run the setup script to re-install the project:
+
+    ```shell script
+    cd /path/to/project
    
+    .\venv\Scripts\activate
+   
+    pip install .\fsf_api_access_python\.
+    ```
+
+    ![Screenshot](doc/images/6.1.2.png)
+
+3. The project should now be updated to the newest version
+
+
+
 [git]: <https://git-scm.com/downloads>

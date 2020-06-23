@@ -6,14 +6,13 @@ import asyncio
 
 # External Imports
 import logging
-
+import tqdm
 import aiohttp
 
 # Internal Imports
 import firststreet.errors as e
 
-DEFAULTS = {'host': "https://api.firststreet.org"}
-SUMMARY_VERSION = 'v1'
+DEFAULT_SUMMARY_VERSION = 'v1'
 
 
 class Http:
@@ -21,18 +20,17 @@ class Http:
         requests, and handles any errors during the execution.
         Attributes:
             api_key (str): A string specifying the API key.
-            options (dict): A dict that has the url used in the request header
+            version (str): The version to call the API with
         Methods:
             execute: Sends a request to the First Street Foundation API for the specified endpoint
         """
 
-    def __init__(self, api_key, options=None):
-        if options is None:
-            options = {}
-        request_options = {**DEFAULTS, **options}
+    def __init__(self, api_key, version=None):
+        if version is None:
+            version = DEFAULT_SUMMARY_VERSION
 
         self.api_key = api_key
-        self.options = {'url': request_options.get('host'),
+        self.options = {'url': "https://astg.firststreet.org",
                         'headers': {
                             'Content-Encoding': 'gzip',
                             'Content-Type': 'text/html',
@@ -40,7 +38,7 @@ class Http:
                             'Accept': 'application/vnd.api+json',
                             'Authorization': 'Bearer %s' % api_key
                         }}
-        self.version = SUMMARY_VERSION
+        self.version = version
 
     async def endpoint_execute(self, endpoints, limit=100):
         """Asynchronously calls each endpoint and returns the JSON responses
@@ -55,7 +53,9 @@ class Http:
         session = aiohttp.ClientSession(connector=connector)
 
         try:
-            ret = await asyncio.gather(*[self.execute(endpoint, session) for endpoint in endpoints])
+            tasks = [self.execute(endpoint, session) for endpoint in endpoints]
+            ret = [await f
+                   for f in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks))]
 
         finally:
             await session.close()

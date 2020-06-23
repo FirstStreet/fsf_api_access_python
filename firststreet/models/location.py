@@ -55,6 +55,7 @@ class LocationDetailNeighborhood(LocationDetail):
         self.fsid = response.get('fsid')
         self.city = response.get('city')
         self.subtype = response.get('subtype')
+        self.county = response.get('county')
         self.state = response.get('state')
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry'))
@@ -74,6 +75,7 @@ class LocationDetailCity(LocationDetail):
         self.lsad = response.get('lsad')
         self.zcta = response.get('zcta')
         self.neighborhood = response.get('neighborhood')
+        self.county = response.get('county')
         self.state = response.get('state')
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry'))
@@ -91,6 +93,7 @@ class LocationDetailZcta(LocationDetail):
         super().__init__(response)
         self.fsid = response.get('fsid')
         self.city = response.get('city')
+        self.county = response.get('county')
         self.state = response.get('state')
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry'))

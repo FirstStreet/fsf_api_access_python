@@ -24,8 +24,8 @@ class TestFemaNfip:
             fs.fema.get_nfip([19055950100], "")
 
     def test_wrong_fsid_type(self):
-        with pytest.raises(TypeError):
-            fs.fema.get_nfip(19055950100, "tract")
+        with pytest.raises(InvalidArgument):
+            fs.fema.get_nfip("19055950100", "tract")
 
     def test_wrong_fsid_number(self):
         fema = fs.fema.get_nfip([19027], "tract")
