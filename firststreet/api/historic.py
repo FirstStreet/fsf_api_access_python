@@ -19,7 +19,7 @@ class Historic(Api):
             get_summary: Retrieves a list of Historic Summary for the given list of IDs
         """
 
-    def get_event(self, fsids, csv=False, limit=100):
+    def get_event(self, fsids, csv=False, limit=100, output_dir=None):
         """Retrieves historic event product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Historic Event objects.
 
@@ -27,6 +27,7 @@ class Historic(Api):
             fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Historic Event
         """
@@ -36,13 +37,13 @@ class Historic(Api):
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
         if csv:
-            csv_format.to_csv(product, "historic", "event")
+            csv_format.to_csv(product, "historic", "event", output_dir=output_dir)
 
         logging.info("Historic Event Data Ready.")
 
         return product
 
-    def get_summary(self, fsids, location_type, csv=False, limit=100):
+    def get_summary(self, fsids, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves historic summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Historic Summary objects.
 
@@ -51,6 +52,7 @@ class Historic(Api):
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Historic Summary
         """
@@ -65,7 +67,7 @@ class Historic(Api):
         product = [HistoricSummary(api_data) for api_data in api_datas]
 
         if csv:
-            csv_format.to_csv(product, "historic", "summary", location_type)
+            csv_format.to_csv(product, "historic", "summary", location_type, output_dir=output_dir)
 
         logging.info("Historic Summary Data Ready.")
 

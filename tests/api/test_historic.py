@@ -1,7 +1,13 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 import os
 
+# External Imports
 import pytest
 
+# Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
 
@@ -27,20 +33,20 @@ class TestHistoricEvent:
         historic = fs.historic.get_event([9, 13])
         assert len(historic) == 2
 
-    def test_single_csv(self):
-        historic = fs.historic.get_event([9], csv=True)
+    def test_single_csv(self, tmpdir):
+        historic = fs.historic.get_event([9], csv=True, output_dir=tmpdir)
         assert len(historic) == 1
 
-    def test_multiple_csv(self):
-        historic = fs.historic.get_event([9, 13], csv=True)
+    def test_multiple_csv(self, tmpdir):
+        historic = fs.historic.get_event([9, 13], csv=True, output_dir=tmpdir)
         assert len(historic) == 2
 
     def test_mixed_invalid(self):
         historic = fs.historic.get_event([9, 0])
         assert len(historic) == 2
 
-    def test_mixed_invalid_csv(self):
-        historic = fs.historic.get_event([9, 0], csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        historic = fs.historic.get_event([9, 0], csv=True, output_dir=tmpdir)
         assert len(historic) == 2
 
 
@@ -67,8 +73,8 @@ class TestHistoricSummary:
         assert len(historic) == 1
         assert historic[0].historic is None
 
-    def test_incorrect_lookup_type(self):
-        historic = fs.historic.get_summary([190836953], "city", csv=True)
+    def test_incorrect_lookup_type(self, tmpdir):
+        historic = fs.historic.get_summary([190836953], "city", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].historic is None
 
@@ -84,18 +90,18 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([190836953, 193139123], "property")
         assert len(historic) == 2
 
-    def test_single_csv(self):
-        historic = fs.historic.get_summary([190836953], "property", csv=True)
+    def test_single_csv(self, tmpdir):
+        historic = fs.historic.get_summary([190836953], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
 
-    def test_multiple_csv(self):
-        historic = fs.historic.get_summary([190836953, 193139123], "property", csv=True)
+    def test_multiple_csv(self, tmpdir):
+        historic = fs.historic.get_summary([190836953, 193139123], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 2
 
     def test_mixed_invalid(self):
         historic = fs.historic.get_summary([190836953, 000000000], "property")
         assert len(historic) == 2
 
-    def test_mixed_invalid_csv(self):
-        historic = fs.historic.get_summary([190836953, 000000000], "property", csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        historic = fs.historic.get_summary([190836953, 000000000], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 2

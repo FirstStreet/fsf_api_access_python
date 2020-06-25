@@ -6,10 +6,9 @@ import argparse
 import os
 import logging
 from distutils.util import strtobool
-
-# Internal Imports
 import sys
 
+# Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
 from firststreet.util import read_fsid_file

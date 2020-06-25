@@ -1,7 +1,13 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 import os
 
+# External Imports
 import pytest
 
+# Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
 
@@ -32,8 +38,8 @@ class TestFemaNfip:
         assert len(fema) == 1
         assert fema[0].claimCount is None
 
-    def test_incorrect_lookup_type(self):
-        fema = fs.fema.get_nfip([19055950100], "county", csv=True)
+    def test_incorrect_lookup_type(self, tmpdir):
+        fema = fs.fema.get_nfip([19055950100], "county", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].claimCount is None
 
@@ -49,18 +55,18 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip([19055950100, 19153003200], "tract")
         assert len(fema) == 2
 
-    def test_single_csv(self):
-        fema = fs.fema.get_nfip([19055950100], "tract", csv=True)
+    def test_single_csv(self, tmpdir):
+        fema = fs.fema.get_nfip([19055950100], "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
 
-    def test_multiple_csv(self):
-        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True)
+    def test_multiple_csv(self, tmpdir):
+        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 2
 
     def test_mixed_invalid(self):
         fema = fs.fema.get_nfip([19055950100, 19153003200], "tract")
         assert len(fema) == 2
 
-    def test_mixed_invalid_csv(self):
-        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        fema = fs.fema.get_nfip([19055950100, 19153003200], "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 2

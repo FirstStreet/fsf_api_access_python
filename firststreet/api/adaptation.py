@@ -19,7 +19,7 @@ class Adaptation(Api):
             get_summary: Retrieves a list of Adaptation Summary for the given list of IDs
         """
 
-    def get_detail(self, fsids, csv=False, limit=100):
+    def get_detail(self, fsids, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Detail objects.
 
@@ -27,6 +27,7 @@ class Adaptation(Api):
             fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Adaptation Detail
         """
@@ -35,13 +36,13 @@ class Adaptation(Api):
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
-            csv_format.to_csv(product, "adaptation", "detail")
+            csv_format.to_csv(product, "adaptation", "detail", output_dir=output_dir)
 
         logging.info("Adaptation Detail Data Ready.")
 
         return product
 
-    def get_summary(self, fsids, location_type, csv=False, limit=100):
+    def get_summary(self, fsids, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Summary objects.
 
@@ -50,6 +51,7 @@ class Adaptation(Api):
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Adaptation Summary
         """
@@ -64,7 +66,7 @@ class Adaptation(Api):
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:
-            csv_format.to_csv(product, "adaptation", "summary", location_type)
+            csv_format.to_csv(product, "adaptation", "summary", location_type, output_dir=output_dir)
 
         logging.info("Adaptation Summary Data Ready.")
 

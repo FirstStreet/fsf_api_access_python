@@ -18,7 +18,7 @@ class Fema(Api):
             get_nfip: Retrieves a list of Fema Nfip for the given list of IDs
         """
 
-    def get_nfip(self, fsids, location_type, csv=False, limit=100):
+    def get_nfip(self, fsids, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves fema nfip product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Fema Nfip objects.
 
@@ -27,6 +27,7 @@ class Fema(Api):
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Fema Nfip
         Raises:
@@ -44,7 +45,7 @@ class Fema(Api):
         product = [FemaNfip(api_data) for api_data in api_datas]
 
         if csv:
-            csv_format.to_csv(product, "fema", "nfip", location_type)
+            csv_format.to_csv(product, "fema", "nfip", location_type, output_dir=output_dir)
 
         logging.info("Fema Nfip Data Ready.")
 

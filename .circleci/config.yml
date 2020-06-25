@@ -1,0 +1,36 @@
+version: 1
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6
+
+    working_directory: ~/fsf-api-access-python
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -e .[testing]
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            pytest tests --basetemp=C:/Users/Lyetenth/Documents/FSF/flood_lab/tests/temp
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports

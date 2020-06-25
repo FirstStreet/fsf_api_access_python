@@ -1,5 +1,13 @@
 # First Street Foundation API Access Documentation (Python)
+[![CircleCI](https://circleci.com/gh/FirstStreet/firststreet-python.svg?style=svg&circle-token=9f4c22fd34a87690970add09e6454f17764812b4)](https://circleci.com/gh/FirstStreet/firststreet-python)
+
 The First Street Foundation API Access (Python) is a wrapper used to bulk extract flood data from the First Street Foundation API
+
+
+### Current Release:
+Current release: 0.1
+
+**Notice:** This API wrapper is subject to change.
 
 # Table of contents
 - **[Installation](#installation)**
@@ -20,6 +28,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
   - [CSV File Name:](#csv-name)
   - [CSV File Content](#csv-content)
 - **[Updating the Project to the Newest Version:](#updating)**
+- **[License](#license)**
 
 <a name="installation"></a>
 # Installation
@@ -434,6 +443,31 @@ If an update is made to this project, you will need to pull the changes from git
 
 3. The project should now be updated to the newest version
 
+<a name="license"></a>
+# License
+```  
+MIT License
+
+Copyright (c) 2020 First Street Foundation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 
 [git]: <https://git-scm.com/downloads>

@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 
-def to_csv(data, product, product_subtype, location_type=None):
+def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
     """Receives a list of data, a product, a product subtype, and a location to create a CSV
 
     Args:
@@ -17,6 +17,7 @@ def to_csv(data, product, product_subtype, location_type=None):
         product (str): The overall product to call
         product_subtype (str): The product subtype (if suitable)
         location_type (str): The location lookup type (if suitable)
+        output_dir (str): The output directory to save the generated csvs
     """
 
     date = datetime.datetime.today().strftime('%Y_%m_%d_%H_%M_%S')
@@ -27,7 +28,8 @@ def to_csv(data, product, product_subtype, location_type=None):
     else:
         file_name = "_".join([date, product, product_subtype]) + ".csv"
 
-    output_dir = "/".join([os.getcwd(), "data_csv"])
+    if not output_dir:
+        output_dir = os.getcwd() + "\\data_csv"
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -162,7 +164,7 @@ def format_adaptation_summary(data):
     """
     df = pd.DataFrame([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
-    return df[['fsid', 'adaptation']]
+    return df[['fsid', 'adaptation', 'properties']]
 
 
 def format_probability_chance(data):

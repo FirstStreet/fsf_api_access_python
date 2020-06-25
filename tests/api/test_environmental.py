@@ -1,7 +1,13 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 import os
 
+# External Imports
 import pytest
 
+# Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
 
@@ -27,18 +33,18 @@ class TestEnvironmentalEvent:
         environmental = fs.environmental.get_precipitation([19117, 19135])
         assert len(environmental) == 2
 
-    def test_single_csv(self):
-        environmental = fs.environmental.get_precipitation([19117], csv=True)
+    def test_single_csv(self, tmpdir):
+        environmental = fs.environmental.get_precipitation([19117], csv=True, output_dir=tmpdir)
         assert len(environmental) == 1
 
-    def test_multiple_csv(self):
-        environmental = fs.environmental.get_precipitation([19117, 19135], csv=True)
+    def test_multiple_csv(self, tmpdir):
+        environmental = fs.environmental.get_precipitation([19117, 19135], csv=True, output_dir=tmpdir)
         assert len(environmental) == 2
 
     def test_mixed_invalid(self):
         environmental = fs.environmental.get_precipitation([19117, 00000])
         assert len(environmental) == 2
 
-    def test_mixed_invalid_csv(self):
-        environmental = fs.environmental.get_precipitation([19117, 00000], csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        environmental = fs.environmental.get_precipitation([19117, 00000], csv=True, output_dir=tmpdir)
         assert len(environmental) == 2

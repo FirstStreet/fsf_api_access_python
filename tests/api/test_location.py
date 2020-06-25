@@ -1,7 +1,13 @@
+# Author: Kelvin Lai <kelvin@firststreet.org>
+# Copyright: This module is owned by First Street Foundation
+
+# Standard Imports
 import os
 
+# External Imports
 import pytest
 
+# Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
 
@@ -32,8 +38,8 @@ class TestLocationDetail:
         assert len(location) == 1
         assert location[0].streetNumber is None
 
-    def test_incorrect_lookup_type(self):
-        location = fs.location.get_detail([190836953], "city", csv=True)
+    def test_incorrect_lookup_type(self, tmpdir):
+        location = fs.location.get_detail([190836953], "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].name is None
 
@@ -49,20 +55,20 @@ class TestLocationDetail:
         location = fs.location.get_detail([190836953, 193139123], "property")
         assert len(location) == 2
 
-    def test_single_csv(self):
-        location = fs.location.get_detail([190836953], "property", csv=True)
+    def test_single_csv(self, tmpdir):
+        location = fs.location.get_detail([190836953], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
 
-    def test_multiple_csv(self):
-        location = fs.location.get_detail([190836953, 193139123], "property", csv=True)
+    def test_multiple_csv(self, tmpdir):
+        location = fs.location.get_detail([190836953, 193139123], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
 
     def test_mixed_invalid(self):
         location = fs.location.get_detail([190836953, 000000000], "property")
         assert len(location) == 2
 
-    def test_mixed_invalid_csv(self):
-        location = fs.location.get_detail([190836953, 000000000], "property", csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        location = fs.location.get_detail([190836953, 000000000], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
 
 
@@ -89,8 +95,8 @@ class TestLocationSummary:
         assert len(location) == 1
         assert location[0].adaptation is None
 
-    def test_incorrect_lookup_type(self):
-        location = fs.location.get_summary([190836953], "city", csv=True)
+    def test_incorrect_lookup_type(self, tmpdir):
+        location = fs.location.get_summary([190836953], "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].adaptation is None
 
@@ -106,18 +112,18 @@ class TestLocationSummary:
         location = fs.location.get_summary([190836953, 193139123], "property")
         assert len(location) == 2
 
-    def test_single_csv(self):
-        location = fs.location.get_summary([190836953], "property", csv=True)
+    def test_single_csv(self, tmpdir):
+        location = fs.location.get_summary([190836953], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
 
-    def test_multiple_csv(self):
-        location = fs.location.get_summary([190836953, 193139123], "property", csv=True)
+    def test_multiple_csv(self, tmpdir):
+        location = fs.location.get_summary([190836953, 193139123], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
 
     def test_mixed_invalid(self):
         location = fs.location.get_summary([190836953, 000000000], "property")
         assert len(location) == 2
 
-    def test_mixed_invalid_csv(self):
-        location = fs.location.get_summary([190836953, 000000000], "property", csv=True)
+    def test_mixed_invalid_csv(self, tmpdir):
+        location = fs.location.get_summary([190836953, 000000000], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2

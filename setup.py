@@ -10,10 +10,10 @@ with open('extra_test_requires.txt') as f:
     extra = {'testing': [x.strip() for x in f.readlines()]}
 
 setup(
-    name='firststreet-python',
+    name='firststreet-api_access-python',
     version='0.1',
     description='A Python API Client for the First Street Foundation API',
-    url='https://github.com/FirstStreet/firststreet-python',
+    url='https://github.com/FirstStreet/fsf_api_access_python',
     project_urls={
         'First Street Foundation Website': 'https://firststreet.org/'
     },
