@@ -432,6 +432,10 @@ If an update is made to this project, you will need to pull the changes from git
 1. Open `git bash` and create then navigate to the existing project directory. Then navigate into the project directory, and run:
 
     ```git
+    cd /path/to/project
+   
+    cd fsf_api_access_python/
+   
     git pull
     ```
 
