@@ -29,7 +29,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest tests --basetemp=C:/Users/Lyetenth/Documents/FSF/flood_lab/tests/temp
+            pytest tests
 
       - store_artifacts:
           path: test-reports

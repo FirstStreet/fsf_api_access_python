@@ -1,5 +1,6 @@
 # First Street Foundation API Access Documentation (Python)
-[![CircleCI](https://circleci.com/gh/FirstStreet/firststreet-python.svg?style=svg&circle-token=9f4c22fd34a87690970add09e6454f17764812b4)](https://circleci.com/gh/FirstStreet/firststreet-python)
+[![CircleCI](https://img.shields.io/circleci/build/gh/FirstStreet/fsf_api_access_python)](https://circleci.com/gh/FirstStreet/fsf_api_access_python)
+![GitHub](https://img.shields.io/github/license/firststreet/fsf_api_access_python)
 
 The First Street Foundation API Access (Python) is a wrapper used to bulk extract flood data from the First Street Foundation API
 
