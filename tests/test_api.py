@@ -27,11 +27,6 @@ class TestApi:
         fs = firststreet.FirstStreet(api_key)
         fs.adaptation.get_detail([29], csv=False, limit=100)
 
-    def test_valid_file(self):
-        api_key = os.environ['FSF_API_KEY']
-        fs = firststreet.FirstStreet(api_key)
-        fs.adaptation.get_detail("\\tests\\data_text\\adaptation_detail.txt", csv=False, limit=100)
-
     def test_invalid_call(self):
         api_key = os.environ['FSF_API_KEY']
         fs = firststreet.FirstStreet(api_key)
