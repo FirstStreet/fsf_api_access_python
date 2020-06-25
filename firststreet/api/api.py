@@ -38,8 +38,8 @@ class Api:
         """
         if not isinstance(fsids, list):
             if isinstance(fsids, str):
-                if os.path.isfile(os.getcwd() + "\\" + fsids):
-                    fsids = read_fsid_file(os.getcwd() + "\\" + fsids)
+                if os.path.isfile(os.getcwd() + "console/terminal" + fsids):
+                    fsids = read_fsid_file(os.getcwd() + "/" + fsids)
                 else:
                     raise InvalidArgument("File provided is not a valid file. "
                                           "Please check the file name. '{}'".format(os.path.curdir + str(fsids)))

@@ -1,4 +1,4 @@
-# First Street Foundation API Access Documentation (Python)
+# First Street Foundation API Access Documentation (Python 3.6+)
 [![CircleCI](https://img.shields.io/circleci/build/gh/FirstStreet/fsf_api_access_python)](https://circleci.com/gh/FirstStreet/fsf_api_access_python)
 ![GitHub](https://img.shields.io/github/license/firststreet/fsf_api_access_python)
 
@@ -49,10 +49,11 @@ Current release: 0.1
 
     ![Screenshot](doc/images/1.2.3.png)
     
-3. Open `git bash` and create then navigate to a new project directory
+3. Open `git bash` or a `bash terminal` (if on a MacOS or Linux) and create then navigate to a new project directory
 
     ```sh
     mkdir fsf_api
+   
     cd fsf_api
     ```
    
@@ -74,7 +75,7 @@ Current release: 0.1
    
     ![Screenshot](doc/images/1.3.1.png)
 
-5. [Optional] Open a new console or close and re-open a console and create and activate a new virtual environment in the project directory:
+5. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -111,7 +112,16 @@ Current release: 0.1
 ## [Running the Project - Method 1: Through the Command Line](#toc)
 **[Reminder] Keep your API key safe, and do not share it with others!**
 
-1. [Required] Set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY`.
+[NOTE] This method will always generate a CSV. 
+
+1.  ## **MacOS or Linux** 
+    [Required] Open a `bash terminal` and set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY` with the command
+    ```shell script
+    export FSF_API_KEY=your personal API key
+    ``` 
+    
+    ## **Windows** 
+    [Required] Set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY`.
     
     ![Screenshot](doc/images/3.1.1.png)
     
@@ -119,7 +129,7 @@ Current release: 0.1
     
     ![Screenshot](doc/images/3.1.3.png)
 
-2. Open a new console and navigate to the project directory. Next, call one of the methods described below in the `Products` section through the command line. See the `Examples` section for more examples.
+2. Open/Re-open a `powershell console` / `bash terminal` and navigate to the project directory. Next, call one of the methods described below in the `Products` section through the command line. See the `Examples` section for more examples.
     ```sh
     cd /path/to/project
     python -m firststreet -p <product>.<product_subtype> -i <fsids> -f <file_name> -l <lookup_type>
@@ -180,6 +190,8 @@ Current release: 0.1
 ## [Running the Project - Method 2: Through the Client](#toc)
 **[Reminder] Keep your API key safe, and do not share it with others!**
 
+[NOTE] This method will **NOT** generate a CSV by default. An argument must be passed to generate a CSV.
+
 1. Create a new Python script (by using notepad or any other text editor) and initialize a First Street Foundation API Client. 
     ```python
     # Contents of my_script.py
@@ -218,6 +230,9 @@ Current release: 0.1
 
 <a name="products"></a>
 # [Products](#toc)
+
+**NOTE**: As of the current release, only direct FSID lookups are available through this wrapper. Lat/lng and address query will be in a later release
+
 <a name="location"></a>
 #### [Location](#toc)
 
@@ -444,7 +459,7 @@ If an update is made to this project, you will need to pull the changes from git
 
     ![Screenshot](doc/images/6.1.1.png)
 
-2. Open a new console, navigate to the project, and re-run the setup script to re-install the project:
+2. Open a new `powershell console` / `bash terminal`, navigate to the project, and re-run the setup script to re-install the project:
 
     ```shell script
     cd /path/to/project

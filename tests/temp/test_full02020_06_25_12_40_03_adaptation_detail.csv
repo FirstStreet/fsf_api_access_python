@@ -1,9 +1,0 @@
-adaptationId,name,type,scenario,conveyance,returnPeriod
-29,Riverfront Park,bioswale,fluvial,False,500
-29,Riverfront Park,bioswale,pluvial,False,500
-29,Riverfront Park,detention basin,fluvial,False,500
-29,Riverfront Park,detention basin,pluvial,False,500
-29,Riverfront Park,levee,fluvial,False,500
-29,Riverfront Park,levee,pluvial,False,500
-29,Riverfront Park,pervious pavement,fluvial,False,500
-29,Riverfront Park,pervious pavement,pluvial,False,500

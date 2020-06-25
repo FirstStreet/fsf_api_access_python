@@ -3,6 +3,7 @@
 
 # Standard Imports
 import datetime
+import logging
 import os
 
 # External Imports
@@ -29,7 +30,7 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         file_name = "_".join([date, product, product_subtype]) + ".csv"
 
     if not output_dir:
-        output_dir = os.getcwd() + "\\data_csv"
+        output_dir = os.getcwd() + "/data_csv"
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -137,6 +138,7 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
     # Export CSVs
     df.fillna(pd.NA, inplace=True)
     df.to_csv(output_dir + '/' + file_name, index=False)
+    logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
 
 
 def format_adaptation_detail(data):

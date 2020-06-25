@@ -28,6 +28,7 @@ def test_full(tmpdir):
     fs.probability.get_count([39047], 'county', csv=True, output_dir=tmpdir)
     fs.probability.get_count([3904], 'cd', csv=True, output_dir=tmpdir)
     fs.probability.get_count([39], 'state', csv=True, output_dir=tmpdir)
+    fs.probability.get_count_summary([394406220], csv=True, output_dir=tmpdir)
     fs.probability.get_cumulative([390000439], csv=True, output_dir=tmpdir)
     fs.probability.get_depth([390000227], csv=True, output_dir=tmpdir)
     fs.environmental.get_precipitation([39057], csv=True, output_dir=tmpdir)
