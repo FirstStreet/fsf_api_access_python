@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--fsids", help="Example: 28,29", required=False,)
     parser.add_argument("-l", "--location", help="Example: property", required=False)
     parser.add_argument("-limit", "--limit", help="Example: 100", required=False, default="100")
-    parser.add_argument("-log", "--log", help="Example: False", required=False, default=True)
+    parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
     parser.add_argument("-f", "--file", help="Example: ./sample.txt", required=False)
 
     argument = parser.parse_args()

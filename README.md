@@ -50,6 +50,11 @@ Current release: 0.1
     
 3. Open `git bash` and create then navigate to a new project directory
 
+    ```sh
+    mkdir fsf_api
+    cd fsf_api
+    ```
+   
     ![Screenshot](doc/images/1.2.1.png)
     
     ![Screenshot](doc/images/1.2.2.png)
@@ -62,6 +67,10 @@ Current release: 0.1
     ├── fsf_api_access_python
     ```
     
+    ```sh
+    git clone https://github.com/FirstStreet/fsf_api_access_python.git
+    ```
+   
     ![Screenshot](doc/images/1.3.1.png)
 
 5. [Optional] Open a new console or close and re-open a console and create and activate a new virtual environment in the project directory:

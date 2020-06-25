@@ -10,7 +10,7 @@ import firststreet
 
 def test_full(tmpdir):
     api_key = os.environ['FSF_API_KEY']
-    fs = firststreet.FirstStreet(api_key, version='v2', log=False)
+    fs = firststreet.FirstStreet(api_key)
     fs.adaptation.get_detail([29], csv=True, output_dir=tmpdir)
     fs.adaptation.get_summary([395133768], "property", csv=True, output_dir=tmpdir)
     fs.adaptation.get_summary([7924], "neighborhood", csv=True, output_dir=tmpdir)
