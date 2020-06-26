@@ -62,7 +62,7 @@ Current release: 0.1.1
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.4.2.png)
     
-4. Run the setup script to install the project requirements
+4. Use pip to install the project
     ```sh
     cd /path/to/project
    
@@ -417,30 +417,16 @@ fsid,year,returnPeriod,bin,low,mid,high
 
 <a name="updating"></a>
 # [Updating the Project to the Newest Version:](#toc)
-If an update is made to this project, you will need to pull the changes from github and reinstall this project.
+If an update is made to this project, you will need to upgrade through PyPi
 
-1. Open `git bash` and create then navigate to the existing project directory. Then navigate into the project directory, and run:
-
-    ```git
-    cd /path/to/project
-   
-    cd fsf_api_access_python/
-   
-    git pull
-    ```
-
-    If the response is `Already up to date.`, then you have the latest version of the project already.
-
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//6.1.1.png)
-
-2. Open a new `powershell console` / `bash terminal`, navigate to the project, and re-run the setup script to re-install the project:
+1. Open a new `powershell console` / `bash terminal`, navigate to the project, and run the upgrade command:
 
     ```shell script
     cd /path/to/project
    
     .\venv\Scripts\activate
    
-    pip install .\fsf_api_access_python\.
+    pip install --upgrade fsf_api_access_python
     ```
 
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//6.1.2.png)
