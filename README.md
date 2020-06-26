@@ -45,11 +45,7 @@ Current release: 0.1.1
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.4.png)
     
-2. Install the source code manager [Git]
-
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.3.png)
-    
-3. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
+2. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -62,7 +58,7 @@ Current release: 0.1.1
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.4.2.png)
     
-4. Use pip to install the project
+3. Use pip to install the project
     ```sh
     cd /path/to/project
    
@@ -78,7 +74,6 @@ Current release: 0.1.1
     Example File Structure:
     
     .
-    ├── fsf_api_access_python.
     ├── venv
     ├── my_script.py
 
@@ -106,6 +101,7 @@ Current release: 0.1.1
 2. Open/Re-open a `powershell console` / `bash terminal` and navigate to the project directory. Next, call one of the methods described below in the `Products` section through the command line. See the `Examples` section for more examples.
     ```sh
     cd /path/to/project
+   
     python -m firststreet -p <product>.<product_subtype> -i <fsids> -f <file_name> -l <lookup_type>
     ```
     
