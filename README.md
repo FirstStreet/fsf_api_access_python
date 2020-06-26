@@ -4,10 +4,6 @@
 
 The First Street Foundation API Access (Python) is a wrapper used to bulk extract flood data from the First Street Foundation API
 
-
-### Current Release:
-Current release: 0.1.1
-
 **Notice:** This API wrapper is subject to change.
 
 <a name="toc"></a>
