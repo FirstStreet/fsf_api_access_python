@@ -6,7 +6,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 
 ### Current Release:
-Current release: 0.1
+Current release: 0.1.1
 
 **Notice:** This API wrapper is subject to change.
 
@@ -37,17 +37,17 @@ Current release: 0.1
 **NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
 1. Go to the Python page (https://www.python.org/downloads/) and download then install Python version 3. **Make sure that the checkbox is checked for Python to be added to the PATH**
 
-    ![Screenshot](doc/images/1.1.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.1.png)
     
-    ![Screenshot](doc/images/1.1.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.2.png)
     
-    ![Screenshot](doc/images/1.1.3.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.3.png)
     
-    ![Screenshot](doc/images/1.1.4.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.4.png)
     
 2. Install the source code manager [Git]
 
-    ![Screenshot](doc/images/1.2.3.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.3.png)
     
 3. Open `git bash` or a `bash terminal` (if on a MacOS or Linux) and create then navigate to a new project directory
 
@@ -57,9 +57,9 @@ Current release: 0.1
     cd fsf_api
     ```
    
-    ![Screenshot](doc/images/1.2.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.1.png)
     
-    ![Screenshot](doc/images/1.2.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.2.png)
     
 4. Clone the project repository (https://github.com/FirstStreet/fsf_api_access_python.git) to the new directory
     ```sh
@@ -73,7 +73,7 @@ Current release: 0.1
     git clone https://github.com/FirstStreet/fsf_api_access_python.git
     ```
    
-    ![Screenshot](doc/images/1.3.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.3.1.png)
 
 5. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
     ```sh
@@ -84,9 +84,9 @@ Current release: 0.1
     .\venv\Scripts\activate
     ```
     
-    ![Screenshot](doc/images/1.4.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.4.1.png)
     
-    ![Screenshot](doc/images/1.4.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.4.2.png)
     
 6. Run the setup script to install the project requirements
     ```sh
@@ -95,9 +95,9 @@ Current release: 0.1
     pip install .\fsf_api_access_python\.
     ```
     
-    ![Screenshot](doc/images/1.5.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.5.2.png)
     
-    ![Screenshot](doc/images/1.5.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.5.1.png)
     
 7. The project is now setup and can be ran through one of the two methods below. See `Products` for additional details on how to extract flood data products from the API.
     ```sh
@@ -123,11 +123,11 @@ Current release: 0.1
     ## **Windows** 
     [Required] Set an Environmental Variable with the `variable_name` as `FSF_API_KEY` and the `variable_value` with the `API_KEY`.
     
-    ![Screenshot](doc/images/3.1.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//3.1.1.png)
     
-    ![Screenshot](doc/images/3.1.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//3.1.2.png)
     
-    ![Screenshot](doc/images/3.1.3.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//3.1.3.png)
 
 2. Open/Re-open a `powershell console` / `bash terminal` and navigate to the project directory. Next, call one of the methods described below in the `Products` section through the command line. See the `Examples` section for more examples.
     ```sh
@@ -135,7 +135,7 @@ Current release: 0.1
     python -m firststreet -p <product>.<product_subtype> -i <fsids> -f <file_name> -l <lookup_type>
     ```
     
-    ![Screenshot](doc/images/3.2.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//3.2.1.png)
     
 <a name="commandline"></a>
 ### [Command Line Argument Details:](#toc)
@@ -182,9 +182,9 @@ Current release: 0.1
     540651172
     ```
   
-    ![Screenshot](doc/images/4.4.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//4.4.1.png)
     
-    ![Screenshot](doc/images/4.4.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//4.4.2.png)
 
 <a name="method2"></a>
 ## [Running the Project - Method 2: Through the Client](#toc)
@@ -216,17 +216,17 @@ Current release: 0.1
     fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>, <csv: boolean>)
     ```
     
-    ![Screenshot](doc/images/2.2.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.2.1.png)
     
     OR
     
-    ![Screenshot](doc/images/2.2.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.2.2.png)
     
-    ![Screenshot](doc/images/2.2.3.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.2.3.png)
     
 3. Run the python script.
 
-    ![Screenshot](doc/images/2.3.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.3.1.png)
 
 <a name="products"></a>
 # [Products](#toc)
@@ -437,9 +437,9 @@ fsid,year,returnPeriod,bin,low,mid,high
 7935,2020,20,100,<NA>,1,<NA>
 ...
 ```
-![Screenshot](doc/images/5.2.1.png)
+![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//5.2.1.png)
 
-![Screenshot](doc/images/5.2.2.png)
+![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//5.2.2.png)
 
 <a name="updating"></a>
 # [Updating the Project to the Newest Version:](#toc)
@@ -457,7 +457,7 @@ If an update is made to this project, you will need to pull the changes from git
 
     If the response is `Already up to date.`, then you have the latest version of the project already.
 
-    ![Screenshot](doc/images/6.1.1.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//6.1.1.png)
 
 2. Open a new `powershell console` / `bash terminal`, navigate to the project, and re-run the setup script to re-install the project:
 
@@ -469,7 +469,7 @@ If an update is made to this project, you will need to pull the changes from git
     pip install .\fsf_api_access_python\.
     ```
 
-    ![Screenshot](doc/images/6.1.2.png)
+    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//6.1.2.png)
 
 3. The project should now be updated to the newest version
 

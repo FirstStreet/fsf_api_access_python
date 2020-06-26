@@ -1,4 +1,4 @@
-aiohttp >= 3.6.2
+aiohttp
 shapely >= 1.7.0
-pandas >= 1.0.5
-tqdm >= 4.46.1
+pandas >= 1.0.0
+tqdm
