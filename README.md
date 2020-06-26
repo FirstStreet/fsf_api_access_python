@@ -49,33 +49,7 @@ Current release: 0.1.1
 
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.3.png)
     
-3. Open `git bash` or a `bash terminal` (if on a MacOS or Linux) and create then navigate to a new project directory
-
-    ```sh
-    mkdir fsf_api
-   
-    cd fsf_api
-    ```
-   
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.1.png)
-    
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.2.2.png)
-    
-4. Clone the project repository (https://github.com/FirstStreet/fsf_api_access_python.git) to the new directory
-    ```sh
-    Example File Structure:
-    
-    .
-    ├── fsf_api_access_python
-    ```
-    
-    ```sh
-    git clone https://github.com/FirstStreet/fsf_api_access_python.git
-    ```
-   
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.3.1.png)
-
-5. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
+3. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -88,11 +62,11 @@ Current release: 0.1.1
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.4.2.png)
     
-6. Run the setup script to install the project requirements
+4. Run the setup script to install the project requirements
     ```sh
     cd /path/to/project
    
-    pip install .\fsf_api_access_python\.
+    pip install fsf-api-access-python
     ```
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.5.2.png)
