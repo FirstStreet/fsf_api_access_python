@@ -105,3 +105,68 @@ class TestAdaptationSummary:
     def test_mixed_invalid_csv(self, tmpdir):
         adaptation = fs.adaptation.get_summary([2739, 0000], "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
+
+
+class TestAdaptationSummaryDetail:
+
+    def test_empty(self):
+        with pytest.raises(InvalidArgument):
+            fs.adaptation.get_details_by_location([], "")
+
+    def test_empty_fsid(self):
+        with pytest.raises(InvalidArgument):
+            fs.adaptation.get_details_by_location([], "property")
+
+    def test_empty_type(self):
+        with pytest.raises(InvalidArgument):
+            fs.adaptation.get_details_by_location([1935265], "")
+
+    def test_wrong_fsid_type(self):
+        with pytest.raises(InvalidArgument):
+            fs.adaptation.get_details_by_location(190836953, "city")
+
+    def test_wrong_fsid_number(self):
+        adaptation = fs.adaptation.get_details_by_location([11], "city")
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 1
+        assert adaptation[0][0].adaptation is None
+
+    def test_incorrect_lookup_type(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([1935265], "state", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 1
+        assert adaptation[0][0].adaptation is None
+
+    def test_wrong_adaptation_type(self):
+        with pytest.raises(TypeError):
+            fs.adaptation.get_details_by_location([1935265], 190)
+
+    def test_single(self):
+        adaptation = fs.adaptation.get_details_by_location([1935265], "city")
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 2
+
+    def test_multiple(self):
+        adaptation = fs.adaptation.get_details_by_location([1935265, 1714000], "city")
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 5
+
+    def test_single_csv(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([1935265], "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 2
+
+    def test_multiple_csv(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([1935265, 1714000], "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 5
+
+    def test_mixed_invalid(self):
+        adaptation = fs.adaptation.get_details_by_location([1935265, 000000000], "city")
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 2
+
+    def test_mixed_invalid_csv(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([1935265, 000000000], "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 2

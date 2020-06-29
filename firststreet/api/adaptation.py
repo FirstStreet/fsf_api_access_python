@@ -42,6 +42,52 @@ class Adaptation(Api):
 
         return product
 
+    def get_details_by_location(self, fsids, location_type, csv=False, limit=100, output_dir=None):
+        """Retrieves adaptation detail product data from the First Street Foundation API given a list of location
+        FSIDs and returns a list of Adaptation Detail objects.
+
+        Args:
+            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            location_type (str): The location lookup type
+            csv (bool): To output extracted data to a csv or not
+            limit (int): max number of connections to make
+            output_dir (str): The output directory to save the generated csvs
+        Returns:
+            A list of list of Adaptation Summary and Adaptation Detail
+        Raises:
+            InvalidArgument: The location provided is empty
+            TypeError: The location provided is not a string
+        """
+
+        if not location_type:
+            raise InvalidArgument(location_type)
+        elif not isinstance(location_type, str):
+            raise TypeError("location is not a string")
+        elif location_type == 'property':
+            raise InvalidArgument("Property is not a valid location type")
+
+        # Get data from api and create objects
+        api_datas_summary = self.call_api(fsids, "adaptation", "summary", location_type, limit=limit)
+        summary = [AdaptationSummary(api_data) for api_data in api_datas_summary]
+
+        fsids = list(set([adaptation for sum_adap in summary if sum_adap.adaptation for
+                          adaptation in sum_adap.adaptation]))
+
+        if fsids:
+            api_datas_detail = self.call_api(fsids, "adaptation", "detail", None, limit=limit)
+
+        else:
+            api_datas_detail = [{"adaptationId": None}]
+
+        detail = [AdaptationDetail(api_data) for api_data in api_datas_detail]
+
+        if csv:
+            csv_format.to_csv([summary, detail], "adaptation", "summary_detail", location_type, output_dir=output_dir)
+
+        logging.info("Adaptation Summary Detail Data Ready.")
+
+        return [summary, detail]
+
     def get_summary(self, fsids, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Summary objects.
@@ -54,6 +100,9 @@ class Adaptation(Api):
             output_dir (str): The output directory to save the generated csvs
         Returns:
             A list of Adaptation Summary
+        Raises:
+            InvalidArgument: The location provided is empty
+            TypeError: The location provided is not a string
         """
 
         if not location_type:

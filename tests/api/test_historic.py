@@ -105,3 +105,68 @@ class TestHistoricSummary:
     def test_mixed_invalid_csv(self, tmpdir):
         historic = fs.historic.get_summary([190836953, 000000000], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 2
+
+
+class TestHistoricSummaryDetail:
+
+    def test_empty(self):
+        with pytest.raises(InvalidArgument):
+            fs.historic.get_events_by_location([], "")
+
+    def test_empty_fsid(self):
+        with pytest.raises(InvalidArgument):
+            fs.historic.get_events_by_location([], "property")
+
+    def test_empty_type(self):
+        with pytest.raises(InvalidArgument):
+            fs.historic.get_events_by_location([190836953], "")
+
+    def test_wrong_fsid_type(self):
+        with pytest.raises(InvalidArgument):
+            fs.historic.get_events_by_location(190836953, "city")
+
+    def test_wrong_fsid_number(self):
+        historic = fs.historic.get_events_by_location([11], "city")
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert historic[0][0].historic is None
+
+    def test_incorrect_lookup_type(self, tmpdir):
+        historic = fs.historic.get_events_by_location([1982200], "state", csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert historic[0][0].historic is None
+
+    def test_wrong_historic_type(self):
+        with pytest.raises(TypeError):
+            fs.historic.get_events_by_location([1982200], 190)
+
+    def test_single(self):
+        historic = fs.historic.get_events_by_location([1982200], "city")
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+
+    def test_multiple(self):
+        historic = fs.historic.get_events_by_location([1982200, 3905074], "city")
+        assert len(historic[0]) == 2
+        assert len(historic[1]) == 2
+
+    def test_single_csv(self, tmpdir):
+        historic = fs.historic.get_events_by_location([1982200], "city", csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+
+    def test_multiple_csv(self, tmpdir):
+        historic = fs.historic.get_events_by_location([1982200, 3905074], "city", csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 2
+        assert len(historic[1]) == 2
+
+    def test_mixed_invalid(self):
+        historic = fs.historic.get_events_by_location([1982200, 000000000], "city")
+        assert len(historic[0]) == 2
+        assert len(historic[1]) == 1
+
+    def test_mixed_invalid_csv(self, tmpdir):
+        historic = fs.historic.get_events_by_location([1982200, 000000000], "city", csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 2
+        assert len(historic[1]) == 1
