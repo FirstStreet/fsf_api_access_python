@@ -199,6 +199,8 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 **NOTE**: As of the current release, only direct FSID lookups are available through this wrapper. Lat/lng and address query will be in a later release
 
+More information on each product can be found at the [First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs)
+
 <a name="location"></a>
 #### [Location](#toc)
 
