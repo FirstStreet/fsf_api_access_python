@@ -44,6 +44,9 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         elif product_subtype == 'summary':
             df = format_adaptation_summary(data)
 
+        elif product_subtype == 'summary_detail':
+            df = format_adaptation_summary_detail(data)
+
         else:
             raise NotImplementedError
 
@@ -82,6 +85,9 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
 
             else:
                 df = format_historic_summary(data)
+
+        elif product_subtype == 'summary_event':
+            df = format_historic_summary_event(data)
 
         else:
             raise NotImplementedError
@@ -136,8 +142,7 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         raise NotImplementedError
 
     # Export CSVs
-    df.fillna(pd.NA, inplace=True)
-    df.to_csv(output_dir + '/' + file_name, index=False)
+    df.fillna(pd.NA).astype(str).to_csv(output_dir + '/' + file_name, index=False)
     logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
 
 
@@ -157,7 +162,7 @@ def format_adaptation_detail(data):
 
 
 def format_adaptation_summary(data):
-    """Reformat the list of data to Adaptation Summary format
+    """Reformat the list of data to Adaptation Summary Detail format
 
     Args:
         data (list): A list of FSF object
@@ -166,7 +171,26 @@ def format_adaptation_summary(data):
     """
     df = pd.DataFrame([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
+    df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     return df[['fsid', 'adaptation', 'properties']]
+
+
+def format_adaptation_summary_detail(data):
+    """Reformat the list of data to Adaptation Summary format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+
+    summary = format_adaptation_summary(data[0])
+    detail = format_adaptation_detail(data[1])
+
+    df = pd.merge(summary, detail, left_on='adaptation', right_on='adaptationId', how='left')\
+        .drop('adaptationId', axis=1)
+
+    return df
 
 
 def format_probability_chance(data):
@@ -245,9 +269,6 @@ def format_probability_count_summary(data):
     Returns:
         A pandas formatted DataFrame
     """
-    # listed_data = [{'fsid': attr.fsid, 'location': [{'state': attr.state}, {'city': attr.city}, {'zcta': attr.zcta},
-    #                                                 {'neighborhood': attr.neighborhood}, {'tract': attr.tract},
-    #                                                 {'county': attr.county}, {'cd': attr.cd}]} for attr in data]
     listed_data = [{'fsid': attr.fsid, 'location': [{'location': 'state', 'data': attr.state},
                                                     {'location': 'city', 'data': attr.city},
                                                     {'location': 'zcta', 'data': attr.zcta},
@@ -460,6 +481,21 @@ def format_historic_summary(data):
         df['count'] = pd.NA
 
     return df[['fsid', 'eventId', 'name', 'type', 'bin', 'count']]
+
+
+def format_historic_summary_event(data):
+    """Reformat the list of data to Historic Summary Event format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+
+    summary = format_historic_summary(data[0])
+    event = format_historic_event(data[1])
+
+    return pd.merge(summary, event, on='eventId', how='left')
 
 
 def format_location_detail_property(data):

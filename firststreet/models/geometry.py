@@ -15,7 +15,7 @@ class Geometry:
     def __init__(self, geometry):
 
         if geometry:
-            self.polygon = shape(geometry.get('polygon'))
+            self.polygon = shape(geometry.get('polygon')) if geometry.get('polygon') else None
             self.center = shape(geometry.get('center'))
             if geometry.get('bbox'):
                 self.bbox = shape(geometry.get('bbox'))

@@ -11,11 +11,12 @@ with open('extra_test_requires.txt') as f:
 
 setup(
     name='fsf-api-access_python',
-    version='1.0.0',
+    version='1.1.0',
     description='A Python API Access Client for the First Street Foundation API',
     url='https://github.com/FirstStreet/fsf_api_access_python',
     project_urls={
-        'First Street Foundation Website': 'https://firststreet.org/'
+        'First Street Foundation Website': 'https://firststreet.org/',
+        'API Product Data Dictionary': 'https://docs.firststreet.dev/docs'
     },
     long_description=readme,
     long_description_content_type="text/markdown",
