@@ -62,6 +62,9 @@ if __name__ == "__main__":
         elif argument.product == 'adaptation.get_summary':
             fs.adaptation.get_summary(fsids, argument.location, csv=True, limit=limit)
 
+        elif argument.product == 'adaptation.get_details_by_location':
+            fs.adaptation.get_details_by_location(fsids, argument.location, csv=True, limit=limit)
+
         elif argument.product == 'probability.get_depth':
             fs.probability.get_depth(fsids, csv=True, limit=limit)
 
@@ -82,6 +85,9 @@ if __name__ == "__main__":
 
         elif argument.product == 'historic.get_summary':
             fs.historic.get_summary(fsids, argument.location, csv=True, limit=limit)
+
+        elif argument.product == 'historic.get_events_by_location':
+            fs.historic.get_events_by_location(fsids, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'location.get_detail':
             fs.location.get_detail(fsids, argument.location, csv=True, limit=limit)

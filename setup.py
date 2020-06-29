@@ -11,7 +11,7 @@ with open('extra_test_requires.txt') as f:
 
 setup(
     name='fsf-api-access_python',
-    version='1.1.0',
+    version='1.1.1',
     description='A Python API Access Client for the First Street Foundation API',
     url='https://github.com/FirstStreet/fsf_api_access_python',
     project_urls={
