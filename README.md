@@ -236,6 +236,7 @@ historic.<method>
 ```
 
 * `get_event`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
+* `get_events_by_location`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Detail` product for the given IDs, location_type, and optionally creates a csv file
 * `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="adaptation"></a>
@@ -248,6 +249,7 @@ adaptation.<method>
 ```
 
 * `get_project`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
+* `get_details_by_location`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given IDs, location_type, and optionally creates a csv file
 * `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="fema"></a>

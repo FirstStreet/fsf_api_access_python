@@ -63,8 +63,6 @@ class Adaptation(Api):
             raise InvalidArgument(location_type)
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
-        elif location_type == 'property':
-            raise InvalidArgument("Property is not a valid location type")
 
         # Get data from api and create objects
         api_datas_summary = self.call_api(fsids, "adaptation", "summary", location_type, limit=limit)
