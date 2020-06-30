@@ -30,7 +30,7 @@ class Http:
             version = DEFAULT_SUMMARY_VERSION
 
         self.api_key = api_key
-        self.options = {'url': "https://astg.firststreet.org",
+        self.options = {'url': "https://api.firststreet.org",
                         'headers': {
                             'Content-Encoding': 'gzip',
                             'Content-Type': 'text/html',
