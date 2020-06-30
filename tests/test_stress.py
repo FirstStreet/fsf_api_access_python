@@ -16,6 +16,7 @@ import firststreet
 def test_stress():
     api_key = os.environ['FSF_API_KEY']
     fs = firststreet.FirstStreet(api_key)
+    fs = firststreet.FirstStreet("oq2zsczhfrwm9os0rt5epjlxnbsiukiy")
 
     start = time.time()
     fs.adaptation.get_summary(
@@ -1024,3 +1025,5 @@ def test_stress():
     elapsed = done - start
 
     print(elapsed)
+
+test_stress()

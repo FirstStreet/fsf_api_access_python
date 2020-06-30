@@ -32,3 +32,16 @@ class TestApi:
         fs = firststreet.FirstStreet(api_key)
         with pytest.raises(InvalidArgument):
             fs.location.get_detail([392873515], "", csv=True)
+
+    def test_file(self):
+        api_key = os.environ['FSF_API_KEY']
+        fs = firststreet.FirstStreet(api_key)
+        fs.location.get_detail("sample.txt", "property", csv=True)
+
+    def test_multi_type(self):
+        api_key = os.environ['FSF_API_KEY']
+        fs = firststreet.FirstStreet(api_key)
+        fs.location.get_detail([395133768,
+                                "10212 BUCKEYE RD, Cleveland, Ohio",
+                                (41.48195701269418, -81.6138601319609)],
+                               "property", csv=True)

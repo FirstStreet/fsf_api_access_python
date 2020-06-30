@@ -11,7 +11,7 @@ import sys
 # Internal Imports
 import firststreet
 from firststreet.errors import InvalidArgument
-from firststreet.util import read_fsid_file
+from firststreet.util import read_search_items_from_file
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Description for my parser")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
                             "list of integers: '{}'".format(argument.fsids))
 
     if argument.file:
-        fsids += read_fsid_file(argument.file)
+        fsids += read_search_items_from_file(argument.file)
 
     # Ensure there is at least a product and FSID
     if fsids:

@@ -17,12 +17,13 @@ class Environmental(Api):
             get_precipitation: Retrieves a list of Environmental Precipitation for the given list of IDs
         """
 
-    def get_precipitation(self, fsids, csv=False, limit=100, output_dir=None):
+    def get_precipitation(self, search_item, csv=False, limit=100, output_dir=None):
         """Retrieves environmental precipitation product data from the First Street Foundation API given a list of FSIDs
         and returns a list of Environmental Precipitation objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
@@ -31,7 +32,7 @@ class Environmental(Api):
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "environmental", "precipitation", "county", limit=limit)
+        api_datas = self.call_api(search_item, "environmental", "precipitation", "county", limit=limit)
         product = [EnvironmentalPrecipitation(api_data) for api_data in api_datas]
 
         if csv:

@@ -21,12 +21,13 @@ class Location(Api):
             get_summary: Retrieves a list of Location Summary for the given list of IDs
         """
 
-    def get_detail(self, fsids, location_type, csv=False, limit=100, output_dir=None):
+    def get_detail(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves location detail product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Location Detail objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -44,7 +45,7 @@ class Location(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "location", "detail", location_type, limit=limit)
+        api_datas = self.call_api(search_item, "location", "detail", location_type, limit=limit)
 
         if location_type == 'property':
             product = [LocationDetailProperty(api_data) for api_data in api_datas]
@@ -80,12 +81,13 @@ class Location(Api):
 
         return product
 
-    def get_summary(self, fsids, location_type, csv=False, limit=100, output_dir=None):
+    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves location summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Location Summary objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -103,7 +105,7 @@ class Location(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "location", "summary", location_type, limit=limit)
+        api_datas = self.call_api(search_item, "location", "summary", location_type, limit=limit)
 
         if location_type == "property":
             product = [LocationSummaryProperty(api_data) for api_data in api_datas]

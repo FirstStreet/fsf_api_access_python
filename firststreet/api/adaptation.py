@@ -19,12 +19,13 @@ class Adaptation(Api):
             get_summary: Retrieves a list of Adaptation Summary for the given list of IDs
         """
 
-    def get_detail(self, fsids, csv=False, limit=100, output_dir=None):
+    def get_detail(self, search_item, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Detail objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
@@ -32,7 +33,7 @@ class Adaptation(Api):
             A list of Adaptation Detail
         """
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "adaptation", "detail", None, limit=limit)
+        api_datas = self.call_api(search_item, "adaptation", "detail", None, limit=limit)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
@@ -42,12 +43,13 @@ class Adaptation(Api):
 
         return product
 
-    def get_details_by_location(self, fsids, location_type, csv=False, limit=100, output_dir=None):
+    def get_details_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of location
         FSIDs and returns a list of Adaptation Detail objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -65,7 +67,7 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas_summary = self.call_api(fsids, "adaptation", "summary", location_type, limit=limit)
+        api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit)
         summary = [AdaptationSummary(api_data) for api_data in api_datas_summary]
 
         fsids = list(set([adaptation for sum_adap in summary if sum_adap.adaptation for
@@ -86,12 +88,13 @@ class Adaptation(Api):
 
         return [summary, detail]
 
-    def get_summary(self, fsids, location_type, csv=False, limit=100, output_dir=None):
+    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of FSIDs and
         returns a list of Adaptation Summary objects.
 
         Args:
-            fsids (list/file): A First Street Foundation IDs or a file of First Street Foundation IDs
+            search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
+                file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
@@ -109,7 +112,7 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(fsids, "adaptation", "summary", location_type, limit=limit)
+        api_datas = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit)
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:

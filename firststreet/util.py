@@ -1,9 +1,10 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 import logging
+import ast
 
 
-def read_fsid_file(file_name):
+def read_search_items_from_file(file_name):
     """Reads the given file and pulls a list of FSIDs from the file
 
     Args:
@@ -19,13 +20,12 @@ def read_fsid_file(file_name):
         count = 1
         for line in fp:
 
+            item = line.rstrip('\n')
             try:
-                fsids.append(int(line.rstrip('\n')))
-                count += 1
+                fsids.append(ast.literal_eval(item))
+            except SyntaxError:
+                fsids.append(line.rstrip('\n'))
 
-            except ValueError:
-                logging.warning("'{}' from file at line {} is not a valid fsid. This line has been skipped. "
-                                "Please check the content of the file if this is unexpected.".
-                                format(line.rstrip('\n'), count))
+            count += 1
 
     return fsids
