@@ -34,6 +34,11 @@ class TestApi:
             fs.location.get_detail([392873515], "", csv=True)
 
     def test_file(self):
+        with open(os.getcwd() + "/" + "sample.txt", "w+") as file:
+            file.write("395133768")
+            file.write("10212 BUCKEYE RD, Cleveland, Ohio")
+            file.write("(41.48195701269418, -81.6138601319609)")
+
         api_key = os.environ['FSF_API_KEY']
         fs = firststreet.FirstStreet(api_key)
         fs.location.get_detail("sample.txt", "property", csv=True)
