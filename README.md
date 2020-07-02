@@ -197,9 +197,31 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 <a name="products"></a>
 # [Products](#toc)
 
-**NOTE**: As of the current release, only direct FSID lookups are available through this wrapper. Lat/lng and address query will be in a later release
-
 More information on each product can be found at the [First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs)
+
+<a name="Search Item"></a>
+#### [Search Item](#toc)
+
+For every product, a list or file of `search items` must be provided to the product call. There are 3 types of `search items` corresponding to the 3 types of lookups.
+
+1. FSID (`int`): The simplest type of lookup is a fsid lookup. If you know the fsid of the specific location, you can navigate directly to the specific product's information using the location's fsid. Example FSID: `18`
+
+2. Lat/Lng (`tuple of int`): Provide a tuple of latitude, longitude pairs will check to see if that point intersects within a boundary of a parcel from the database. Example lat/lng: `(40.7079652311, -74.0021455387)`
+
+3. Address (`string`): Pass the address in your request to retrieve a reverse geocode location lookup. LocationType is required for address lookup. An address can be a city name, home address, or business address. City and State need to be included within the address query. Example Address: `New York, NY`
+
+Example list of `search items`:
+
+```python
+lst = [362493883, (40.792505, -73.951949), "1220 5th Ave, New York, NY"]
+```
+
+Example file of `search items`:
+```text
+362493883
+(40.792505, -73.951949)
+1220 5th Ave, New York, NY
+```
 
 <a name="location"></a>
 #### [Location](#toc)
@@ -210,8 +232,8 @@ The Location API provides `Detail` and `Summary` data for the given FSIDs.
 location.<method>
 ```
 
-* `get_detail`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_detail`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="probability"></a>
 #### [Probability](#toc)
@@ -222,11 +244,11 @@ The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for t
 probability.<method>
 ```
 
-* `get_depth`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
-* `get_chance`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file
-* `get_count_summary`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file
-* `get_cumulative`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file
-* `get_count`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file
+* `get_depth`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
+* `get_chance`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file
+* `get_count_summary`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file
+* `get_cumulative`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file
+* `get_count`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="historic"></a>
 #### [Historic](#toc)
@@ -237,9 +259,9 @@ The Historic API provides `Summary` and `Event` data for the given FSIDs.
 historic.<method>
 ```
 
-* `get_event`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
-* `get_events_by_location`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Detail` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_event`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
+* `get_events_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Detail` product for the given IDs, location_type, and optionally creates a csv file
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="adaptation"></a>
 #### [Adaptation](#toc)
@@ -250,9 +272,9 @@ The Adaptation API provides `Summary` and `Project` data for the given FSIDs.
 adaptation.<method>
 ```
 
-* `get_project`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
-* `get_details_by_location`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_project`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
+* `get_details_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given IDs, location_type, and optionally creates a csv file
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="fema"></a>
 #### [Fema](#toc)
@@ -263,7 +285,7 @@ The Fema API provides `NFIP` data for the given FSIDs.
 fema.<method>
 ```
 
-* `get_nfip`(fsids `list`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
+* `get_nfip`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
 
 <a name="environmental"></a>
 #### [Environmental](#toc)
@@ -274,7 +296,7 @@ The Environmental API provides `Precipitation` data for the given FSIDs.
 environmental.<method>
 ```
 
-* `get_precipitation`(fsids `list`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
+* `get_precipitation`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
    
 <a name="examples"></a>
 # [Examples](#toc)
