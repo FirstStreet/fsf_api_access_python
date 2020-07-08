@@ -5,15 +5,15 @@ import ast
 
 
 def read_search_items_from_file(file_name):
-    """Reads the given file and pulls a list of FSIDs from the file
+    """Reads the given file and pulls a list of search_items from the file
 
     Args:
         file_name (str): A file name
     Returns:
-        A list of fsids
+        A list of search_items
     """
 
-    fsids = []
+    search_items = []
 
     with open(file_name) as fp:
 
@@ -22,10 +22,10 @@ def read_search_items_from_file(file_name):
 
             item = line.rstrip('\n')
             try:
-                fsids.append(ast.literal_eval(item))
+                search_items.append(ast.literal_eval(item))
             except SyntaxError:
-                fsids.append(line.rstrip('\n'))
+                search_items.append(line.rstrip('\n'))
 
             count += 1
 
-    return fsids
+    return search_items

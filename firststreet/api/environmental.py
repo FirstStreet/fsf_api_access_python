@@ -11,15 +11,15 @@ from firststreet.models.environmental import EnvironmentalPrecipitation
 
 
 class Environmental(Api):
-    """This class receives a list of fsids and handles the creation of a environmental product from the request.
+    """This class receives a list of search_items and handles the creation of a environmental product from the request.
 
         Methods:
             get_precipitation: Retrieves a list of Environmental Precipitation for the given list of IDs
         """
 
     def get_precipitation(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves environmental precipitation product data from the First Street Foundation API given a list of FSIDs
-        and returns a list of Environmental Precipitation objects.
+        """Retrieves environmental precipitation product data from the First Street Foundation API given a list of
+        search_items and returns a list of Environmental Precipitation objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a

@@ -88,32 +88,32 @@ class Http:
 
                     error = body.get("error")
                     if error:
-                        fsid = endpoint[1]
+                        search_item = endpoint[1]
                         product = endpoint[2]
                         product_subtype = endpoint[3]
 
                         if product == 'adaptation' and product_subtype == 'detail':
-                            return {'adaptationId': fsid}
+                            return {'adaptationId': search_item}
 
                         elif product == 'historic' and product_subtype == 'event':
-                            return {'eventId': fsid}
+                            return {'eventId': search_item}
 
                         else:
-                            return {'fsid': fsid}
+                            return {'search_item': search_item}
 
                     return body
 
             except asyncio.TimeoutError:
-                logging.info("Timeout error for fsid: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
+                logging.info("Timeout error for item: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
                 retry += 1
                 await asyncio.sleep(1)
 
             except aiohttp.ClientError as ex:
-                logging.error("{} error while getting fsid: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
-                return {'fsid': endpoint[1]}
+                logging.error("{} error while getting item: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
+                return {'search_item': endpoint[1]}
 
-        logging.error("Timeout error after 5 retries for fsid: {} from {}".format(endpoint[1], endpoint[0]))
-        return {'fsid': endpoint[1]}
+        logging.error("Timeout error after 5 retries for search_item: {} from {}".format(endpoint[1], endpoint[0]))
+        return {'search_item': endpoint[1]}
 
     @staticmethod
     def _parse_rate_limit(headers):

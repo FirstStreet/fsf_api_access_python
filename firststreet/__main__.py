@@ -3,6 +3,7 @@
 
 # Standard Imports
 import argparse
+import ast
 import os
 import logging
 from distutils.util import strtobool
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--product", help="Example: adaptation_detail", required=True)
     parser.add_argument("-api_key", "--api_key", required=False)
     parser.add_argument("-v", "--version", required=False)
-    parser.add_argument("-i", "--fsids", help="Example: 28,29", required=False,)
+    parser.add_argument("-i", "--search_items", help="Example: 28,29", required=False,)
     parser.add_argument("-l", "--location", help="Example: property", required=False)
     parser.add_argument("-limit", "--limit", help="Example: 100", required=False, default="100")
     parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
@@ -26,20 +27,20 @@ if __name__ == "__main__":
 
     argument = parser.parse_args()
 
-    # Merge FSIDs from file and list input
-    fsids = []
-    if argument.fsids:
-        try:
-            fsids += list(map(int, argument.fsids.strip().split(",")))
-        except ValueError:
-            logging.warning("An invalid fsid list was provided. Please check this input list is a comma-separated " 
-                            "list of integers: '{}'".format(argument.fsids))
+    # Merge search_item from file and list input
+    search_items = []
+    if argument.search_items:
+        for search_item in argument.search_items.strip().split(";"):
+            try:
+                search_items.append(ast.literal_eval(search_item))
+            except (SyntaxError, ValueError):
+                search_items.append(search_item)
 
     if argument.file:
-        fsids += read_search_items_from_file(argument.file)
+        search_items += read_search_items_from_file(argument.file)
 
-    # Ensure there is at least a product and FSID
-    if fsids:
+    # Ensure there is at least a product and search item
+    if search_items:
 
         # Try to get the API key either from env var or the parameter
         if not argument.api_key:
@@ -57,54 +58,54 @@ if __name__ == "__main__":
         limit = int(argument.limit)
 
         if argument.product == 'adaptation.get_detail':
-            fs.adaptation.get_detail(fsids, csv=True, limit=limit)
+            fs.adaptation.get_detail(search_items, csv=True, limit=limit)
 
         elif argument.product == 'adaptation.get_summary':
-            fs.adaptation.get_summary(fsids, argument.location, csv=True, limit=limit)
+            fs.adaptation.get_summary(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'adaptation.get_details_by_location':
-            fs.adaptation.get_details_by_location(fsids, argument.location, csv=True, limit=limit)
+            fs.adaptation.get_details_by_location(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'probability.get_depth':
-            fs.probability.get_depth(fsids, csv=True, limit=limit)
+            fs.probability.get_depth(search_items, csv=True, limit=limit)
 
         elif argument.product == 'probability.get_chance':
-            fs.probability.get_chance(fsids, csv=True, limit=limit)
+            fs.probability.get_chance(search_items, csv=True, limit=limit)
 
         elif argument.product == 'probability.get_count_summary':
-            fs.probability.get_count_summary(fsids, csv=True, limit=limit)
+            fs.probability.get_count_summary(search_items, csv=True, limit=limit)
 
         elif argument.product == 'probability.get_cumulative':
-            fs.probability.get_cumulative(fsids, csv=True, limit=limit)
+            fs.probability.get_cumulative(search_items, csv=True, limit=limit)
 
         elif argument.product == 'probability.get_count':
-            fs.probability.get_count(fsids, argument.location, csv=True, limit=limit)
+            fs.probability.get_count(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'historic.get_event':
-            fs.historic.get_event(fsids, csv=True, limit=limit)
+            fs.historic.get_event(search_items, csv=True, limit=limit)
 
         elif argument.product == 'historic.get_summary':
-            fs.historic.get_summary(fsids, argument.location, csv=True, limit=limit)
+            fs.historic.get_summary(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'historic.get_events_by_location':
-            fs.historic.get_events_by_location(fsids, argument.location, csv=True, limit=limit)
+            fs.historic.get_events_by_location(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'location.get_detail':
-            fs.location.get_detail(fsids, argument.location, csv=True, limit=limit)
+            fs.location.get_detail(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'location.get_summary':
-            fs.location.get_summary(fsids, argument.location, csv=True, limit=limit)
+            fs.location.get_summary(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'fema.get_nfip':
-            fs.fema.get_nfip(fsids, argument.location, csv=True, limit=limit)
+            fs.fema.get_nfip(search_items, argument.location, csv=True, limit=limit)
 
         elif argument.product == 'environmental.get_precipitation':
-            fs.environmental.get_precipitation(fsids, csv=True, limit=limit)
+            fs.environmental.get_precipitation(search_items, csv=True, limit=limit)
 
         else:
             logging.error("Product not found. Please check that the argument"
                           " provided is correct: {}".format(argument.product))
 
     else:
-        raise InvalidArgument("No fsids were provided from either a fsid list or a file. "
-                              "List: '{}', File Name: '{}'".format(argument.fsids, argument.file))
+        raise InvalidArgument("No search items were provided from either a search item list or a file. "
+                              "List: '{}', File Name: '{}'".format(argument.search_items, argument.file))

@@ -14,7 +14,7 @@ from firststreet.models.location import LocationDetailProperty, LocationDetailNe
 
 
 class Location(Api):
-    """This class receives a list of fsids and handles the creation of a location product from the request.
+    """This class receives a list of search_items and handles the creation of a location product from the request.
 
         Methods:
             get_detail: Retrieves a list of Location Details for the given list of IDs
@@ -22,7 +22,7 @@ class Location(Api):
         """
 
     def get_detail(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves location detail product data from the First Street Foundation API given a list of FSIDs and
+        """Retrieves location detail product data from the First Street Foundation API given a list of search_items and
         returns a list of Location Detail objects.
 
         Args:
@@ -82,7 +82,7 @@ class Location(Api):
         return product
 
     def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves location summary product data from the First Street Foundation API given a list of FSIDs and
+        """Retrieves location summary product data from the First Street Foundation API given a list of search_items and
         returns a list of Location Summary objects.
 
         Args:

@@ -13,7 +13,7 @@ from firststreet.models.probability import ProbabilityChance, ProbabilityCount, 
 
 
 class Probability(Api):
-    """This class receives a list of fsids and handles the creation of a probability product from the request.
+    """This class receives a list of search_items and handles the creation of a probability product from the request.
 
         Methods:
             get_depth: Retrieves a list of Probability Depth for the given list of IDs
@@ -24,8 +24,8 @@ class Probability(Api):
         """
 
     def get_chance(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves probability chance product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Probability Chance objects.
+        """Retrieves probability chance product data from the First Street Foundation API given a list of search_items
+         and returns a list of Probability Chance objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -49,8 +49,8 @@ class Probability(Api):
         return product
 
     def get_count(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves probability count product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Probability Count objects.
+        """Retrieves probability count product data from the First Street Foundation API given a list of search_items
+         and returns a list of Probability Count objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -83,8 +83,8 @@ class Probability(Api):
         return product
 
     def get_count_summary(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves probability Count-Summary product data from the First Street Foundation API given a list of FSIDs
-        and returns a list of Probability Count-Summary object.
+        """Retrieves probability Count-Summary product data from the First Street Foundation API given a list of
+        search_items and returns a list of Probability Count-Summary object.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -108,8 +108,8 @@ class Probability(Api):
         return product
 
     def get_cumulative(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves probability cumulative product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Probability Cumulative object.
+        """Retrieves probability cumulative product data from the First Street Foundation API given a list of
+        search_items and returns a list of Probability Cumulative object.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -133,8 +133,8 @@ class Probability(Api):
         return product
 
     def get_depth(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves probability depth product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Probability Depth objects.
+        """Retrieves probability depth product data from the First Street Foundation API given a list of search_items
+         and returns a list of Probability Depth objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a

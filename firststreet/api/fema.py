@@ -12,14 +12,14 @@ from firststreet.models.fema import FemaNfip
 
 
 class Fema(Api):
-    """This class receives a list of fsids and handles the creation of a fema product from the request.
+    """This class receives a list of search_items and handles the creation of a fema product from the request.
 
         Methods:
             get_nfip: Retrieves a list of Fema Nfip for the given list of IDs
         """
 
     def get_nfip(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves fema nfip product data from the First Street Foundation API given a list of FSIDs and
+        """Retrieves fema nfip product data from the First Street Foundation API given a list of search_items and
         returns a list of Fema Nfip objects.
 
         Args:
