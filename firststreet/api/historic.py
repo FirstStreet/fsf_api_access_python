@@ -12,7 +12,7 @@ from firststreet.models.historic import HistoricEvent, HistoricSummary
 
 
 class Historic(Api):
-    """This class receives a list of fsids and handles the creation of a historic product from the request.
+    """This class receives a list of search_items and handles the creation of a historic product from the request.
 
         Methods:
             get_event: Retrieves a list of Historic Event for the given list of IDs
@@ -20,7 +20,7 @@ class Historic(Api):
         """
 
     def get_event(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves historic event product data from the First Street Foundation API given a list of FSIDs and
+        """Retrieves historic event product data from the First Street Foundation API given a list of search_items and
         returns a list of Historic Event objects.
 
         Args:
@@ -46,7 +46,7 @@ class Historic(Api):
 
     def get_events_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves historic summary product data from the First Street Foundation API given a list of location
-        FSIDs and returns a list of Historic Summary objects.
+        search_items and returns a list of Historic Summary objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -90,7 +90,7 @@ class Historic(Api):
         return [summary, event]
 
     def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves historic summary product data from the First Street Foundation API given a list of FSIDs and
+        """Retrieves historic summary product data from the First Street Foundation API given a list of search_items and
         returns a list of Historic Summary objects.
 
         Args:

@@ -12,7 +12,7 @@ from firststreet.models.adaptation import AdaptationDetail, AdaptationSummary
 
 
 class Adaptation(Api):
-    """This class receives a list of fsids and handles the creation of a adaptation product from the request.
+    """This class receives a list of search_items and handles the creation of a adaptation product from the request.
 
         Methods:
             get_detail: Retrieves a list of Adaptation Details for the given list of IDs
@@ -20,8 +20,8 @@ class Adaptation(Api):
         """
 
     def get_detail(self, search_item, csv=False, limit=100, output_dir=None):
-        """Retrieves adaptation detail product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Adaptation Detail objects.
+        """Retrieves adaptation detail product data from the First Street Foundation API given a list of search_items
+         and returns a list of Adaptation Detail objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -45,7 +45,7 @@ class Adaptation(Api):
 
     def get_details_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of location
-        FSIDs and returns a list of Adaptation Detail objects.
+        search_items and returns a list of Adaptation Detail objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
@@ -70,11 +70,11 @@ class Adaptation(Api):
         api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit)
         summary = [AdaptationSummary(api_data) for api_data in api_datas_summary]
 
-        fsids = list(set([adaptation for sum_adap in summary if sum_adap.adaptation for
+        search_items = list(set([adaptation for sum_adap in summary if sum_adap.adaptation for
                           adaptation in sum_adap.adaptation]))
 
-        if fsids:
-            api_datas_detail = self.call_api(fsids, "adaptation", "detail", None, limit=limit)
+        if search_items:
+            api_datas_detail = self.call_api(search_items, "adaptation", "detail", None, limit=limit)
 
         else:
             api_datas_detail = [{"adaptationId": None}]
@@ -89,8 +89,8 @@ class Adaptation(Api):
         return [summary, detail]
 
     def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
-        """Retrieves adaptation summary product data from the First Street Foundation API given a list of FSIDs and
-        returns a list of Adaptation Summary objects.
+        """Retrieves adaptation summary product data from the First Street Foundation API given a list of
+        search_items and returns a list of Adaptation Summary objects.
 
         Args:
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a

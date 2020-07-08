@@ -31,17 +31,12 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 <a name="installation"></a>
 # [Installation](#toc)
 **NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
+
 1. Go to the Python page (https://www.python.org/downloads/) and download then install Python version 3. **Make sure that the checkbox is checked for Python to be added to the PATH**
 
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.1.png)
+    A more detailed and in-depth guide on how to install Python can be found [here](https://realpython.com/installing-python/)
     
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.2.png)
-    
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.3.png)
-    
-    ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//1.1.4.png)
-    
-2. [Optional] Open a new `powershell console` / `bash terminal` or close and re-open a console and create and activate a new virtual environment in the project directory:
+2. [Optional] Open a new `powershell console` / `bash terminal`and create and activate a new virtual environment in the project directory:
     ```sh
     python -m venv /path/to/new/virtual/environment
    
@@ -98,7 +93,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     ```sh
     cd /path/to/project
    
-    python -m firststreet -p <product>.<product_subtype> -i <fsids> -f <file_name> -l <lookup_type>
+    python -m firststreet -p <product>.<product_subtype> -i <search_item> -f <file_name> -l <lookup_type>
     ```
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//3.2.1.png)
@@ -118,9 +113,11 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
     Example: ```-v v1```
     
-- `[-i/--fsids FSIDS]`: [OPTIONAL] The FSIDs to search for with the product
+- `[-i/--search_items SEARCH_ITEM]`: [OPTIONAL] The Search Items to search for with the product. 
 
-    Example: ```-i 541114211,541229206```
+    **NOTE** THE LIST MUST BE A SEPRATED WITH A SEMICOLON (;) INSTEAD OF A COMMA
+
+    Example: ```-i 541114211;541229206```
     
 - `[-l/--location LOOKUP_TYPE]`: [OPTIONAL] The lookup location type (property, neighborhood, city, zcta, tract, county, cd, state)
 
@@ -134,7 +131,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
     Example: ```-l False```
     
-- `[-f/--file FILE]`: [OPTIONAL] A file of FSIDs (one per line) to search for with the product
+- `[-f/--file FILE]`: [OPTIONAL] A file of Search Items (one per line) to search for with the product
 
     Example: ```-f sample.txt```
 
@@ -164,6 +161,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     ```
+    
     <a name="client-init"></a>
     #### [Client Initialization Details](#toc)
     
@@ -179,7 +177,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 2. Call one of the methods described below in the `Products` section with the required arguments. See the `Examples` section for more examples.
     ```python
-    fs.<product>.<product_subtype>(<fsids: list>, <lookup_type: string>, <csv: boolean>)
+    fs.<product>.<product_subtype>(<search_items: list>, <lookup_type: string>, <csv: boolean>)
     ```
     
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.2.1.png)
@@ -194,15 +192,28 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
     ![Screenshot](https://raw.githubusercontent.com/FirstStreet/fsf_api_access_python/master/doc/images//2.3.1.png)
 
+
+<a name="jupyter_setup"></a>
+### [If you are using Jupyter Notebook](#toc)
+1. Add the following to the top of the file before the [client initialization](client-init) to allow the jupyter notebook and download loops to be nested
+    ```python
+    # Setup For Notebook only
+    import nest_asyncio
+    nest_asyncio.apply()
+    ```
+
 <a name="products"></a>
 # [Products](#toc)
 
 More information on each product can be found at the [First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs)
 
 <a name="Search Item"></a>
-#### [Search Item](#toc)
+#### [Search Item:](#toc) 
 
-For every product, a list or file of `search items` must be provided to the product call. There are 3 types of `search items` corresponding to the 3 types of lookups.
+For every product, a list or file of `search items` must be provided to the product call. 
+There are 3 types of `search items` corresponding to the 3 types of lookups. 
+(More information on the Lookup types can be found on the [Lookups Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/lookups)
+)
 
 1. FSID (`int`): The simplest type of lookup is a fsid lookup. If you know the fsid of the specific location, you can navigate directly to the specific product's information using the location's fsid. Example FSID: `18`
 
@@ -226,8 +237,9 @@ Example file of `search items`:
 <a name="location"></a>
 #### [Location](#toc)
 
-The Location API provides `Detail` and `Summary` data for the given FSIDs.
-
+The Location API provides `Detail` and `Summary` data for the given SearchItems.
+(More information on the Location product can be found on the [Location Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/location-introduction)
+)
 ```python
 location.<method>
 ```
@@ -238,7 +250,9 @@ location.<method>
 <a name="probability"></a>
 #### [Probability](#toc)
 
-The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for the given FSIDs.
+The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for the given SearchItems.
+(More information on the Probability product can be found on the [Probability Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/probability-depth)
+)
 
 ```python
 probability.<method>
@@ -253,7 +267,9 @@ probability.<method>
 <a name="historic"></a>
 #### [Historic](#toc)
 
-The Historic API provides `Summary` and `Event` data for the given FSIDs.
+The Historic API provides `Summary` and `Event` data for the given SearchItems.
+(More information on the Historic product can be found on the [Historic Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/historic-summary)
+)
 
 ```python
 historic.<method>
@@ -265,8 +281,10 @@ historic.<method>
 
 <a name="adaptation"></a>
 #### [Adaptation](#toc)
+(More information on the Adaptation product can be found on the [Adaptation Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/adaptation-introduction)
+)
 
-The Adaptation API provides `Summary` and `Project` data for the given FSIDs.
+The Adaptation API provides `Summary` and `Project` data for the given SearchItems.
 
 ```python
 adaptation.<method>
@@ -279,7 +297,9 @@ adaptation.<method>
 <a name="fema"></a>
 #### [Fema](#toc)
 
-The Fema API provides `NFIP` data for the given FSIDs.
+The Fema API provides `NFIP` data for the given SearchItems.
+(More information on the Fema NFIP product can be found on the [Fema NFIP Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/fema-nfip)
+)
 
 ```python
 fema.<method>
@@ -290,7 +310,9 @@ fema.<method>
 <a name="environmental"></a>
 #### [Environmental](#toc)
 
-The Environmental API provides `Precipitation` data for the given FSIDs.
+The Environmental API provides `Precipitation` data for the given SearchItems.
+(More information on the Environmental Precipitation product can be found on the [Environmental Precipitation Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/environmental-precipitation)
+)
 
 ```python
 environmental.<method>
@@ -371,7 +393,7 @@ environmental.<method>
 
 5. Multiple FSIDs Extraction to CSV Through the Command Line:
     ```sh
-    python -m firststreet -p historic.get_summary -i 1912000,1979140 -l property
+    python -m firststreet -p historic.get_summary -i 1912000;1979140 -l property
     ```
 
 6. Bulk FSIDs Extraction From File to CSV Through the Command Line:
