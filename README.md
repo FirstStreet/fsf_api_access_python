@@ -14,6 +14,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
   * [Running the Project - Method 2: Through the Client](#method2)
       - [Client Initialization Details](#client-init)
       - [Arguments](#client-arguments)
+      - [If you are using Jupyter Notebook](#jupyter_setup)
 - **[Products](#products)**
   - [Location](#location)
   - [Probability](#probability)
@@ -195,7 +196,8 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 <a name="jupyter_setup"></a>
 ### [If you are using Jupyter Notebook](#toc)
-1. Add the following to the top of the file before the [client initialization](client-init) to allow the jupyter notebook and download loops to be nested
+1. Add the following to the top of the file before the [client initialization](client-init) to allow the jupyter notebook and download loops to work correctly
+
     ```python
     # Setup For Notebook only
     import nest_asyncio
