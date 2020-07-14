@@ -23,7 +23,7 @@ class Api:
     def __init__(self, http):
         self._http = http
 
-    def call_api(self, search_item, product, product_subtype, location, limit=100):
+    def call_api(self, search_item, product, product_subtype, location, limit=100, extra_param=None):
         """Receives an item, a product, a product subtype, and a location to create and call an endpoint to the First
         Street Foundation API.
 
@@ -34,6 +34,7 @@ class Api:
             product_subtype (str): The product subtype (if suitable)
             location (str/None): The location type (if suitable)
             limit (int): max number of connections to make
+            extra_param (str): Extra parameter to be added to the url
         Returns:
             A list of JSON responses
         """
@@ -71,15 +72,15 @@ class Api:
 
             # fsid
             if isinstance(item, int):
-                endpoint = endpoint + "/{}".format(item)
+                endpoint = endpoint + "/{}".format(item) + "?{}".format(extra_param)
 
             # lat/lng
             elif isinstance(item, tuple):
-                endpoint = endpoint + "?lat={}&lng={}".format(item[0], item[1])
+                endpoint = endpoint + "?lat={}&lng={}&{}".format(item[0], item[1], extra_param)
 
             # address
             elif isinstance(item, str):
-                endpoint = endpoint + "?address={}".format(item)
+                endpoint = endpoint + "?address={}&{}".format(item, extra_param)
 
             endpoints.append((endpoint, item, product, product_subtype))
 

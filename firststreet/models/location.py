@@ -40,6 +40,8 @@ class LocationDetailProperty(LocationDetail):
         self.elevation = response.get('elevation')
         self.fema = response.get('fema')
         if response.get('geometry'):
+            self.geometry = Geometry(response.get('geometry')).center
+        else:
             self.geometry = Geometry(response.get('geometry'))
 
 
@@ -58,6 +60,8 @@ class LocationDetailNeighborhood(LocationDetail):
         self.county = response.get('county')
         self.state = response.get('state')
         if response.get('geometry'):
+            self.geometry = Geometry(response.get('geometry')).center
+        else:
             self.geometry = Geometry(response.get('geometry'))
         self.name = response.get('name')
 
@@ -77,8 +81,7 @@ class LocationDetailCity(LocationDetail):
         self.neighborhood = response.get('neighborhood')
         self.county = response.get('county')
         self.state = response.get('state')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
         self.name = response.get('name')
 
 
@@ -95,8 +98,7 @@ class LocationDetailZcta(LocationDetail):
         self.city = response.get('city')
         self.county = response.get('county')
         self.state = response.get('state')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
         self.name = response.get('name')
 
 
@@ -113,8 +115,7 @@ class LocationDetailTract(LocationDetail):
         self.fips = response.get('fips')
         self.county = response.get('county')
         self.state = response.get('state')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
 
 
 class LocationDetailCounty(LocationDetail):
@@ -137,8 +138,7 @@ class LocationDetailCounty(LocationDetail):
             self.isCoastal = False
         self.cd = response.get('cd')
         self.state = response.get('state')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
         self.district = response.get('district')
 
 
@@ -155,8 +155,7 @@ class LocationDetailCd(LocationDetail):
         self.county = response.get('county')
         self.congress = response.get('congress')
         self.state = response.get('state')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
         self.district = response.get('district')
 
 
@@ -171,8 +170,7 @@ class LocationDetailState(LocationDetail):
         super().__init__(response)
         self.fsid = response.get('fsid')
         self.fips = response.get('fips')
-        if response.get('geometry'):
-            self.geometry = Geometry(response.get('geometry'))
+        self.geometry = Geometry(response.get('geometry'))
         self.name = response.get('name')
 
 

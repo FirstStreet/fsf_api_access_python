@@ -19,7 +19,7 @@ class Historic(Api):
             get_summary: Retrieves a list of Historic Summary for the given list of IDs
         """
 
-    def get_event(self, search_item, csv=False, limit=100, output_dir=None):
+    def get_event(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
         """Retrieves historic event product data from the First Street Foundation API given a list of search_items and
         returns a list of Historic Event objects.
 
@@ -29,12 +29,14 @@ class Historic(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of Historic Event
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "historic", "event", None, limit)
+        api_datas = self.call_api(search_item, "historic", "event", None, limit=limit, extra_param=extra_param)
         product = [HistoricEvent(api_data) for api_data in api_datas]
 
         if csv:
@@ -44,7 +46,8 @@ class Historic(Api):
 
         return product
 
-    def get_events_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None):
+    def get_events_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None,
+                               extra_param=None):
         """Retrieves historic summary product data from the First Street Foundation API given a list of location
         search_items and returns a list of Historic Summary objects.
 
@@ -55,6 +58,8 @@ class Historic(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of Historic Event
         Raises:
@@ -75,7 +80,8 @@ class Historic(Api):
                                 event in sum_hist.historic]))
 
         if search_item:
-            api_datas_event = self.call_api(search_item, "historic", "event", None, limit)
+            api_datas_event = self.call_api(search_item, "historic", "event", None, limit=limit,
+                                            extra_param=extra_param)
 
         else:
             api_datas_event = [{"eventId": None}]
@@ -89,7 +95,7 @@ class Historic(Api):
 
         return [summary, event]
 
-    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
+    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None, extra_param=None):
         """Retrieves historic summary product data from the First Street Foundation API given a list of search_items and
         returns a list of Historic Summary objects.
 
@@ -100,6 +106,8 @@ class Historic(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of Historic Summary
         Raises:
@@ -113,7 +121,8 @@ class Historic(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "historic", "summary", location_type, limit)
+        api_datas = self.call_api(search_item, "historic", "summary", location_type, limit=limit,
+                                  extra_param=extra_param)
         product = [HistoricSummary(api_data) for api_data in api_datas]
 
         if csv:
