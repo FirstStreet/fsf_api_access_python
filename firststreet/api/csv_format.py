@@ -5,6 +5,7 @@
 import datetime
 import logging
 import os
+import shapely.geometry
 
 # External Imports
 import pandas as pd
@@ -146,6 +147,25 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
     logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
 
 
+def get_geom_center(geom):
+
+    if hasattr(geom, "center"):
+        if isinstance(geom.center, shapely.geometry.MultiPolygon):
+            return {"latitude": geom.center.centroid.y, "longitude": geom.center.centroid.x}
+
+        elif isinstance(geom.center, shapely.geometry.Point):
+            return {"latitude": geom.center.y, "longitude": geom.center.x}
+
+        else:
+            raise NotImplementedError
+
+    elif hasattr(geom, "y") and hasattr(geom, "x"):
+        return {"latitude": geom.y, "longitude": geom.x}
+
+    return {"latitude": None, "longitude": None}
+
+
+
 def format_adaptation_detail(data):
     """Reformat the list of data to Adaptation Detail format
 
@@ -155,10 +175,12 @@ def format_adaptation_detail(data):
         A pandas formatted DataFrame
     """
     df = pd.DataFrame([vars(o) for o in data]).explode('type').explode('scenario').reset_index(drop=True)
-    df.drop(["serving", "geometry"], axis=1, inplace=True)
     df['adaptationId'] = df['adaptationId'].astype('Int64').apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
-    return df[['adaptationId', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod']]
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+
+    return df[['adaptationId', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod', 'latitude', 'longitude']]
 
 
 def format_adaptation_summary(data):
@@ -410,7 +432,6 @@ def format_historic_event(data):
         A pandas formatted DataFrame
     """
     df = pd.DataFrame([vars(o) for o in data])
-    df.drop(["geometry"], axis=1, inplace=True)
     if not df['properties'].isna().values.all():
         df = pd.concat([df.drop(['properties'], axis=1), df['properties'].apply(pd.Series)], axis=1)
         df['eventId'] = df['eventId'].astype('Int64').apply(str)
@@ -425,8 +446,11 @@ def format_historic_event(data):
         df.drop(['properties'], axis=1, inplace=True)
         df['propertiesTotal'] = pd.NA
         df['propertiesAffected'] = pd.NA
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
-    return df[['eventId', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal', 'propertiesAffected']]
+    return df[['eventId', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal',
+               'propertiesAffected', 'latitude', 'longitude']]
 
 
 def format_historic_summary_property(data):
@@ -567,9 +591,11 @@ def format_location_detail_property(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['footprintId'] = df['footprintId'].astype('Int64').apply(str)
     df['elevation'] = df['city_fips'].apply(str)
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
                'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
-               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema']]
+               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude']]
 
 
 def format_location_detail_neighborhood(data):
@@ -612,8 +638,10 @@ def format_location_detail_neighborhood(data):
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'subtype',
-               'state_fips', 'state_name']]
+               'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_city(data):
@@ -666,8 +694,10 @@ def format_location_detail_city(data):
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['neighborhood_fips'] = df['neighborhood_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name',
-               'county_fips', 'county_name', 'state_fips', 'state_name']]
+               'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_zcta(data):
@@ -710,7 +740,10 @@ def format_location_detail_zcta(data):
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips', 'state_name']]
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips',
+               'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_tract(data):
@@ -744,7 +777,9 @@ def format_location_detail_tract(data):
     df['fsid'] = df['fsid'].apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name']]
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+    return df[['fsid', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_county(data):
@@ -797,8 +832,10 @@ def format_location_detail_county(data):
     df['zipCode'] = df['zipCode'].astype('Int64').apply(str)
     df['cd_fips'] = df['cd_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'city_fips', 'city_name', 'zipCode', 'fips', 'isCoastal', 'cd_fips',
-               'cd_name', 'state_fips', 'state_name']]
+               'cd_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_cd(data):
@@ -832,7 +869,9 @@ def format_location_detail_cd(data):
     df['fsid'] = df['fsid'].apply(str)
     df['county_fips'] = df['county_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
-    return df[['fsid', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name']]
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+    return df[['fsid', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
 def format_location_detail_state(data):
@@ -845,7 +884,9 @@ def format_location_detail_state(data):
     """
     df = pd.DataFrame([vars(o) for o in data])
     df['fsid'] = df['fsid'].apply(str)
-    return df[['fsid', 'name', 'fips']]
+    df['geometry'] = df['geometry'].apply(get_geom_center)
+    df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+    return df[['fsid', 'name', 'fips', 'latitude', 'longitude']]
 
 
 def format_location_summary_property(data):

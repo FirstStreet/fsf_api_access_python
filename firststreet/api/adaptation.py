@@ -19,7 +19,7 @@ class Adaptation(Api):
             get_summary: Retrieves a list of Adaptation Summary for the given list of IDs
         """
 
-    def get_detail(self, search_item, csv=False, limit=100, output_dir=None):
+    def get_detail(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of search_items
          and returns a list of Adaptation Detail objects.
 
@@ -29,11 +29,13 @@ class Adaptation(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of Adaptation Detail
         """
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "adaptation", "detail", None, limit=limit)
+        api_datas = self.call_api(search_item, "adaptation", "detail", None, limit=limit, extra_param=extra_param)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
@@ -43,7 +45,8 @@ class Adaptation(Api):
 
         return product
 
-    def get_details_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None):
+    def get_details_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None,
+                                extra_param=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of location
         search_items and returns a list of Adaptation Detail objects.
 
@@ -54,6 +57,8 @@ class Adaptation(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of list of Adaptation Summary and Adaptation Detail
         Raises:
@@ -67,14 +72,16 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit)
+        api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit,
+                                          extra_param=extra_param)
         summary = [AdaptationSummary(api_data) for api_data in api_datas_summary]
 
         search_items = list(set([adaptation for sum_adap in summary if sum_adap.adaptation for
-                          adaptation in sum_adap.adaptation]))
+                                 adaptation in sum_adap.adaptation]))
 
         if search_items:
-            api_datas_detail = self.call_api(search_items, "adaptation", "detail", None, limit=limit)
+            api_datas_detail = self.call_api(search_items, "adaptation", "detail", None, limit=limit,
+                                             extra_param=extra_param)
 
         else:
             api_datas_detail = [{"adaptationId": None}]
@@ -82,13 +89,14 @@ class Adaptation(Api):
         detail = [AdaptationDetail(api_data) for api_data in api_datas_detail]
 
         if csv:
-            csv_format.to_csv([summary, detail], "adaptation", "summary_detail", location_type, output_dir=output_dir)
+            csv_format.to_csv([summary, detail], "adaptation", "summary_detail", location_type,
+                              output_dir=output_dir)
 
         logging.info("Adaptation Summary Detail Data Ready.")
 
         return [summary, detail]
 
-    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None):
+    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None, extra_param=None):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of
         search_items and returns a list of Adaptation Summary objects.
 
@@ -99,6 +107,8 @@ class Adaptation(Api):
             csv (bool): To output extracted data to a csv or not
             limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
+            extra_param (str): Extra parameter to be added to the url
+
         Returns:
             A list of Adaptation Summary
         Raises:
@@ -112,7 +122,8 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit)
+        api_datas = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit,
+                                  extra_param=extra_param)
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 
         if csv:
