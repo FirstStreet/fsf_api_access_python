@@ -132,6 +132,10 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
     Example: ```-l False```
     
+- `[-e/--extra_param EXTRA_PARAM]`: [OPTIONAL] Adds the argument to the end of the endpoint call
+
+    Example: ```-e extra_param```
+    
 - `[-f/--file FILE]`: [OPTIONAL] A file of Search Items (one per line) to search for with the product
 
     Example: ```-f sample.txt```
@@ -246,8 +250,8 @@ The Location API provides `Detail` and `Summary` data for the given SearchItems.
 location.<method>
 ```
 
-* `get_detail`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_detail`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Location Detail` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Location Summary` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
 
 <a name="probability"></a>
 #### [Probability](#toc)
@@ -260,11 +264,11 @@ The Probability API provides `Depth`, `Chance`, `Cumulative`, `Count` data for t
 probability.<method>
 ```
 
-* `get_depth`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file
-* `get_chance`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file
-* `get_count_summary`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file
-* `get_cumulative`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file
-* `get_count`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file
+* `get_depth`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Probability Depth` product for the given IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_chance`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Probability Chance` product for the given IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_count_summary`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Probability Count-Summary` product for the given IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_cumulative`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Probability Cumulative` product for the given IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_count`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Probability Count` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
 
 <a name="historic"></a>
 #### [Historic](#toc)
@@ -277,9 +281,9 @@ The Historic API provides `Summary` and `Event` data for the given SearchItems.
 historic.<method>
 ```
 
-* `get_event`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file
-* `get_events_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Detail` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_event`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Historic Event` product for the given historic IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_events_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Historic Detail` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Historic Summary` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
 
 <a name="adaptation"></a>
 #### [Adaptation](#toc)
@@ -292,9 +296,9 @@ The Adaptation API provides `Summary` and `Project` data for the given SearchIte
 adaptation.<method>
 ```
 
-* `get_project`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file
-* `get_details_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Project` product for the given IDs, location_type, and optionally creates a csv file
-* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file
+* `get_project`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Adaptation Project` product for the given adaptation IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_details_by_location`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Adaptation Project` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
+* `get_summary`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Adaptation Summary` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
 
 <a name="fema"></a>
 #### [Fema](#toc)
@@ -307,7 +311,7 @@ The Fema API provides `NFIP` data for the given SearchItems.
 fema.<method>
 ```
 
-* `get_nfip`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file
+* `get_nfip`(search_items `list/file`, location_type `string`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Fema NFIP` product for the given IDs, location_type, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
 
 <a name="environmental"></a>
 #### [Environmental](#toc)
@@ -320,7 +324,7 @@ The Environmental API provides `Precipitation` data for the given SearchItems.
 environmental.<method>
 ```
 
-* `get_precipitation`(search_items `list/file`, csv `bool`, [core_limit `int=100`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file
+* `get_precipitation`(search_items `list/file`, csv `bool`, [core_limit `int=100`], [extra_param `str=None`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
    
 <a name="examples"></a>
 # [Examples](#toc)
