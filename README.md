@@ -352,7 +352,7 @@ environmental.<method>
     details = fs.location.get_detail(fsids, "city")
     
     print(details[0].fsid)
-    print(details[0].route)
+    print(details[0].county)
     print(details[1].fsid)
     ```
    
@@ -362,7 +362,10 @@ environmental.<method>
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
-    fs.adaptation.get_detail([29], csv=True)
+    adaptation = fs.adaptation.get_detail([29], csv=True)
+
+    print(adaptation[0].adaptationId)
+    print(adaptation[0].name)
     ```
    
    Output File:
@@ -379,30 +382,57 @@ environmental.<method>
     ```
    
 4. Multiple FSIDs Extraction Using a File Through the Client:
+
+    Content of sample.txt:
+    ```text
+    541114211
+    540456284
+    541229206
+    540563324
+    541262690
+    540651172
+    ```
+    
     ```python
     # Contents of sample.py
     import firststreet
     fs = firststreet.FirstStreet("api-key")
     
-    fsids = [1912000, 1979140]
-    details = fs.location.get_detail(fsids, "property")
-    
+    details = fs.location.get_detail("sample.txt", "property")
+
     print(details[0].fsid)
-    print(details[0].route)
+    print(details[0].county)
     print(details[1].fsid)
     ```
+    
+5. Different Location Types Through the Client:
+    ```python
+    # Contents of sample.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
+    
+    lst = [362493883, (40.792505, -73.951949), "1220 5th Ave, New York, NY"]
+    location = fs.location.get_detail(lst, location_type="property", csv=True)
 
-4. Single FSID Extraction to CSV Through the Command Line:
-    ```sh
-    python -m firststreet -p fs.probability.get_depth -i 390000227
+    print(location[0].fsid)
+    print(location[0].route)
+    print(location[1].fsid)
+    print(location[1].route)
+    print(location[2].fsid)
+    print(location[2].route)
     ```
 
-5. Multiple FSIDs Extraction to CSV Through the Command Line:
+5. Single FSID Extraction to CSV Through the Command Line:
+    ```sh
+    python -m firststreet -p probability.get_depth -i 390000227
+    ```
+
+6. Multiple FSIDs Extraction to CSV Through the Command Line:
     ```sh
     python -m firststreet -p historic.get_summary -i 1912000;1979140 -l property
     ```
 
-6. Bulk FSIDs Extraction From File to CSV Through the Command Line:
+7. Bulk FSIDs Extraction From File to CSV Through the Command Line:
 
     Content of sample.txt:
     ```text
@@ -429,6 +459,25 @@ environmental.<method>
     540651172,1,0,1,0,0
     ```
 
+5. Different Location Types Through the Client:
+
+   **Note that the separator for each item must be a semicolon `;`**
+    ```sh
+    python -m firststreet -p location.get_detail -i "362493883;(40.792505,-73.951949);1220 5th Ave, New York, NY" -l property
+    ```
+    
+7. Different Locatio Types From File to CSV Through Command Line:
+   Content of sample.txt:
+   ```text
+   362493883
+   (40.792505, -73.951949)
+   1220 5th Ave, New York, NY
+   ```
+
+   ```sh
+   python -m firststreet -p location.get_summary -f sample.txt -l property
+   ```
+    
 <a name="csv-output"></a>
 # [CSV File Output:](#toc)
 Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
