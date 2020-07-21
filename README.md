@@ -349,7 +349,7 @@ environmental.<method>
     fs = firststreet.FirstStreet("api-key")
     
     fsids = [1912000, 1979140]
-    details = fs.location.get_detail(fsids, "property")
+    details = fs.location.get_detail(fsids, "city")
     
     print(details[0].fsid)
     print(details[0].route)
