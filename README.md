@@ -467,6 +467,7 @@ environmental.<method>
     ```
     
 7. Different Locatio Types From File to CSV Through Command Line:
+
    Content of sample.txt:
    ```text
    362493883
