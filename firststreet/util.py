@@ -25,6 +25,9 @@ def read_search_items_from_file(file_name):
                 search_items.append(ast.literal_eval(item))
             except SyntaxError:
                 search_items.append(line.rstrip('\n'))
+            except ValueError:
+                if count != 1:
+                    search_items.append(line.rstrip('\n'))
 
             count += 1
 

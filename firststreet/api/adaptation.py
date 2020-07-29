@@ -19,7 +19,7 @@ class Adaptation(Api):
             get_summary: Retrieves a list of Adaptation Summary for the given list of IDs
         """
 
-    def get_detail(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_detail(self, search_item, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of search_items
          and returns a list of Adaptation Detail objects.
 
@@ -27,7 +27,7 @@ class Adaptation(Api):
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
                 file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -35,7 +35,8 @@ class Adaptation(Api):
             A list of Adaptation Detail
         """
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "adaptation", "detail", None, limit=limit, extra_param=extra_param)
+        api_datas = self.call_api(search_item, "adaptation", "detail", None, connection_limit=connection_limit,
+                                  extra_param=extra_param)
         product = [AdaptationDetail(api_data) for api_data in api_datas]
 
         if csv:
@@ -45,7 +46,7 @@ class Adaptation(Api):
 
         return product
 
-    def get_details_by_location(self, search_item, location_type, csv=False, limit=100, output_dir=None,
+    def get_details_by_location(self, search_item, location_type, csv=False, connection_limit=100, output_dir=None,
                                 extra_param=None):
         """Retrieves adaptation detail product data from the First Street Foundation API given a list of location
         search_items and returns a list of Adaptation Detail objects.
@@ -55,7 +56,7 @@ class Adaptation(Api):
                 file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -72,7 +73,7 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit,
+        api_datas_summary = self.call_api(search_item, "adaptation", "summary", location_type, connection_limit=connection_limit,
                                           extra_param=extra_param)
         summary = [AdaptationSummary(api_data) for api_data in api_datas_summary]
 
@@ -80,11 +81,11 @@ class Adaptation(Api):
                                  adaptation in sum_adap.adaptation]))
 
         if search_items:
-            api_datas_detail = self.call_api(search_items, "adaptation", "detail", None, limit=limit,
+            api_datas_detail = self.call_api(search_items, "adaptation", "detail", None, connection_limit=connection_limit,
                                              extra_param=extra_param)
 
         else:
-            api_datas_detail = [{"adaptationId": None}]
+            api_datas_detail = [{"adaptationId": None, "valid_id": False}]
 
         detail = [AdaptationDetail(api_data) for api_data in api_datas_detail]
 
@@ -96,7 +97,8 @@ class Adaptation(Api):
 
         return [summary, detail]
 
-    def get_summary(self, search_item, location_type, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_summary(self, search_item, location_type, csv=False, connection_limit=100,
+                    output_dir=None, extra_param=None):
         """Retrieves adaptation summary product data from the First Street Foundation API given a list of
         search_items and returns a list of Adaptation Summary objects.
 
@@ -105,7 +107,7 @@ class Adaptation(Api):
                 file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -122,7 +124,7 @@ class Adaptation(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "adaptation", "summary", location_type, limit=limit,
+        api_datas = self.call_api(search_item, "adaptation", "summary", location_type, connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [AdaptationSummary(api_data) for api_data in api_datas]
 

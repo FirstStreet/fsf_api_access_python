@@ -2,10 +2,11 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.models.api import Api
 from firststreet.models.geometry import Geometry
 
 
-class HistoricEvent:
+class HistoricEvent(Api):
     """Creates a Historic Event object given a response
 
     Args:
@@ -13,6 +14,7 @@ class HistoricEvent:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.eventId = response.get('eventId')
         self.name = response.get('name')
         self.month = response.get('month')
@@ -23,7 +25,7 @@ class HistoricEvent:
         self.geometry = Geometry(response.get('geometry'))
 
 
-class HistoricSummary:
+class HistoricSummary(Api):
     """Creates a Historic Summary object given a response
 
     Args:
@@ -31,5 +33,6 @@ class HistoricSummary:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.historic = response.get('historic')

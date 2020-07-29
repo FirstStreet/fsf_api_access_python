@@ -23,7 +23,7 @@ class Probability(Api):
             get_cumulative: Retrieves a list of Probability Depth for the given list of IDs
         """
 
-    def get_chance(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_chance(self, search_item, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves probability chance product data from the First Street Foundation API given a list of search_items
          and returns a list of Probability Chance objects.
 
@@ -31,7 +31,7 @@ class Probability(Api):
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
                 file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -40,7 +40,7 @@ class Probability(Api):
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "probability", "chance", "property", limit=limit,
+        api_datas = self.call_api(search_item, "probability", "chance", "property", connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [ProbabilityChance(api_data) for api_data in api_datas]
 
@@ -51,7 +51,7 @@ class Probability(Api):
 
         return product
 
-    def get_count(self, search_item, location_type, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_count(self, search_item, location_type, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves probability count product data from the First Street Foundation API given a list of search_items
          and returns a list of Probability Count objects.
 
@@ -60,7 +60,7 @@ class Probability(Api):
                 file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -77,7 +77,7 @@ class Probability(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "probability", "count", location_type, limit=limit,
+        api_datas = self.call_api(search_item, "probability", "count", location_type, connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [ProbabilityCount(api_data) for api_data in api_datas]
 
@@ -88,7 +88,7 @@ class Probability(Api):
 
         return product
 
-    def get_count_summary(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_count_summary(self, search_item, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves probability Count-Summary product data from the First Street Foundation API given a list of
         search_items and returns a list of Probability Count-Summary object.
 
@@ -96,7 +96,7 @@ class Probability(Api):
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
                 file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -105,7 +105,7 @@ class Probability(Api):
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "probability", "count-summary", "property", limit=limit,
+        api_datas = self.call_api(search_item, "probability", "count-summary", "property", connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [ProbabilityCountSummary(api_data) for api_data in api_datas]
 
@@ -116,7 +116,7 @@ class Probability(Api):
 
         return product
 
-    def get_cumulative(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_cumulative(self, search_item, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves probability cumulative product data from the First Street Foundation API given a list of
         search_items and returns a list of Probability Cumulative object.
 
@@ -124,7 +124,7 @@ class Probability(Api):
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
                 file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -133,7 +133,7 @@ class Probability(Api):
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "probability", "cumulative", "property", limit=limit,
+        api_datas = self.call_api(search_item, "probability", "cumulative", "property", connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [ProbabilityCumulative(api_data) for api_data in api_datas]
 
@@ -144,7 +144,7 @@ class Probability(Api):
 
         return product
 
-    def get_depth(self, search_item, csv=False, limit=100, output_dir=None, extra_param=None):
+    def get_depth(self, search_item, csv=False, connection_limit=100, output_dir=None, extra_param=None):
         """Retrieves probability depth product data from the First Street Foundation API given a list of search_items
          and returns a list of Probability Depth objects.
 
@@ -152,7 +152,7 @@ class Probability(Api):
             search_item (list/file): A First Street Foundation IDs, lat/lng pair, address, or a
                 file of First Street Foundation IDs
             csv (bool): To output extracted data to a csv or not
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -161,7 +161,7 @@ class Probability(Api):
         """
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "probability", "depth", "property", limit=limit,
+        api_datas = self.call_api(search_item, "probability", "depth", "property", connection_limit=connection_limit,
                                   extra_param=extra_param)
         product = [ProbabilityDepth(api_data) for api_data in api_datas]
 

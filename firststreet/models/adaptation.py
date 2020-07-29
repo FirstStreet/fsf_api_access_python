@@ -2,10 +2,11 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.models.api import Api
 from firststreet.models.geometry import Geometry
 
 
-class AdaptationDetail:
+class AdaptationDetail(Api):
     """Creates an Adaptation Detail object given a response
 
     Args:
@@ -13,6 +14,7 @@ class AdaptationDetail:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.adaptationId = response.get('adaptationId')
         self.name = response.get('name')
         self.type = response.get('type')
@@ -23,7 +25,7 @@ class AdaptationDetail:
         self.geometry = Geometry(response.get('geometry'))
 
 
-class AdaptationSummary:
+class AdaptationSummary(Api):
     """Creates an Adaptation Summary object given a response
 
     Args:
@@ -31,6 +33,7 @@ class AdaptationSummary:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.adaptation = response.get('adaptation')
         self.properties = response.get('properties')

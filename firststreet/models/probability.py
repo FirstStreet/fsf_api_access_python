@@ -1,8 +1,11 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Internal Imports
+from firststreet.models.api import Api
 
-class ProbabilityChance:
+
+class ProbabilityChance(Api):
     """Creates a Probability Chance object given a response
 
     Args:
@@ -10,11 +13,12 @@ class ProbabilityChance:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.chance = response.get('chance')
 
 
-class ProbabilityCount:
+class ProbabilityCount(Api):
     """Creates a Probability Count object given a response
 
     Args:
@@ -22,11 +26,12 @@ class ProbabilityCount:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.count = response.get('count')
 
 
-class ProbabilityCountSummary:
+class ProbabilityCountSummary(Api):
     """Creates a Probability Count Summary object given a response
 
     Args:
@@ -34,6 +39,7 @@ class ProbabilityCountSummary:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.state = response.get('state')
         self.city = response.get('city')
@@ -44,7 +50,7 @@ class ProbabilityCountSummary:
         self.cd = response.get('cd')
 
 
-class ProbabilityCumulative:
+class ProbabilityCumulative(Api):
     """Creates a Probability Cumulative object given a response
 
     Args:
@@ -52,11 +58,12 @@ class ProbabilityCumulative:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.cumulative = response.get('cumulative')
 
 
-class ProbabilityDepth:
+class ProbabilityDepth(Api):
     """Creates a Probability Depth object given a response
 
     Args:
@@ -64,5 +71,6 @@ class ProbabilityDepth:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.depth = response.get('depth')

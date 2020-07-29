@@ -25,29 +25,98 @@ class TestAdaptationDetail:
         with pytest.raises(InvalidArgument):
             fs.adaptation.get_detail(2739)
 
-    def test_single(self):
-        adaptation = fs.adaptation.get_detail([2739])
+    def test_invalid(self):
+        adaptation_id = [0000]
+        adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 1
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is None
+        assert adaptation[0].valid_id is False
+
+    def test_single(self):
+        adaptation_id = [2739]
+        adaptation = fs.adaptation.get_detail(adaptation_id)
+        assert len(adaptation) == 1
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[0].valid_id is True
 
     def test_multiple(self):
-        adaptation = fs.adaptation.get_detail([2739, 2741])
+        adaptation_id = [2739, 2741]
+        adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.adaptationId)
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].type is not None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is True
 
     def test_single_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_detail([2739], csv=True, output_dir=tmpdir)
+        adaptation_id = [2739]
+        adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[0].valid_id is True
 
     def test_multiple_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_detail([2739, 2741], csv=True, output_dir=tmpdir)
+        adaptation_id = [2739, 2741]
+        adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.adaptationId)
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].type is not None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is True
 
     def test_mixed_invalid(self):
-        adaptation = fs.adaptation.get_detail([2739, 0000])
+        adaptation_id = [2739, 0000]
+        adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].type is None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is False
 
     def test_mixed_invalid_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_detail([2739, 0000], csv=True, output_dir=tmpdir)
+        adaptation_id = [2739, 0000]
+        adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].type is not None
+        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].type is None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is False
+
+    def test_one_of_each(self, tmpdir):
+        adaptation = fs.adaptation.get_detail([29], csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].adaptationId == 29
+        assert adaptation[0].name is not None
+        assert adaptation[0].type is not None
+        assert adaptation[0].scenario is not None
+        assert adaptation[0].conveyance is not None
+        assert adaptation[0].returnPeriod is not None
+        assert adaptation[0].serving is not None
+        assert adaptation[0].serving.get("property") is not None
+        assert adaptation[0].serving.get("neighborhood") is not None
+        assert adaptation[0].serving.get("zcta") is not None
+        assert adaptation[0].serving.get("tract") is not None
+        assert adaptation[0].serving.get("city") is not None
+        assert adaptation[0].serving.get("county") is not None
+        assert adaptation[0].serving.get("cd") is not None
+        assert adaptation[0].serving.get("state") is not None
+        assert adaptation[0].geometry is not None
 
 
 class TestAdaptationSummary:
@@ -69,42 +138,130 @@ class TestAdaptationSummary:
             fs.adaptation.get_summary(190836953, "property")
 
     def test_wrong_fsid_number(self):
-        adaptation = fs.adaptation.get_summary([1867176], "property")
+        fsid = [1867176]
+        adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 1
-        assert adaptation[0].adaptation is None
+        assert adaptation[0].fsid == fsid[0]
+        assert not adaptation[0].adaptation
+        assert adaptation[0].valid_id is False
 
     def test_incorrect_lookup_type(self, tmpdir):
-        adaptation = fs.adaptation.get_summary([190836953], "city", csv=True, output_dir=tmpdir)
+        fsid = [190836953]
+        adaptation = fs.adaptation.get_summary(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
-        assert adaptation[0].adaptation is None
+        assert adaptation[0].fsid == fsid[0]
+        assert not adaptation[0].adaptation
+        assert adaptation[0].valid_id is False
 
     def test_wrong_adaptation_type(self):
         with pytest.raises(TypeError):
-            fs.adaptation.get_summary([190836953], 190)
+            fs.adaptation.get_summary([395133768], 190)
 
     def test_single(self):
-        adaptation = fs.adaptation.get_summary([190836953], "property")
+        fsid = [395133768]
+        adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 1
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[0].valid_id is True
 
     def test_multiple(self):
-        adaptation = fs.adaptation.get_summary([190836953, 193139123], "property")
+        fsid = [395133768, 193139123]
+        adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.fsid, reverse=True)
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].adaptation is not None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is True
 
     def test_single_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_summary([190836953], "property", csv=True, output_dir=tmpdir)
+        fsid = [395133768]
+        adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[0].valid_id is True
 
     def test_multiple_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_summary([395133768, 193139123], "property", csv=True, output_dir=tmpdir)
+        fsid = [395133768, 193139123]
+        adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.fsid, reverse=True)
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].adaptation is not None
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is True
 
     def test_mixed_invalid(self):
-        adaptation = fs.adaptation.get_summary([2739, 0000], "property")
+        fsid = [395133768, 0000]
+        adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.fsid, reverse=True)
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[1].fsid == fsid[1]
+        assert not adaptation[1].adaptation
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is False
 
     def test_mixed_invalid_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_summary([2739, 0000], "property", csv=True, output_dir=tmpdir)
+        fsid = [395133768, 0000]
+        adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
+        adaptation.sort(key=lambda x: x.fsid, reverse=True)
+        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].adaptation is not None
+        assert adaptation[1].fsid == fsid[1]
+        assert not adaptation[1].adaptation
+        assert adaptation[0].valid_id is True
+        assert adaptation[1].valid_id is False
+
+    def test_one_of_each(self, tmpdir):
+        adaptation = fs.adaptation.get_summary([395133768], "property", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([7924], "neighborhood", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([1935265], "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([50158], "zcta", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([39061007100], "tract", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([19047], "county", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([3915], "cd", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
+        adaptation = fs.adaptation.get_summary([39], "state", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].valid_id is True
+        assert adaptation[0].properties is not None
+        assert adaptation[0].adaptation is not None
 
 
 class TestAdaptationSummaryDetail:
@@ -126,47 +283,305 @@ class TestAdaptationSummaryDetail:
             fs.adaptation.get_details_by_location(190836953, "city")
 
     def test_wrong_fsid_number(self):
-        adaptation = fs.adaptation.get_details_by_location([11], "city")
+        fsid = [11]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
-        assert adaptation[0][0].adaptation is None
+        assert adaptation[0][0].fsid == fsid[0]
+        assert not adaptation[0][0].adaptation
+        assert not adaptation[1][0].type
+        assert adaptation[0][0].valid_id is False
+        assert adaptation[1][0].valid_id is False
 
     def test_incorrect_lookup_type(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([1935265], "state", csv=True, output_dir=tmpdir)
+        fsid = [1935265]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "state", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
-        assert adaptation[0][0].adaptation is None
+        assert adaptation[0][0].fsid == fsid[0]
+        assert not adaptation[0][0].adaptation
+        assert not adaptation[1][0].type
+        assert adaptation[0][0].valid_id is False
+        assert adaptation[1][0].valid_id is False
 
     def test_wrong_adaptation_type(self):
         with pytest.raises(TypeError):
             fs.adaptation.get_details_by_location([1935265], 190)
 
     def test_single(self):
-        adaptation = fs.adaptation.get_details_by_location([1935265], "city")
+        fsid = [1935265]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
 
     def test_multiple(self):
-        adaptation = fs.adaptation.get_details_by_location([1935265, 1714000], "city")
+        fsid = [1935265, 1714000]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
         assert len(adaptation[0]) == 2
         assert len(adaptation[1]) == 5
+        adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
+        adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].adaptation is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][1].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[0][1].valid_id is True
+        assert adaptation[1][1].valid_id is True
 
     def test_single_csv(self, tmpdir):
+        fsid = [1935265]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 2
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+
+    def test_multiple_csv(self, tmpdir):
+        fsid = [1935265, 1714000]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 5
+        adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
+        adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].adaptation is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][1].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[0][1].valid_id is True
+        assert adaptation[1][1].valid_id is True
+
+    def test_mixed_invalid(self):
+        fsid = [1935265, 000000000]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 2
+        adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
+        adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][1].fsid == fsid[1]
+        assert not adaptation[0][1].adaptation
+        assert adaptation[1][0].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[0][1].valid_id is False
+        assert adaptation[1][1].valid_id is True
+
+    def test_mixed_invalid_csv(self, tmpdir):
+        fsid = [1935265, 000000000]
+        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 2
+        assert len(adaptation[1]) == 2
+        adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
+        adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
+        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][1].fsid == fsid[1]
+        assert not adaptation[0][1].adaptation
+        assert adaptation[1][0].type is not None
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[0][1].valid_id is False
+        assert adaptation[1][1].valid_id is True
+
+    def test_one_of_each(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([395133768], "property", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 1
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 395133768
+        assert adaptation[0][0].properties is None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([7924], "neighborhood", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 6
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 7924
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_details_by_location([1935265], "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
-
-    def test_multiple_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([1935265, 1714000], "city", csv=True, output_dir=tmpdir)
-        assert len(adaptation[0]) == 2
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 1935265
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([50158], "zcta", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 4
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 50158
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([39061007100], "tract", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 1
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 39061007100
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([19047], "county", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 3
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 19047
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([3915], "cd", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 5
-
-    def test_mixed_invalid(self):
-        adaptation = fs.adaptation.get_details_by_location([1935265, 000000000], "city")
-        assert len(adaptation[0]) == 2
-        assert len(adaptation[1]) == 2
-
-    def test_mixed_invalid_csv(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([1935265, 000000000], "city", csv=True, output_dir=tmpdir)
-        assert len(adaptation[0]) == 2
-        assert len(adaptation[1]) == 2
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 3915
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None
+        adaptation = fs.adaptation.get_details_by_location([39], "state", csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert len(adaptation[1]) == 299
+        assert adaptation[0][0].valid_id is True
+        assert adaptation[1][0].valid_id is True
+        assert adaptation[1][0].name is not None
+        assert adaptation[1][0].type is not None
+        assert adaptation[1][0].scenario is not None
+        assert adaptation[1][0].conveyance is not None
+        assert adaptation[1][0].returnPeriod is not None
+        assert adaptation[1][0].serving is not None
+        assert adaptation[1][0].serving.get("property") is not None
+        assert adaptation[1][0].serving.get("neighborhood") is not None
+        assert adaptation[1][0].serving.get("zcta") is not None
+        assert adaptation[1][0].serving.get("tract") is not None
+        assert adaptation[1][0].serving.get("city") is not None
+        assert adaptation[1][0].serving.get("county") is not None
+        assert adaptation[1][0].serving.get("cd") is not None
+        assert adaptation[1][0].serving.get("state") is not None
+        assert adaptation[1][0].geometry is not None
+        assert adaptation[0][0].fsid == 39
+        assert adaptation[0][0].properties is not None
+        assert adaptation[0][0].adaptation is not None

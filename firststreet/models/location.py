@@ -2,10 +2,11 @@
 # Copyright: This module is owned by First Street Foundation
 
 # Internal Imports
+from firststreet.models.api import Api
 from firststreet.models.geometry import Geometry
 
 
-class LocationDetail:
+class LocationDetail(Api):
     """A Location Detail Object parent
 
     Args:
@@ -13,6 +14,7 @@ class LocationDetail:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
 
 
@@ -42,7 +44,7 @@ class LocationDetailProperty(LocationDetail):
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry')).center
         else:
-            self.geometry = Geometry(response.get('geometry'))
+            self.geometry = None
 
 
 class LocationDetailNeighborhood(LocationDetail):
@@ -62,7 +64,7 @@ class LocationDetailNeighborhood(LocationDetail):
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry')).center
         else:
-            self.geometry = Geometry(response.get('geometry'))
+            self.geometry = None
         self.name = response.get('name')
 
 
@@ -128,6 +130,7 @@ class LocationDetailCounty(LocationDetail):
     def __init__(self, response):
         super().__init__(response)
         self.fsid = response.get('fsid')
+        self.name = response.get('name')
         self.city = response.get('city')
         self.zcta = response.get('zcta')
         self.fips = response.get('fips')
@@ -174,7 +177,7 @@ class LocationDetailState(LocationDetail):
         self.name = response.get('name')
 
 
-class LocationSummary:
+class LocationSummary(Api):
     """A Location Summary Object parent
 
     Args:
@@ -182,6 +185,7 @@ class LocationSummary:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.riskDirection = response.get('riskDirection')
         self.environmentalRisk = response.get('environmentalRisk')

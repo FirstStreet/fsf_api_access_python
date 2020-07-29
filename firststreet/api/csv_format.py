@@ -88,7 +88,11 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
                 df = format_historic_summary(data)
 
         elif product_subtype == 'summary_event':
-            df = format_historic_summary_event(data)
+            if location_type == 'property':
+                df = format_historic_summary_event_property(data)
+
+            else:
+                df = format_historic_summary_event(data)
 
         else:
             raise NotImplementedError
@@ -143,6 +147,11 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         raise NotImplementedError
 
     # Export CSVs
+    if df['valid_id'].isna().values.all():
+        df = df.drop(columns=['valid_id'])
+    else:
+        df = df.fillna(True)
+
     df.fillna(pd.NA).astype(str).to_csv(output_dir + '/' + file_name, index=False)
     logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
 
@@ -165,7 +174,6 @@ def get_geom_center(geom):
     return {"latitude": None, "longitude": None}
 
 
-
 def format_adaptation_detail(data):
     """Reformat the list of data to Adaptation Detail format
 
@@ -180,7 +188,8 @@ def format_adaptation_detail(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
-    return df[['adaptationId', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod', 'latitude', 'longitude']]
+    return df[['adaptationId', 'valid_id', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod',
+               'latitude', 'longitude']]
 
 
 def format_adaptation_summary(data):
@@ -194,7 +203,7 @@ def format_adaptation_summary(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
-    return df[['fsid', 'adaptation', 'properties']]
+    return df[['fsid', 'valid_id', 'adaptation', 'properties']]
 
 
 def format_adaptation_summary_detail(data):
@@ -209,10 +218,8 @@ def format_adaptation_summary_detail(data):
     summary = format_adaptation_summary(data[0])
     detail = format_adaptation_detail(data[1])
 
-    df = pd.merge(summary, detail, left_on='adaptation', right_on='adaptationId', how='left')\
-        .drop('adaptationId', axis=1)
-
-    return df
+    return pd.merge(summary, detail, left_on=['adaptation', 'valid_id'], right_on=['adaptationId', 'valid_id'],
+                    how='left').drop('adaptationId', axis=1)
 
 
 def format_probability_chance(data):
@@ -244,7 +251,7 @@ def format_probability_chance(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'year', 'threshold', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
 
 
 def format_probability_count(data):
@@ -280,7 +287,7 @@ def format_probability_count(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'year', 'returnPeriod', 'bin', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'bin', 'low', 'mid', 'high']]
 
 
 def format_probability_count_summary(data):
@@ -291,13 +298,14 @@ def format_probability_count_summary(data):
     Returns:
         A pandas formatted DataFrame
     """
-    listed_data = [{'fsid': attr.fsid, 'location': [{'location': 'state', 'data': attr.state},
-                                                    {'location': 'city', 'data': attr.city},
-                                                    {'location': 'zcta', 'data': attr.zcta},
-                                                    {'location': 'neighborhood', 'data': attr.neighborhood},
-                                                    {'location': 'tract', 'data': attr.tract},
-                                                    {'location': 'county', 'data': attr.county},
-                                                    {'location': 'cd', 'data': attr.cd}]} for attr in data]
+    listed_data = [{'fsid': attr.fsid, 'valid_id': attr.valid_id,
+                    'location': [{'location': 'state', 'data': attr.state},
+                                 {'location': 'city', 'data': attr.city},
+                                 {'location': 'zcta', 'data': attr.zcta},
+                                 {'location': 'neighborhood', 'data': attr.neighborhood},
+                                 {'location': 'tract', 'data': attr.tract},
+                                 {'location': 'county', 'data': attr.county},
+                                 {'location': 'cd', 'data': attr.cd}]} for attr in data]
 
     df = pd.DataFrame(listed_data).explode('location').reset_index(drop=True)
     df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
@@ -328,7 +336,8 @@ def format_probability_count_summary(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'location', 'location_fips', 'location_name', 'subtype', 'year', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'location', 'location_fips',
+               'location_name', 'subtype', 'year', 'low', 'mid', 'high']]
 
 
 def format_probability_cumulative(data):
@@ -360,7 +369,7 @@ def format_probability_cumulative(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'year', 'threshold', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
 
 
 def format_probability_depth(data):
@@ -392,7 +401,7 @@ def format_probability_depth(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'year', 'returnPeriod', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'low', 'mid', 'high']]
 
 
 def format_environmental_precipitation(data):
@@ -420,7 +429,7 @@ def format_environmental_precipitation(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'year', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'low', 'mid', 'high']]
 
 
 def format_historic_event(data):
@@ -449,7 +458,7 @@ def format_historic_event(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
-    return df[['eventId', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal',
+    return df[['eventId', 'valid_id', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal',
                'propertiesAffected', 'latitude', 'longitude']]
 
 
@@ -475,7 +484,7 @@ def format_historic_summary_property(data):
         df['type'] = pd.NA
         df['depth'] = pd.NA
 
-    return df[['fsid', 'eventId', 'name', 'type', 'depth']]
+    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth']]
 
 
 def format_historic_summary(data):
@@ -493,6 +502,7 @@ def format_historic_summary(data):
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['eventId'] = df['eventId'].astype('Int64').apply(str)
+        df['type'] = df['type'].apply(str)
         df['bin'] = df['bin'].astype('Int64').apply(str)
         df['count'] = df['count'].astype('Int64').apply(str)
     else:
@@ -504,7 +514,22 @@ def format_historic_summary(data):
         df['bin'] = pd.NA
         df['count'] = pd.NA
 
-    return df[['fsid', 'eventId', 'name', 'type', 'bin', 'count']]
+    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'bin', 'count']]
+
+
+def format_historic_summary_event_property(data):
+    """Reformat the list of data to Historic Summary Event Property format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+
+    summary = format_historic_summary_property(data[0])
+    event = format_historic_event(data[1])
+
+    return pd.merge(summary, event, on=['eventId', 'valid_id'], how='left')
 
 
 def format_historic_summary_event(data):
@@ -519,7 +544,7 @@ def format_historic_summary_event(data):
     summary = format_historic_summary(data[0])
     event = format_historic_event(data[1])
 
-    return pd.merge(summary, event, on='eventId', how='left')
+    return pd.merge(summary, event, on=['eventId', 'valid_id'], how='left')
 
 
 def format_location_detail_property(data):
@@ -593,7 +618,7 @@ def format_location_detail_property(data):
     df['elevation'] = df['city_fips'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
+    return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
                'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
                'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude']]
 
@@ -640,7 +665,7 @@ def format_location_detail_neighborhood(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'subtype',
+    return df[['fsid', 'valid_id', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'subtype',
                'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
@@ -696,7 +721,7 @@ def format_location_detail_city(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name',
+    return df[['fsid', 'valid_id', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name',
                'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
@@ -742,7 +767,7 @@ def format_location_detail_zcta(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips',
+    return df[['fsid', 'valid_id', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips',
                'state_name', 'latitude', 'longitude']]
 
 
@@ -779,7 +804,8 @@ def format_location_detail_tract(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
+    return df[['fsid', 'valid_id', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name',
+               'latitude', 'longitude']]
 
 
 def format_location_detail_county(data):
@@ -834,7 +860,7 @@ def format_location_detail_county(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'city_fips', 'city_name', 'zipCode', 'fips', 'isCoastal', 'cd_fips',
+    return df[['fsid', 'valid_id', 'city_fips', 'city_name', 'zipCode', 'fips', 'isCoastal', 'cd_fips',
                'cd_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 
@@ -871,7 +897,8 @@ def format_location_detail_cd(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
+    return df[['fsid', 'valid_id', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name',
+               'latitude', 'longitude']]
 
 
 def format_location_detail_state(data):
@@ -886,7 +913,7 @@ def format_location_detail_state(data):
     df['fsid'] = df['fsid'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'name', 'fips', 'latitude', 'longitude']]
+    return df[['fsid', 'valid_id', 'name', 'fips', 'latitude', 'longitude']]
 
 
 def format_location_summary_property(data):
@@ -904,7 +931,7 @@ def format_location_summary_property(data):
     df['historic'] = df['historic'].astype('Int64').apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     df['floodFactor'] = df['floodFactor'].astype('Int64').apply(str)
-    return df[['fsid', 'floodFactor', 'riskDirection', 'environmentalRisk', 'historic', 'adaptation']]
+    return df[['fsid', 'valid_id', 'floodFactor', 'riskDirection', 'environmentalRisk', 'historic', 'adaptation']]
 
 
 def format_location_summary(data):
@@ -932,7 +959,8 @@ def format_location_summary(data):
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     df['propertiesTotal'] = df['propertiesTotal'].astype('Int64').apply(str)
     df['propertiesAtRisk'] = df['propertiesAtRisk'].astype('Int64').apply(str)
-    return df[['fsid', 'riskDirection', 'environmentalRisk', 'propertiesTotal', 'propertiesAtRisk', 'historic']]
+    return df[['fsid', 'valid_id', 'riskDirection', 'environmentalRisk', 'propertiesTotal',
+               'propertiesAtRisk', 'historic']]
 
 
 def format_fema_nfip(data):
@@ -952,5 +980,5 @@ def format_fema_nfip(data):
     df['buildingCoverage'] = df['buildingCoverage'].astype('Int64').apply(str)
     df['contentCoverage'] = df['contentCoverage'].astype('Int64').apply(str)
     df['iccPaid'] = df['iccPaid'].astype('Int64').apply(str)
-    return df[['fsid', 'claimCount', 'policyCount', 'buildingPaid', 'contentPaid', 'buildingCoverage',
+    return df[['fsid', 'valid_id', 'claimCount', 'policyCount', 'buildingPaid', 'contentPaid', 'buildingCoverage',
                'contentCoverage', 'iccPaid']]

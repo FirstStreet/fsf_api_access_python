@@ -23,7 +23,7 @@ class Api:
     def __init__(self, http):
         self._http = http
 
-    def call_api(self, search_item, product, product_subtype, location, limit=100, extra_param=None):
+    def call_api(self, search_item, product, product_subtype, location, connection_limit=100, extra_param=None):
         """Receives an item, a product, a product subtype, and a location to create and call an endpoint to the First
         Street Foundation API.
 
@@ -33,7 +33,7 @@ class Api:
             product (str): The overall product to call
             product_subtype (str): The product subtype (if suitable)
             location (str/None): The location type (if suitable)
-            limit (int): max number of connections to make
+            connection_limit (int): max number of connections to make
             extra_param (str): Extra parameter to be added to the url
         Returns:
             A list of JSON responses
@@ -86,6 +86,6 @@ class Api:
 
         # Asynchronously call the API for each endpoint
         loop = asyncio.get_event_loop()
-        response = loop.run_until_complete(self._http.endpoint_execute(endpoints, limit))
+        response = loop.run_until_complete(self._http.endpoint_execute(endpoints, connection_limit))
 
         return response

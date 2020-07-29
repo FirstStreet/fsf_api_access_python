@@ -1,8 +1,11 @@
 # Author: Kelvin Lai <kelvin@firststreet.org>
 # Copyright: This module is owned by First Street Foundation
 
+# Internal Imports
+from firststreet.models.api import Api
 
-class FemaNfip:
+
+class FemaNfip(Api):
     """Creates a FEMA NFIP object given a response
 
     Args:
@@ -10,6 +13,7 @@ class FemaNfip:
     """
 
     def __init__(self, response):
+        super().__init__(response)
         self.fsid = response.get('fsid')
         self.claimCount = response.get('claimCount')
         self.policyCount = response.get('policyCount')

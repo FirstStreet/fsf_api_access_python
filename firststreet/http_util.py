@@ -93,13 +93,13 @@ class Http:
                         product_subtype = endpoint[3]
 
                         if product == 'adaptation' and product_subtype == 'detail':
-                            return {'adaptationId': search_item}
+                            return {'adaptationId': search_item, 'valid_id': False}
 
                         elif product == 'historic' and product_subtype == 'event':
-                            return {'eventId': search_item}
+                            return {'eventId': search_item, 'valid_id': False}
 
                         else:
-                            return {'search_item': search_item}
+                            return {'fsid': search_item, 'valid_id': False}
 
                     return body
 
