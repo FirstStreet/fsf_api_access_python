@@ -1,2 +1,0 @@
-fsid,valid_id,streetNumber,route,city_fips,city_name,zipCode,neighborhood_fips,neighborhood_name,tract_fips,county_fips,county_name,cd_fips,cd_name,state_fips,state_name,footprintId,elevation,fema,latitude,longitude
-395112095,True,3830,STORER AVE,3916000,Cleveland,44109,7945,Clark - Fulton,39035102900,39035,Cuyahoga County,3911,Ohio Congressional District 11,39,Ohio,820858291,3916000,X,True,True

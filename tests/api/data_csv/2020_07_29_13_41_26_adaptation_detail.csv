@@ -1,9 +1,0 @@
-adaptationId,valid_id,name,type,scenario,conveyance,returnPeriod,latitude,longitude
-29,True,Riverfront Park,bioswale,fluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,bioswale,pluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,detention basin,fluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,detention basin,pluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,levee,fluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,levee,pluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,pervious pavement,fluvial,False,500,36.16070743493516,-86.77233613620375
-29,True,Riverfront Park,pervious pavement,pluvial,False,500,36.16070743493516,-86.77233613620375
