@@ -25,6 +25,9 @@ if __name__ == "__main__":
     parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
     parser.add_argument("-f", "--file", help="Example: ./sample.txt", required=False)
     parser.add_argument("-e", "--extra_param", required=False)
+    parser.add_argument("-year", "--year", required=False)
+    parser.add_argument("-return_period", "--return_period", required=False)
+    parser.add_argument("-event_id", "--event_id", required=False)
 
     argument = parser.parse_args()
 
@@ -56,7 +59,7 @@ if __name__ == "__main__":
 
         fs = firststreet.FirstStreet(api_key, version=argument.version, log=bool(strtobool(argument.log)))
 
-        limit = int(argument.limit)
+        limit = int(argument.connection_limit)
 
         if argument.product == 'adaptation.get_detail':
             fs.adaptation.get_detail(search_items,
@@ -155,6 +158,19 @@ if __name__ == "__main__":
                                                csv=True,
                                                connection_limit=limit,
                                                extra_param=argument.extra_param)
+
+        elif argument.product == 'tile.get_probability_depth':
+            fs.tile.get_probability_depth(year=int(argument.year), return_period=int(argument.return_period),
+                                          coordinate=search_items,
+                                          image=True,
+                                          connection_limit=limit)
+
+        elif argument.product == 'tile.get_historic_event':
+            fs.tile.get_historic_event(event_id=int(argument.event_id), coordinate=search_items,
+                                       image=True,
+                                       connection_limit=limit)
+
+            # AND FILES
 
         else:
             logging.error("Product not found. Please check that the argument"

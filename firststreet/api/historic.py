@@ -74,7 +74,7 @@ class Historic(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "historic", "summary", location_type, connection_limit)
+        api_datas = self.call_api(search_item, "historic", "summary", location_type, connection_limit=connection_limit)
         summary = [HistoricSummary(api_data) for api_data in api_datas]
 
         search_item = list(set([event.get("eventId") for sum_hist in summary if sum_hist.historic for

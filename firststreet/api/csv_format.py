@@ -147,10 +147,10 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         raise NotImplementedError
 
     # Export CSVs
-    if df['valid_id'].isna().values.all():
+    if df['valid_id'].all():
         df = df.drop(columns=['valid_id'])
     else:
-        df = df.fillna(True)
+        df['valid_id'] = df['valid_id'].fillna(True)
 
     df.fillna(pd.NA).astype(str).to_csv(output_dir + '/' + file_name, index=False)
     logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
