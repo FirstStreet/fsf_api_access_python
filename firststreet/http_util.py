@@ -53,9 +53,10 @@ class Http:
         session = aiohttp.ClientSession(connector=connector)
 
         try:
-            tasks = [self.execute(endpoint, session) for endpoint in endpoints]
-            ret = [await f
-                   for f in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks))]
+            tasks = [asyncio.create_task(self.execute(endpoint, session)) for endpoint in endpoints]
+            for t in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks)):
+                await t
+            ret = [t.result() for t in tasks]
 
         finally:
             await session.close()
