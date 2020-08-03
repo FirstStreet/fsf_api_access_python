@@ -22,6 +22,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
   - [Adaptation](#adaptation)
   - [Fema](#fema)
   - [Environmental](#environmental)
+  - [Tile](#tiles)
 - **[Examples](#examples)**
 - **[CSV File Output:](#csv-output)**
   - [CSV File Name:](#csv-name)
@@ -135,6 +136,18 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 - `[-e/--extra_param EXTRA_PARAM]`: [OPTIONAL] Adds the argument to the end of the endpoint call
 
     Example: ```-e extra_param```
+    
+- `[-year/--year YEAR]`: [OPTIONAL] The year to use for the `Probability Depth Tile` product
+
+    Example: ```-year 2050```
+    
+- `[-return_period/--return_period RETURN_PERIOD]`: [OPTIONAL] The return period to use for the `Probability Depth Tile` product
+
+    Example: ```-return_period 500```
+    
+- `[-event_id/--event_id EVENT_ID]`: [OPTIONAL] The event id to use for the `Historic Event Tile` product
+
+    Example: ```-event_id 3```
     
 - `[-f/--file FILE]`: [OPTIONAL] A file of Search Items (one per line) to search for with the product
 
@@ -326,6 +339,20 @@ environmental.<method>
 
 * `get_precipitation`(search_items `list/file`, csv `bool`, [connection_limit `int=100`], [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Environmental Precipitation` product for the given county IDs, and optionally creates a csv file. Arguments provided to `extra_param` will be appened to the end of the endpoint call
    
+<a name="tiles"></a>
+#### [Tiles](#toc)
+
+The Flood Tiles product give the ability to customize maps by layering on flood tiles.
+(More information on the Tile product can be found on the [Tile Page on the First Street Foundation API Data Dictionary](https://docs.firststreet.dev/docs/tiles-introduction)
+)
+
+```python
+tile.<method>
+```
+
+* `get_probability_depth`(coordinate `tuple of int`, year `int`, return_period `int`, image `bool`, [connection_limit `int=100`], [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Probability Depth Tile` product for the given coordinates, and optionally creates an image file
+* `get_historic_event`(coordinate `tuple of int`, event_id `int`, image `bool`, [connection_limit `int=100`], [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Historic Event Tile` product for the given coordinates, and optionally creates an image file
+   
 <a name="examples"></a>
 # [Examples](#toc)
 **[Reminder] Keep your API key safe, and do not share it with others!**
@@ -494,6 +521,8 @@ Ex:
 <a name="csv-content"></a>
 #### [CSV File Content](#toc)
 The contents of the CSV file will follow similar formats as the `First Street Foundation API - V1.0 Overview and Dictionary`, but all lists will be expanded to a flat file. For any values that are null or not available, `<NA>` will be used.
+
+If any of the input FSIDs are invalid, a `valid_id` column will appear with the invalid FSIDs marked with `False`
 
 Ex: 
 ```csv
