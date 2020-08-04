@@ -1,4 +1,4 @@
-# First Street Foundation API Access Documentation (Python 3.6+)
+# First Street Foundation API Access Documentation (Python 3.7+)
 [![CircleCI](https://img.shields.io/circleci/build/gh/FirstStreet/fsf_api_access_python)](https://circleci.com/gh/FirstStreet/fsf_api_access_python)
 ![GitHub](https://img.shields.io/github/license/firststreet/fsf_api_access_python)
 
@@ -32,7 +32,7 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 <a name="installation"></a>
 # [Installation](#toc)
-**NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.6+ to run.
+**NOTE**: This project requires [Python](https://www.python.org/downloads/) 3.7+ to run.
 
 1. Go to the Python page (https://www.python.org/downloads/) and download then install Python version 3. **Make sure that the checkbox is checked for Python to be added to the PATH**
 
