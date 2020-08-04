@@ -53,9 +53,10 @@ class Http:
         session = aiohttp.ClientSession(connector=connector)
 
         try:
-            tasks = [self.execute(endpoint, session) for endpoint in endpoints]
-            ret = [await f
-                   for f in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks))]
+            tasks = [asyncio.create_task(self.execute(endpoint, session)) for endpoint in endpoints]
+            for t in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks)):
+                await t
+            ret = [t.result() for t in tasks]
 
         finally:
             await session.close()
@@ -81,27 +82,43 @@ class Http:
                 async with session.get(endpoint[0], headers=headers) as response:
 
                     rate_limit = self._parse_rate_limit(response.headers)
-                    body = await response.json(content_type=None)
 
-                    if response.status != 200 and response.status != 404:
-                        raise self._network_error(self.options, body.get('error'), rate_limit)
+                    if endpoint[2] == 'tile':
+                        body = await response.read()
 
-                    error = body.get("error")
-                    if error:
-                        search_item = endpoint[1]
-                        product = endpoint[2]
-                        product_subtype = endpoint[3]
+                        if response.status != 200 and response.status != 500:
+                            raise self._network_error(self.options, rate_limit,
+                                                      status=response.reason, message=response.status)
+                        elif response.status == 500:
+                            logging.info(
+                                "Error retrieving tile from server. Check if the coordinates provided are correct: {}"
+                                .format(endpoint[1]))
+                            return {"coordinate": endpoint[1], "image": None, 'valid_id': False}
 
-                        if product == 'adaptation' and product_subtype == 'detail':
-                            return {'adaptationId': search_item, 'valid_id': False}
+                        return {"coordinate": endpoint[1], "image": body}
 
-                        elif product == 'historic' and product_subtype == 'event':
-                            return {'eventId': search_item, 'valid_id': False}
+                    else:
+                        body = await response.json(content_type=None)
 
-                        else:
-                            return {'fsid': search_item, 'valid_id': False}
+                        if response.status != 200 and response.status != 404 and response.status != 500:
+                            raise self._network_error(self.options, rate_limit, error=body.get('error'))
 
-                    return body
+                        error = body.get("error")
+                        if error:
+                            search_item = endpoint[1]
+                            product = endpoint[2]
+                            product_subtype = endpoint[3]
+
+                            if product == 'adaptation' and product_subtype == 'detail':
+                                return {'adaptationId': search_item, 'valid_id': False}
+
+                            elif product == 'historic' and product_subtype == 'event':
+                                return {'eventId': search_item, 'valid_id': False}
+
+                            else:
+                                return {'fsid': search_item, 'valid_id': False}
+
+                        return body
 
             except asyncio.TimeoutError:
                 logging.info("Timeout error for item: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
@@ -127,32 +144,37 @@ class Http:
                 'reset': headers.get('x-ratelimit-reset'), 'requestId': headers.get('x-request-id')}
 
     @staticmethod
-    def _network_error(options, error, rate_limit):
+    def _network_error(options, rate_limit, error=None, status=None, message=None):
         """Handles any network errors as a result of the First Street Foundation API
         Args:
             options (dict): The options used in the header of the response
-            error (dict): The body returned from the request call
             rate_limit (dict): The rate limit information
+            error (dict): The body returned from the request call
+            status (str): The status error from the response
+            message (str): The message error from the response
         Returns:
             A First Street error class
         """
-        status = int(error.get('code'))
+        if error:
+            status = int(error.get('code'))
+            message = error.get('message')
 
         if not status == 429:
-            message = "Network Error {}: {}".format(status, error.get('message'))
+            formatted = "Network Error {}: {}".format(status, message)
         else:
-            message = "Network Error {}: {}. Limit: {}. Remaining: {}. Reset: {}".format(status, error.get('message'),
-                                                                                         rate_limit.get('limit'),
-                                                                                         rate_limit.get('remaining'),
-                                                                                         rate_limit.get('reset'))
+            formatted = "Network Error {}: {}. Limit: {}. Remaining: {}. Reset: {}".format(status,
+                                                                                           message,
+                                                                                           rate_limit.get('limit'),
+                                                                                           rate_limit.get('remaining'),
+                                                                                           rate_limit.get('reset'))
 
         return {
-            401: e.UnauthorizedError(message=message,
+            401: e.UnauthorizedError(message=formatted,
                                      attachments={"options": options, "rate_limit": rate_limit}),
-            406: e.NotAcceptableError(message=message,
+            406: e.NotAcceptableError(message=formatted,
                                       attachments={"options": options, "rate_limit": rate_limit}),
-            429: e.RateLimitError(message=message, attachments={"options": options, "rate_limit": rate_limit}),
-            500: e.InternalError(message=message, attachments={"options": options, "rate_limit": rate_limit}),
-            503: e.OfflineError(message=message, attachments={"options": options, "rate_limit": rate_limit}),
+            429: e.RateLimitError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}),
+            500: e.InternalError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}),
+            503: e.OfflineError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}),
         }.get(status,
-              e.UnknownError(message=message, attachments={"options": options, "rate_limit": rate_limit}))
+              e.UnknownError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}))

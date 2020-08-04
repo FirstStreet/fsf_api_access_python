@@ -11,3 +11,6 @@ python -m firststreet -p adaptation.get_detail -i 39 -log True
 python -m firststreet -p adaptation.get_detail -i 39 -log False
 python -m firststreet -p adaptation.get_details_by_location -i 3807200 -l city -log True
 python -m firststreet -p historic.get_events_by_location -i 3807200 -l city -log False
+
+python -m firststreet -p tile.get_probability_depth -i [(12, 942, 1715)] -year 2050 -return_period 500
+python -m firststreet -p tile.get_historic_event -i 3807200 -l city -log False
