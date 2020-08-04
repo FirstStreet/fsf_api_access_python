@@ -71,7 +71,7 @@ class Tile(Api):
                                           str(data.get("coordinate"))]) + ".png"
 
                     if not output_dir:
-                        output_dir = os.getcwd() + "/data_csv"
+                        output_dir = os.getcwd() + "/output_data"
 
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
@@ -79,7 +79,7 @@ class Tile(Api):
                     with open(output_dir + '/' + file_name, "wb") as f:
                         f.write(data['image'])
 
-            logging.info("Images generated to '{}'.".format(output_dir))
+            logging.info("Image(s) generated to '{}'.".format(output_dir))
 
         product = [ProbabilityDepthTile(api_data, year, return_period) for api_data in api_datas]
 
@@ -125,7 +125,7 @@ class Tile(Api):
                     file_name = "_".join([date, "historic_event", str(event_id), str(data.get("coordinate"))]) + ".png"
 
                     if not output_dir:
-                        output_dir = os.getcwd() + "/data_csv"
+                        output_dir = os.getcwd() + "/output_data"
 
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
@@ -133,7 +133,7 @@ class Tile(Api):
                     with open(output_dir + '/' + file_name, "wb") as f:
                         f.write(data.get("image"))
 
-            logging.info("Images generated to '{}'.".format(output_dir))
+            logging.info("Image(s) generated to '{}'.".format(output_dir))
 
         product = [HistoricEventTile(api_data, event_id) for api_data in api_datas]
 

@@ -31,7 +31,7 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         file_name = "_".join([date, product, product_subtype]) + ".csv"
 
     if not output_dir:
-        output_dir = os.getcwd() + "/data_csv"
+        output_dir = os.getcwd() + "/output_data"
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
