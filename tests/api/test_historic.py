@@ -27,11 +27,11 @@ class TestHistoricEvent:
 
     def test_invalid(self):
         event_id = [0000]
-        adaptation = fs.historic.get_event(event_id)
-        assert len(adaptation) == 1
-        assert adaptation[0].eventId == event_id[0]
-        assert adaptation[0].properties is None
-        assert adaptation[0].valid_id is False
+        historic = fs.historic.get_event(event_id)
+        assert len(historic) == 1
+        assert historic[0].eventId == event_id[0]
+        assert historic[0].properties is None
+        assert historic[0].valid_id is False
 
     def test_single(self):
         event_id = [9]
@@ -175,7 +175,6 @@ class TestHistoricSummary:
         fsid = [190836953]
         historic = fs.historic.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
-        historic.sort(key=lambda x: x.fsid, reverse=True)
         assert historic[0].fsid == fsid[0]
         assert historic[0].historic is not None
         assert historic[0].valid_id is True
@@ -215,6 +214,37 @@ class TestHistoricSummary:
         assert not historic[1].historic
         assert historic[0].valid_id is True
         assert historic[1].valid_id is False
+
+    def test_coordinate_invalid(self, tmpdir):
+        historic = fs.historic.get_summary([(82.487671, -62.374322)], "property", csv=True, output_dir=tmpdir)
+        assert len(historic) == 1
+        assert not historic[0].historic
+        assert historic[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        historic = fs.historic.get_summary([(40.7079652311, -74.0021455387)], "property", csv=True, output_dir=tmpdir)
+        assert len(historic) == 1
+        assert historic[0].historic is not None
+        assert historic[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        historic = fs.historic.get_summary(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        assert len(historic) == 1
+        assert not historic[0].historic
+        assert historic[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        historic = fs.historic.get_summary(["Toronto, Ontario, Canada"], "property", csv=True, output_dir=tmpdir)
+        assert len(historic) == 1
+        assert not historic[0].historic
+        assert historic[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        historic = fs.historic.get_summary(["247 Water St, New York, New York"], "property",
+                                           csv=True, output_dir=tmpdir)
+        assert len(historic) == 1
+        assert historic[0].historic is not None
+        assert historic[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         historic = fs.historic.get_summary([511447411], "property", csv=True, output_dir=tmpdir)
@@ -440,6 +470,56 @@ class TestHistoricSummaryDetail:
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
         assert historic[0][1].valid_id is False
+
+    def test_coordinate_invalid(self, tmpdir):
+        historic = fs.historic.get_events_by_location([(82.487671, -62.374322)], "property",
+                                                      csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert not historic[0][0].historic
+        assert historic[0][0].valid_id is False
+        assert not historic[1][0].properties
+        assert historic[0][0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        historic = fs.historic.get_events_by_location([(40.7079652311, -74.0021455387)], "property",
+                                                      csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert historic[0][0].historic is not None
+        assert historic[0][0].valid_id is True
+        assert historic[1][0].properties is not None
+        assert historic[0][0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        historic = fs.historic.get_events_by_location(["Shimik, Nunavut"], "property",
+                                                      csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert not historic[0][0].historic
+        assert historic[0][0].valid_id is False
+        assert not historic[1][0].properties
+        assert historic[0][0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        historic = fs.historic.get_events_by_location(["Toronto, Ontario, Canada"], "property",
+                                                      csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert not historic[0][0].historic
+        assert historic[0][0].valid_id is False
+        assert not historic[1][0].properties
+        assert historic[0][0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        historic = fs.historic.get_events_by_location(["247 Water St, New York, New York"], "property",
+                                                      csv=True, output_dir=tmpdir)
+        assert len(historic[0]) == 1
+        assert len(historic[1]) == 1
+        assert historic[0][0].historic is not None
+        assert historic[0][0].valid_id is True
+        assert historic[1][0].properties is not None
+        assert historic[0][0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         historic = fs.historic.get_events_by_location([511447411], "property", csv=True, output_dir=tmpdir)

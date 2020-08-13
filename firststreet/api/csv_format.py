@@ -236,12 +236,15 @@ def format_probability_chance(data):
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['threshold'] = df['threshold'].astype('Int64').apply(str)
-        df['low'] = df['low'].round(3)
-        df['mid'] = df['mid'].round(3)
-        df['high'] = df['high'].round(3)
+        if df['low'] is None:
+            df['low'] = df['low'].round(3)
+        if df['mid'] is None:
+            df['mid'] = df['mid'].round(3)
+        if df['high'] is None:
+            df['high'] = df['high'].round(3)
     else:
         df['fsid'] = df['fsid'].apply(str)
         df.drop(['chance'], axis=1, inplace=True)
@@ -270,7 +273,7 @@ def format_probability_count(data):
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
         df['bin'] = df['bin'].astype('Int64').apply(str)
@@ -321,7 +324,7 @@ def format_probability_count_summary(data):
         df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
         if 'subtype' not in df:
             df['subtype'] = pd.NA
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['location_fips'] = df['location_fips'].astype('Int64').apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['low'] = df['low'].astype('Int64').apply(str)
@@ -329,8 +332,10 @@ def format_probability_count_summary(data):
         df['high'] = df['high'].astype('Int64').apply(str)
 
     else:
+        df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
         df['location_fips'] = pd.NA
         df['location_name'] = pd.NA
+        df['subtype'] = pd.NA
         df['year'] = pd.NA
         df['low'] = pd.NA
         df['mid'] = pd.NA
@@ -354,12 +359,15 @@ def format_probability_cumulative(data):
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['threshold'] = df['threshold'].astype('Int64').apply(str)
-        df['low'] = df['low'].round(3)
-        df['mid'] = df['mid'].round(3)
-        df['high'] = df['high'].round(3)
+        if df['low'] is None:
+            df['low'] = df['low'].round(3)
+        if df['mid'] is None:
+            df['mid'] = df['mid'].round(3)
+        if df['high'] is None:
+            df['high'] = df['high'].round(3)
     else:
         df['fsid'] = df['fsid'].apply(str)
         df.drop(['cumulative'], axis=1, inplace=True)
@@ -386,14 +394,14 @@ def format_probability_depth(data):
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
         df['low'] = df['low'].astype('Int64').apply(str)
         df['mid'] = df['mid'].astype('Int64').apply(str)
         df['high'] = df['high'].astype('Int64').apply(str)
     else:
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df.drop(['depth'], axis=1, inplace=True)
         df['year'] = pd.NA
         df['returnPeriod'] = pd.NA
@@ -416,7 +424,7 @@ def format_environmental_precipitation(data):
     if not df['projected'].isna().values.all():
         df = pd.concat([df.drop(['projected'], axis=1), df['projected'].apply(pd.Series)], axis=1)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['year'] = df['year'].astype('Int64').apply(str)
         df['low'] = df['low'].round(3)
         df['mid'] = df['mid'].round(3)
@@ -473,11 +481,11 @@ def format_historic_summary_property(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('historic').reset_index(drop=True)
     if not df['historic'].isna().values.all():
         df = pd.concat([df.drop(['historic'], axis=1), df['historic'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df['eventId'] = df['eventId'].astype('Int64').apply(str)
         df['depth'] = df['depth'].astype('Int64').apply(str)
     else:
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df.drop(['historic'], axis=1, inplace=True)
         df['eventId'] = pd.NA
         df['name'] = pd.NA
@@ -498,7 +506,7 @@ def format_historic_summary(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('historic').reset_index(drop=True)
     if not df['historic'].isna().values.all():
         df = pd.concat([df.drop(['historic'], axis=1), df['historic'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
         df['eventId'] = df['eventId'].astype('Int64').apply(str)
@@ -506,7 +514,7 @@ def format_historic_summary(data):
         df['bin'] = df['bin'].astype('Int64').apply(str)
         df['count'] = df['count'].astype('Int64').apply(str)
     else:
-        df['fsid'] = df['fsid'].astype('Int64').apply(str)
+        df['fsid'] = df['fsid'].apply(str)
         df.drop(['historic'], axis=1, inplace=True)
         df['eventId'] = pd.NA
         df['name'] = pd.NA

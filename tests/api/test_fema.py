@@ -116,6 +116,36 @@ class TestFemaNfip:
         assert fema[1].claimCount is None
         assert fema[0].valid_id is True
         assert fema[1].valid_id is False
+        
+    def test_coordinate_invalid(self, tmpdir):
+        fema = fs.fema.get_nfip([(82.487671, -62.374322)], "county", csv=True, output_dir=tmpdir)
+        assert len(fema) == 1
+        assert fema[0].claimCount is None
+        assert fema[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        fema = fs.fema.get_nfip([(40.7079652311, -74.0021455387)], "county", csv=True, output_dir=tmpdir)
+        assert len(fema) == 1
+        assert fema[0].claimCount is not None
+        assert fema[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        fema = fs.fema.get_nfip(["Shimik, Nunavut"], "county", csv=True, output_dir=tmpdir)
+        assert len(fema) == 1
+        assert fema[0].claimCount is None
+        assert fema[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        fema = fs.fema.get_nfip(["Toronto, Ontario, Canada"], "county", csv=True, output_dir=tmpdir)
+        assert len(fema) == 1
+        assert fema[0].claimCount is None
+        assert fema[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        fema = fs.fema.get_nfip(["247 Water St, New York, New York"], "county", csv=True, output_dir=tmpdir)
+        assert len(fema) == 1
+        assert fema[0].claimCount is not None
+        assert fema[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         fema = fs.fema.get_nfip([44074], "zcta", csv=True, output_dir=tmpdir)

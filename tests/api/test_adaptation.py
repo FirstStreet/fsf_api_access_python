@@ -221,6 +221,40 @@ class TestAdaptationSummary:
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is False
 
+    def test_coordinate_invalid(self, tmpdir):
+        adaptation = fs.adaptation.get_summary([(41.70808, -72.860217)], "property", csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert not adaptation[0].adaptation
+        assert adaptation[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        adaptation = fs.adaptation.get_summary([(40.7079652311, -74.0021455387)], "property",
+                                               csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].adaptation is not None
+        assert adaptation[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        adaptation = fs.adaptation.get_summary(["Shimik, Nunavut"], "property",
+                                               csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert not adaptation[0].adaptation
+        assert adaptation[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        adaptation = fs.adaptation.get_summary(["Toronto, Ontario, Canada"], "property",
+                                               csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert not adaptation[0].adaptation
+        assert adaptation[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        adaptation = fs.adaptation.get_summary(["247 Water St, New York, New York"], "property",
+                                               csv=True, output_dir=tmpdir)
+        assert len(adaptation) == 1
+        assert adaptation[0].adaptation is not None
+        assert adaptation[0].valid_id is True
+
     def test_one_of_each(self, tmpdir):
         adaptation = fs.adaptation.get_summary([395133768], "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
@@ -399,6 +433,41 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].valid_id is True
         assert adaptation[0][1].valid_id is False
         assert adaptation[1][1].valid_id is True
+
+    def test_coordinate_invalid(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([(41.70808, -72.860217)], "property",
+                                                           csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert not adaptation[0][0].adaptation
+        assert adaptation[0][0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location([(40.7079652311, -74.0021455387)], "property",
+                                                           csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location(["Shimik, Nunavut"], "property",
+                                                           csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert not adaptation[0][0].adaptation
+        assert adaptation[0][0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location(["Toronto, Ontario, Canada"], "property",
+                                                           csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert not adaptation[0][0].adaptation
+        assert adaptation[0][0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        adaptation = fs.adaptation.get_details_by_location(["247 Water St, New York, New York"], "property",
+                                                           csv=True, output_dir=tmpdir)
+        assert len(adaptation[0]) == 1
+        assert adaptation[0][0].adaptation is not None
+        assert adaptation[0][0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         adaptation = fs.adaptation.get_details_by_location([395133768], "property", csv=True, output_dir=tmpdir)
