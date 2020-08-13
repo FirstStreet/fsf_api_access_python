@@ -52,7 +52,7 @@ class Http:
         """
         ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
-        connector = aiohttp.TCPConnector(limit_per_host=limit, ssl_context=ssl_ctx)
+        connector = aiohttp.TCPConnector(limit_per_host=limit, ssl=ssl_ctx)
         session = aiohttp.ClientSession(connector=connector)
 
         try:
