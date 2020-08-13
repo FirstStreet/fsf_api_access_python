@@ -508,7 +508,7 @@ tile.<method>
     
 <a name="csv-output"></a>
 # [CSV File Output:](#toc)
-Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `data_csv` directory of the project folder (if at least one CSV has been extracted).
+Any product above can be additionally exported to a CSV file for further usage if the csv boolean is set during the product call, or any call using the command line. The extracted can be found in the `output_data` directory of the project folder (if at least one CSV has been extracted).
 
 <a name="csv-name"></a>
 #### [CSV File Name:](#toc)
