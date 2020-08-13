@@ -9,6 +9,7 @@ import logging
 import tqdm
 import aiohttp
 import ssl
+import certifi
 
 # Internal Imports
 import firststreet.errors as e
@@ -49,11 +50,7 @@ class Http:
         Returns:
             The list of JSON responses corresponding to each endpoint
         """
-
-        # ssl_ctx = ssl.create_default_context(cafile=)
-        # ssl_ctx.load_cert_chain('/path_to_client_public_key.pem', '/path_to_client_private_key.pem')
-        ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        ssl_ctx.load_cert_chain(ssl.get_default_verify_paths().openssl_cafile)
+        ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
         connector = aiohttp.TCPConnector(limit_per_host=limit, ssl_context=ssl_ctx)
         session = aiohttp.ClientSession(connector=connector)
