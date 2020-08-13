@@ -96,6 +96,36 @@ class TestProbabilityChance:
         assert probability[0].valid_id is True
         assert probability[1].chance is None
         assert probability[1].valid_id is False
+        
+    def test_coordinate_invalid(self, tmpdir):
+        probability = fs.probability.get_chance([(82.487671, -62.374322)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].chance is None
+        assert probability[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        probability = fs.probability.get_chance([(40.7079652311, -74.0021455387)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].chance is not None
+        assert probability[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        probability = fs.probability.get_chance(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].chance is None
+        assert probability[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        probability = fs.probability.get_chance(["Toronto, Ontario, Canada"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].chance is None
+        assert probability[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        probability = fs.probability.get_chance(["247 Water St, New York, New York"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].chance is not None
+        assert probability[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         probability = fs.probability.get_chance([390000257], csv=True, output_dir=tmpdir)
@@ -209,6 +239,41 @@ class TestProbabilityCount:
         assert probability[0].valid_id is True
         assert probability[1].count is None
         assert probability[1].valid_id is False
+
+    def test_coordinate_invalid(self, tmpdir):
+        probability = fs.probability.get_count([(82.487671, -62.374322)], "city",
+                                               csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].count is None
+        assert probability[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        probability = fs.probability.get_count([(40.7079652311, -74.0021455387)], "city",
+                                               csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].count is not None
+        assert probability[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        probability = fs.probability.get_count(["Shimik, Nunavut"], "city",
+                                               csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].count is None
+        assert probability[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        probability = fs.probability.get_count(["Toronto, Ontario, Canada"], "city",
+                                               csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].count is None
+        assert probability[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        probability = fs.probability.get_count(["247 Water St, New York, New York"], "city",
+                                               csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].count is not None
+        assert probability[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         probability = fs.probability.get_count([7935], 'neighborhood', csv=True, output_dir=tmpdir)
@@ -392,6 +457,37 @@ class TestProbabilityCountSummary:
         assert probability[0].valid_id is True
         assert probability[1].state is None
         assert probability[1].valid_id is False
+    
+    def test_coordinate_invalid(self, tmpdir):
+        probability = fs.probability.get_count_summary([(82.487671, -62.374322)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].state is None
+        assert probability[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        probability = fs.probability.get_count_summary([(40.7079652311, -74.0021455387)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].state is not None
+        assert probability[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        probability = fs.probability.get_count_summary(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].state is None
+        assert probability[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        probability = fs.probability.get_count_summary(["Toronto, Ontario, Canada"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].state is None
+        assert probability[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        probability = fs.probability.get_count_summary(["247 Water St, New York, New York"],
+                                                       csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].state is not None
+        assert probability[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         probability = fs.probability.get_count_summary([394406220], csv=True, output_dir=tmpdir)
@@ -488,6 +584,36 @@ class TestProbabilityCumulative:
         assert probability[0].valid_id is True
         assert probability[1].cumulative is None
         assert probability[1].valid_id is False
+        
+    def test_coordinate_invalid(self, tmpdir):
+        probability = fs.probability.get_cumulative([(82.487671, -62.374322)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].cumulative is None
+        assert probability[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        probability = fs.probability.get_cumulative([(40.7079652311, -74.0021455387)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].cumulative is not None
+        assert probability[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        probability = fs.probability.get_cumulative(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].cumulative is None
+        assert probability[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        probability = fs.probability.get_cumulative(["Toronto, Ontario, Canada"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].cumulative is None
+        assert probability[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        probability = fs.probability.get_cumulative(["247 Water St, New York, New York"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].cumulative is not None
+        assert probability[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         probability = fs.probability.get_cumulative([390000439], csv=True, output_dir=tmpdir)
@@ -585,6 +711,36 @@ class TestProbabilityDepth:
         assert probability[0].valid_id is True
         assert probability[1].depth is None
         assert probability[1].valid_id is False
+
+    def test_coordinate_invalid(self, tmpdir):
+        probability = fs.probability.get_depth([(82.487671, -62.374322)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].depth is None
+        assert probability[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        probability = fs.probability.get_depth([(40.7079652311, -74.0021455387)], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].depth is not None
+        assert probability[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        probability = fs.probability.get_depth(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].depth is None
+        assert probability[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        probability = fs.probability.get_depth(["Toronto, Ontario, Canada"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].depth is None
+        assert probability[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        probability = fs.probability.get_depth(["247 Water St, New York, New York"], csv=True, output_dir=tmpdir)
+        assert len(probability) == 1
+        assert probability[0].depth is not None
+        assert probability[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         probability = fs.probability.get_depth([390000227], csv=True, output_dir=tmpdir)

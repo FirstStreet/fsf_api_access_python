@@ -27,11 +27,11 @@ class TestEnvironmentalEvent:
 
     def test_invalid(self):
         fsid = [0000]
-        adaptation = fs.environmental.get_precipitation(fsid)
-        assert len(adaptation) == 1
-        assert adaptation[0].fsid == fsid[0]
-        assert adaptation[0].projected is None
-        assert adaptation[0].valid_id is False
+        environmental = fs.environmental.get_precipitation(fsid)
+        assert len(environmental) == 1
+        assert environmental[0].fsid == fsid[0]
+        assert environmental[0].projected is None
+        assert environmental[0].valid_id is False
 
     def test_single(self):
         fsid = [19117]
@@ -96,6 +96,38 @@ class TestEnvironmentalEvent:
         assert environmental[1].projected is None
         assert environmental[0].valid_id is True
         assert environmental[1].valid_id is False
+
+    def test_coordinate_invalid(self, tmpdir):
+        environmental = fs.environmental.get_precipitation([(82.487671, -62.374322)], csv=True, output_dir=tmpdir)
+        assert len(environmental) == 1
+        assert environmental[0].projected is None
+        assert environmental[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        environmental = fs.environmental.get_precipitation([(40.7079652311, -74.0021455387)],
+                                                           csv=True, output_dir=tmpdir)
+        assert len(environmental) == 1
+        assert environmental[0].projected is not None
+        assert environmental[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        environmental = fs.environmental.get_precipitation(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        assert len(environmental) == 1
+        assert environmental[0].projected is None
+        assert environmental[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        environmental = fs.environmental.get_precipitation(["Toronto, Ontario, Canada"], csv=True, output_dir=tmpdir)
+        assert len(environmental) == 1
+        assert environmental[0].projected is None
+        assert environmental[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        environmental = fs.environmental.get_precipitation(["247 Water St, New York, New York"],
+                                                           csv=True, output_dir=tmpdir)
+        assert len(environmental) == 1
+        assert environmental[0].projected is not None
+        assert environmental[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         environmental = fs.environmental.get_precipitation([39057], csv=True, output_dir=tmpdir)

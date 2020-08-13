@@ -116,6 +116,36 @@ class TestLocationDetail:
         assert location[1].state is None
         assert location[0].valid_id is True
         assert location[1].valid_id is False
+    
+    def test_coordinate_invalid(self, tmpdir):
+        location = fs.location.get_detail([(82.487671, -62.374322)], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].state is None
+        assert location[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        location = fs.location.get_detail([(40.7079652311, -74.0021455387)], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].state is not None
+        assert location[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        location = fs.location.get_detail(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].state is None
+        assert location[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        location = fs.location.get_detail(["Toronto, Ontario, Canada"], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].state is None
+        assert location[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        location = fs.location.get_detail(["247 Water St, New York, New York"], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].state is not None
+        assert location[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
         location = fs.location.get_detail([511447411], "property", csv=True, output_dir=tmpdir)
@@ -305,6 +335,37 @@ class TestLocationSummary:
         assert location[0].valid_id is True
         assert location[1].valid_id is False
 
+    def test_coordinate_invalid(self, tmpdir):
+        location = fs.location.get_summary([(82.487671, -62.374322)], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].adaptation is None
+        assert location[0].valid_id is False
+
+    def test_single_coordinate(self, tmpdir):
+        location = fs.location.get_summary([(40.7079652311, -74.0021455387)], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].adaptation is not None
+        assert location[0].valid_id is True
+
+    def test_address_invalid_404(self, tmpdir):
+        location = fs.location.get_summary(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].adaptation is None
+        assert location[0].valid_id is False
+
+    def test_address_invalid_500(self, tmpdir):
+        location = fs.location.get_summary(["Toronto, Ontario, Canada"], "property", csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].adaptation is None
+        assert location[0].valid_id is False
+
+    def test_single_address(self, tmpdir):
+        location = fs.location.get_summary(["247 Water St, New York, New York"], "property",
+                                           csv=True, output_dir=tmpdir)
+        assert len(location) == 1
+        assert location[0].adaptation is not None
+        assert location[0].valid_id is True
+        
     def test_one_of_each(self, tmpdir):
         location = fs.location.get_summary([395112095], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
