@@ -16,6 +16,8 @@ Questions regarding the API Access Library
 **Additional Information:**
 Python Version: 3.X
 
+OS: Windows/Mac/Linux/Other
+
 <!--- Run `pip list` on a terminal for a list of installed Python libraries. Post a screenshot if it is easier-->
 Fsf-api-access-python Version:
 
