@@ -8,6 +8,8 @@ import asyncio
 import logging
 import tqdm
 import aiohttp
+import ssl
+import certifi
 
 # Internal Imports
 import firststreet.errors as e
@@ -48,8 +50,9 @@ class Http:
         Returns:
             The list of JSON responses corresponding to each endpoint
         """
+        ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
-        connector = aiohttp.TCPConnector(limit_per_host=limit)
+        connector = aiohttp.TCPConnector(limit_per_host=limit, ssl_context=ssl_ctx)
         session = aiohttp.ClientSession(connector=connector)
 
         try:
