@@ -479,7 +479,6 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].type is not None
         assert adaptation[1][0].scenario is not None
         assert adaptation[1][0].conveyance is not None
-        assert adaptation[1][0].returnPeriod is not None
         assert adaptation[1][0].serving is not None
         assert adaptation[1][0].serving.get("property") is not None
         assert adaptation[1][0].serving.get("neighborhood") is not None

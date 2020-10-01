@@ -21,8 +21,7 @@ class Location(Api):
             get_summary: Retrieves a list of Location Summary for the given list of IDs
         """
 
-    def get_detail(self, search_item, location_type, csv=False, connection_limit=100,
-                   output_dir=None, extra_param=None):
+    def get_detail(self, search_item, location_type, csv=False, output_dir=None, extra_param=None):
         """Retrieves location detail product data from the First Street Foundation API given a list of search_items and
         returns a list of Location Detail objects.
 
@@ -31,7 +30,6 @@ class Location(Api):
                 file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
-            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -48,8 +46,7 @@ class Location(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "location", "detail", location_type, connection_limit=connection_limit,
-                                  extra_param=extra_param)
+        api_datas = self.call_api(search_item, "location", "detail", location_type, extra_param=extra_param)
 
         if location_type == 'property':
             product = [LocationDetailProperty(api_data) for api_data in api_datas]
@@ -85,8 +82,7 @@ class Location(Api):
 
         return product
 
-    def get_summary(self, search_item, location_type, csv=False, connection_limit=100,
-                    output_dir=None, extra_param=None):
+    def get_summary(self, search_item, location_type, csv=False, output_dir=None, extra_param=None):
         """Retrieves location summary product data from the First Street Foundation API given a list of search_items and
         returns a list of Location Summary objects.
 
@@ -95,7 +91,6 @@ class Location(Api):
                 file of First Street Foundation IDs
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
-            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated csvs
             extra_param (str): Extra parameter to be added to the url
 
@@ -112,8 +107,7 @@ class Location(Api):
             raise TypeError("location is not a string")
 
         # Get data from api and create objects
-        api_datas = self.call_api(search_item, "location", "summary", location_type, connection_limit=connection_limit,
-                                  extra_param=extra_param)
+        api_datas = self.call_api(search_item, "location", "summary", location_type, extra_param=extra_param)
 
         if location_type == "property":
             product = [LocationSummaryProperty(api_data) for api_data in api_datas]

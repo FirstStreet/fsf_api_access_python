@@ -22,6 +22,8 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--search_items", help="Example: 28,29", required=False,)
     parser.add_argument("-l", "--location", help="Example: property", required=False)
     parser.add_argument("-connection_limit", "--connection_limit", help="Example: 100", required=False, default="100")
+    parser.add_argument("-rate_limit", "--rate_limit", help="Example: 5000", required=False, default="20000")
+    parser.add_argument("-rate_period", "--rate_period", help="Example: 3600", required=False, default="1")
     parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
     parser.add_argument("-f", "--file", help="Example: ./sample.txt", required=False)
     parser.add_argument("-e", "--extra_param", required=False)
@@ -57,118 +59,105 @@ if __name__ == "__main__":
         else:
             api_key = argument.api_key
 
-        fs = firststreet.FirstStreet(api_key, version=argument.version, log=bool(strtobool(argument.log)))
-
         limit = int(argument.connection_limit)
+        rate_limit = int(argument.rate_limit)
+        rate_period = int(argument.rate_period)
+
+        fs = firststreet.FirstStreet(api_key, version=argument.version, connection_limit=limit,
+                                     rate_limit=rate_limit, rate_period=rate_period,
+                                     log=bool(strtobool(argument.log)))
 
         if argument.product == 'adaptation.get_detail':
             fs.adaptation.get_detail(search_items,
                                      csv=True,
-                                     connection_limit=limit,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'adaptation.get_summary':
             fs.adaptation.get_summary(search_items,
                                       argument.location,
                                       csv=True,
-                                      connection_limit=limit,
                                       extra_param=argument.extra_param)
 
         elif argument.product == 'adaptation.get_details_by_location':
             fs.adaptation.get_details_by_location(search_items,
                                                   argument.location,
                                                   csv=True,
-                                                  connection_limit=limit,
                                                   extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_depth':
             fs.probability.get_depth(search_items,
                                      csv=True,
-                                     connection_limit=limit,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_chance':
             fs.probability.get_chance(search_items,
                                       csv=True,
-                                      connection_limit=limit,
                                       extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_count_summary':
             fs.probability.get_count_summary(search_items,
                                              csv=True,
-                                             connection_limit=limit,
                                              extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_cumulative':
             fs.probability.get_cumulative(search_items,
                                           csv=True,
-                                          connection_limit=limit,
                                           extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_count':
             fs.probability.get_count(search_items,
                                      argument.location,
                                      csv=True,
-                                     connection_limit=limit,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_event':
             fs.historic.get_event(search_items,
                                   csv=True,
-                                  connection_limit=limit,
                                   extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_summary':
             fs.historic.get_summary(search_items,
                                     argument.location,
                                     csv=True,
-                                    connection_limit=limit,
                                     extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_events_by_location':
             fs.historic.get_events_by_location(search_items,
                                                argument.location,
                                                csv=True,
-                                               connection_limit=limit,
                                                extra_param=argument.extra_param)
 
         elif argument.product == 'location.get_detail':
             fs.location.get_detail(search_items,
                                    argument.location,
                                    csv=True,
-                                   connection_limit=limit,
                                    extra_param=argument.extra_param)
 
         elif argument.product == 'location.get_summary':
             fs.location.get_summary(search_items,
                                     argument.location,
                                     csv=True,
-                                    connection_limit=limit,
                                     extra_param=argument.extra_param)
 
         elif argument.product == 'fema.get_nfip':
             fs.fema.get_nfip(search_items,
                              argument.location,
                              csv=True,
-                             connection_limit=limit,
                              extra_param=argument.extra_param)
 
         elif argument.product == 'environmental.get_precipitation':
             fs.environmental.get_precipitation(search_items,
                                                csv=True,
-                                               connection_limit=limit,
                                                extra_param=argument.extra_param)
 
         elif argument.product == 'tile.get_probability_depth':
             fs.tile.get_probability_depth(year=int(argument.year), return_period=int(argument.return_period),
                                           coordinate=search_items,
-                                          image=True,
-                                          connection_limit=limit)
+                                          image=True)
 
         elif argument.product == 'tile.get_historic_event':
             fs.tile.get_historic_event(event_id=int(argument.event_id), coordinate=search_items,
-                                       image=True,
-                                       connection_limit=limit)
+                                       image=True)
 
             # AND FILES
 

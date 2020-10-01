@@ -359,7 +359,7 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([39], 'state', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True

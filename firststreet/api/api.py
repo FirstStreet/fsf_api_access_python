@@ -21,10 +21,11 @@ class Api:
         """
 
     def __init__(self, http):
+        """ Init"""
         self._http = http
 
     def call_api(self, search_item, product, product_subtype, location=None, tile_product=None, year=None,
-                 return_period=None, event_id=None, connection_limit=100, extra_param=None):
+                 return_period=None, event_id=None, extra_param=None):
         """Receives an item, a product, a product subtype, and a location to create and call an endpoint to the First
         Street Foundation API.
 
@@ -38,7 +39,6 @@ class Api:
             year (int/None): The year for probability depth tiles (if suitable)
             return_period (int/None): The return period for probability depth tiles (if suitable)
             event_id (int/None): The event_id for historic tiles (if suitable)
-            connection_limit (int): max number of connections to make
             extra_param (str): Extra parameter to be added to the url
         Returns:
             A list of JSON responses
@@ -62,7 +62,8 @@ class Api:
 
         if tile_product:
             if not all(isinstance(t, tuple) for t in search_item):
-                raise TypeError("Input must be a list of coordinates in a tuple of (z, x, y). Provided Arg: {}".format(search_item))
+                raise TypeError("Input must be a list of coordinates in a tuple of (z, x, y). "
+                                "Provided Arg: {}".format(search_item))
 
             if not all(isinstance(coord, int) for t in search_item for coord in t):
                 raise TypeError("Each coordinate in the tuple must be an integer. Provided Arg: {}".format(search_item))
@@ -110,6 +111,6 @@ class Api:
 
         # Asynchronously call the API for each endpoint
         loop = asyncio.get_event_loop()
-        response = loop.run_until_complete(self._http.endpoint_execute(endpoints, connection_limit))
+        response = loop.run_until_complete(self._http.endpoint_execute(endpoints))
 
         return response

@@ -21,8 +21,7 @@ class Tile(Api):
             get_historic_event: Retrieves a list of Probability Depth for the given list of IDs
         """
 
-    def get_probability_depth(self, year, return_period, coordinate, image=False, connection_limit=100,
-                              output_dir=None, extra_param=None):
+    def get_probability_depth(self, year, return_period, coordinate, image=False, output_dir=None, extra_param=None):
         """Retrieves probability depth tile data from the First Street Foundation API given a list of search_items
          and returns a list of Probability Depth Tile objects.
 
@@ -31,7 +30,6 @@ class Tile(Api):
             return_period (int): The return period to get the tile
             coordinate (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             image (bool): To output extracted image to a png or not
-            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated tile
             extra_param (str): Extra parameter to be added to the url
 
@@ -58,8 +56,7 @@ class Tile(Api):
 
         # Get data from api and create objects
         api_datas = self.call_api(coordinate, "tile", "probability", tile_product="depth", year=year,
-                                  return_period=return_period, connection_limit=connection_limit,
-                                  extra_param=extra_param)
+                                  return_period=return_period, extra_param=extra_param)
 
         if image:
             for data in api_datas:
@@ -87,8 +84,7 @@ class Tile(Api):
 
         return product
 
-    def get_historic_event(self, event_id, coordinate, image=False, connection_limit=100,
-                           output_dir=None, extra_param=None):
+    def get_historic_event(self, event_id, coordinate, image=False, output_dir=None, extra_param=None):
         """Retrieves historic event tile data from the First Street Foundation API given a list of search_items
          and returns a list of Historic Event Tile objects.
 
@@ -96,7 +92,6 @@ class Tile(Api):
             event_id (int): A First Street Foundation eventId
             coordinate (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             image (bool): To output extracted image to a png or not
-            connection_limit (int): max number of connections to make
             output_dir (str): The output directory to save the generated tile
             extra_param (str): Extra parameter to be added to the url
 
@@ -114,7 +109,7 @@ class Tile(Api):
 
         # Get data from api and create objects
         api_datas = self.call_api(coordinate, "tile", "historic", tile_product="event", event_id=event_id,
-                                  connection_limit=connection_limit, extra_param=extra_param)
+                                  extra_param=extra_param)
 
         if image:
             for data in api_datas:

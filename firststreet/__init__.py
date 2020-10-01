@@ -23,6 +23,9 @@ class FirstStreet:
 
         Attributes:
             api_key (str): A string specifying the API key.
+            connection_limit (int): max number of connections to make
+            rate_limit (int): max number of requests during the period
+            rate_period (int): period of time for the limit
             version (str): The version to call the API with
             log (bool): To log the outputs on info level
         Example:
@@ -37,7 +40,7 @@ class FirstStreet:
             MissingAPIError: If the API is not provided
     """
 
-    def __init__(self, api_key=None, version=None, log=True):
+    def __init__(self, api_key=None, connection_limit=100, rate_limit=20000, rate_period=1, version=None, log=True):
 
         if not api_key:
             raise MissingAPIKeyError('Missing API Key.')
@@ -46,7 +49,7 @@ class FirstStreet:
             logging.basicConfig(level=logging.INFO,
                                 format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 
-        self.http = Http(api_key, version)
+        self.http = Http(api_key, connection_limit, rate_limit, rate_period, version)
         self.location = Location(self.http)
         self.probability = Probability(self.http)
         self.historic = Historic(self.http)

@@ -182,7 +182,7 @@ def format_adaptation_detail(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('type').explode('scenario').reset_index(drop=True)
+    df = pd.json_normalize([vars(o) for o in data]).explode('type').explode('scenario').reset_index(drop=True)
     df['adaptationId'] = df['adaptationId'].astype('Int64').apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
@@ -200,7 +200,7 @@ def format_adaptation_summary(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
+    df = pd.json_normalize([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     return df[['fsid', 'valid_id', 'adaptation', 'properties']]
@@ -230,29 +230,44 @@ def format_probability_chance(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('chance').reset_index(drop=True)
-    if not df['chance'].isna().values.all():
-        df = pd.concat([df.drop(['chance'], axis=1), df['chance'].apply(pd.Series)], axis=1)
-        df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['threshold'] = df['threshold'].astype('Int64').apply(str)
-        if df['low'] is None:
-            df['low'] = df['low'].round(3)
-        if df['mid'] is None:
-            df['mid'] = df['mid'].round(3)
-        if df['high'] is None:
-            df['high'] = df['high'].round(3)
-    else:
-        df['fsid'] = df['fsid'].apply(str)
-        df.drop(['chance'], axis=1, inplace=True)
-        df['year'] = pd.NA
-        df['threshold'] = pd.NA
-        df['low'] = pd.NA
-        df['mid'] = pd.NA
-        df['high'] = pd.NA
+
+    depth_list = list()
+
+    # Loop through data
+    for d in data:
+
+        try:
+            # Normalize data to get df
+            row_df = pd.json_normalize(d.chance, record_path='data', meta=['year'])
+
+            # Add FSID to row
+            row_df['fsid'] = d.fsid
+            row_df['valid_id'] = d.valid_id
+
+            # Add rows to df - return periods matched to depths across scenarios
+            depth_list.append(row_df)
+
+        except TypeError:
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df['year'] = pd.NA
+            row_df['threshold'] = pd.NA
+            row_df['data.low'] = pd.NA
+            row_df['data.mid'] = pd.NA
+            row_df['data.high'] = pd.NA
+            depth_list.append(row_df)
+
+    # Get into df
+    df = pd.concat(depth_list, axis=0).reset_index(drop=True)
+    df.rename(columns={'data.low': 'low', 'data.mid': 'mid', 'data.high': 'high'}, inplace=True)
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['threshold'] = df['threshold'].astype('Int64').apply(str)
+    if df['low'] is None:
+        df['low'] = df['low'].round(3)
+    if df['mid'] is None:
+        df['mid'] = df['mid'].round(3)
+    if df['high'] is None:
+        df['high'] = df['high'].round(3)
 
     return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
 
@@ -265,30 +280,44 @@ def format_probability_count(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('count').reset_index(drop=True)
-    if not df['count'].isna().values.all():
-        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
-        df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
-        df['bin'] = df['bin'].astype('Int64').apply(str)
-        df['low'] = df['low'].astype('Int64').apply(str)
-        df['mid'] = df['mid'].astype('Int64').apply(str)
-        df['high'] = df['high'].astype('Int64').apply(str)
-    else:
-        df['fsid'] = df['fsid'].apply(str)
-        df.drop(['count'], axis=1, inplace=True)
-        df['year'] = pd.NA
-        df['returnPeriod'] = pd.NA
-        df['bin'] = pd.NA
-        df['low'] = pd.NA
-        df['mid'] = pd.NA
-        df['high'] = pd.NA
+
+    depth_list = list()
+
+    # Loop through data
+    for d in data:
+
+        try:
+            # Normalize data to get df
+            row_df = pd.json_normalize(d.count, record_path=['data', 'data'], meta=['year', ['data', 'returnPeriod']])
+
+            # Add FSID to row
+            row_df['fsid'] = d.fsid
+            row_df['valid_id'] = d.valid_id
+
+            # Add rows to df - return periods matched to depths across scenarios
+            depth_list.append(row_df)
+
+        except TypeError:
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df['year'] = pd.NA
+            row_df['data.returnPeriod'] = pd.NA
+            row_df['bin'] = pd.NA
+            row_df['count.low'] = pd.NA
+            row_df['count.mid'] = pd.NA
+            row_df['count.high'] = pd.NA
+            depth_list.append(row_df)
+
+    # Get into df
+    df = pd.concat(depth_list, axis=0).reset_index(drop=True)
+    df.rename(columns={'count.low': 'low', 'count.mid': 'mid', 'count.high': 'high',
+                       'data.returnPeriod': 'returnPeriod'}, inplace=True)
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
+    df['bin'] = df['bin'].astype('Int64').apply(str)
+    df['low'] = df['low'].astype('Int64').apply(str)
+    df['mid'] = df['mid'].astype('Int64').apply(str)
+    df['high'] = df['high'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'bin', 'low', 'mid', 'high']]
 
@@ -310,36 +339,50 @@ def format_probability_count_summary(data):
                                  {'location': 'county', 'data': attr.county},
                                  {'location': 'cd', 'data': attr.cd}]} for attr in data]
 
-    df = pd.DataFrame(listed_data).explode('location').reset_index(drop=True)
-    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
-    df = pd.concat([df.drop(['location'], axis=1), df['location'].apply(pd.Series)], axis=1)
-    df = df.explode('data').reset_index(drop=True)
-    df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-    df.rename(columns={'fsid': 'location_fips', 'name': 'location_name'}, inplace=True)
+    depth_list = list()
 
-    if 'count' in df:
-        df = df.explode('count').reset_index(drop=True)
-        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
-        if 'subtype' not in df:
-            df['subtype'] = pd.NA
-        df['fsid'] = df['fsid'].apply(str)
-        df['location_fips'] = df['location_fips'].astype('Int64').apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['low'] = df['low'].astype('Int64').apply(str)
-        df['mid'] = df['mid'].astype('Int64').apply(str)
-        df['high'] = df['high'].astype('Int64').apply(str)
+    # Loop through data
+    for d in listed_data:
 
-    else:
-        df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
-        df['location_fips'] = pd.NA
-        df['location_name'] = pd.NA
+        try:
+            # Normalize data to get df
+            row_df = pd.json_normalize(d["location"], ['data', 'count'],
+                                       ['location', ['location', 'fsid'], ['location', 'name'],
+                                        ['location', 'subtype']], errors='ignore')
+
+            # Add FSID to row
+            row_df['fsid'] = d["fsid"]
+            row_df['valid_id'] = d["valid_id"]
+
+            depth_list.append(row_df)
+
+        except TypeError:
+            row_df = pd.DataFrame([[str(d["fsid"]), d["valid_id"]]], columns=['fsid', 'valid_id'])
+            row_df['location'] = pd.NA
+            row_df['location.fsid'] = pd.NA
+            row_df['location.name'] = pd.NA
+            row_df['location.subtype'] = pd.NA
+            row_df['year'] = pd.NA
+            row_df['data.low'] = pd.NA
+            row_df['data.mid'] = pd.NA
+            row_df['data.high'] = pd.NA
+
+            depth_list.append(row_df)
+
+    # Get into df
+    df = pd.concat(depth_list, axis=0).reset_index(drop=True)
+    df.rename(
+        columns={'location.fsid': 'location_fips', 'location.name': 'location_name', 'location.subtype': 'subtype',
+                 'data.low': 'low', 'data.mid': 'mid', 'data.high': 'high'},
+        inplace=True)
+    if 'subtype' not in df:
         df['subtype'] = pd.NA
-        df['year'] = pd.NA
-        df['low'] = pd.NA
-        df['mid'] = pd.NA
-        df['high'] = pd.NA
+    df['fsid'] = df['fsid'].apply(str)
+    df['location_fips'] = df['location_fips'].astype('Int64').apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['low'] = df['low'].astype('Int64').apply(str)
+    df['mid'] = df['mid'].astype('Int64').apply(str)
+    df['high'] = df['high'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'location', 'location_fips',
                'location_name', 'subtype', 'year', 'low', 'mid', 'high']]
@@ -353,29 +396,44 @@ def format_probability_cumulative(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('cumulative').reset_index(drop=True)
-    if not df['cumulative'].isna().values.all():
-        df = pd.concat([df.drop(['cumulative'], axis=1), df['cumulative'].apply(pd.Series)], axis=1)
-        df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['threshold'] = df['threshold'].astype('Int64').apply(str)
-        if df['low'] is None:
-            df['low'] = df['low'].round(3)
-        if df['mid'] is None:
-            df['mid'] = df['mid'].round(3)
-        if df['high'] is None:
-            df['high'] = df['high'].round(3)
-    else:
-        df['fsid'] = df['fsid'].apply(str)
-        df.drop(['cumulative'], axis=1, inplace=True)
-        df['year'] = pd.NA
-        df['threshold'] = pd.NA
-        df['low'] = pd.NA
-        df['mid'] = pd.NA
-        df['high'] = pd.NA
+
+    depth_list = list()
+
+    # Loop through data
+    for d in data:
+
+        try:
+            # Normalize data to get df
+            row_df = pd.json_normalize(d.cumulative, record_path='data', meta='year')
+
+            # Add FSID to row
+            row_df['fsid'] = d.fsid
+            row_df['valid_id'] = d.valid_id
+
+            # Add rows to df - return periods matched to depths across scenarios
+            depth_list.append(row_df)
+
+        except TypeError:
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df['year'] = pd.NA
+            row_df['threshold'] = pd.NA
+            row_df['data.low'] = pd.NA
+            row_df['data.mid'] = pd.NA
+            row_df['data.high'] = pd.NA
+            depth_list.append(row_df)
+
+    # Get into df
+    df = pd.concat(depth_list, axis=0).reset_index(drop=True)
+    df.rename(columns={'data.low': 'low', 'data.mid': 'mid', 'data.high': 'high'}, inplace=True)
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['threshold'] = df['threshold'].astype('Int64').apply(str)
+    if df['low'] is None:
+        df['low'] = df['low'].round(3)
+    if df['mid'] is None:
+        df['mid'] = df['mid'].round(3)
+    if df['high'] is None:
+        df['high'] = df['high'].round(3)
 
     return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
 
@@ -388,26 +446,41 @@ def format_probability_depth(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('depth').reset_index(drop=True)
-    if not df['depth'].isna().values.all():
-        df = pd.concat([df.drop(['depth'], axis=1), df['depth'].apply(pd.Series)], axis=1)
-        df = df.explode('data').reset_index(drop=True)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
-        df['low'] = df['low'].astype('Int64').apply(str)
-        df['mid'] = df['mid'].astype('Int64').apply(str)
-        df['high'] = df['high'].astype('Int64').apply(str)
-    else:
-        df['fsid'] = df['fsid'].apply(str)
-        df.drop(['depth'], axis=1, inplace=True)
-        df['year'] = pd.NA
-        df['returnPeriod'] = pd.NA
-        df['low'] = pd.NA
-        df['mid'] = pd.NA
-        df['high'] = pd.NA
+
+    depth_list = list()
+
+    # Loop through data
+    for d in data:
+
+        try:
+            # Normalize data to get df
+            row_df = pd.json_normalize(d.depth, record_path='data', meta=['year'])
+
+            # Add FSID to row
+            row_df['fsid'] = d.fsid
+            row_df['valid_id'] = d.valid_id
+
+            # Add rows to df - return periods matched to depths across scenarios
+            depth_list.append(row_df)
+
+        except TypeError:
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df['year'] = pd.NA
+            row_df['returnPeriod'] = pd.NA
+            row_df['data.low'] = pd.NA
+            row_df['data.mid'] = pd.NA
+            row_df['data.high'] = pd.NA
+            depth_list.append(row_df)
+
+    # Get into df
+    df = pd.concat(depth_list, axis=0).reset_index(drop=True)
+    df.rename(columns={'data.low': 'low', 'data.mid': 'mid', 'data.high': 'high'}, inplace=True)
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
+    df['low'] = df['low'].astype('Int64').apply(str)
+    df['mid'] = df['mid'].astype('Int64').apply(str)
+    df['high'] = df['high'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'low', 'mid', 'high']]
 
@@ -420,6 +493,7 @@ def format_environmental_precipitation(data):
     Returns:
         A pandas formatted DataFrame
     """
+    #
     df = pd.DataFrame([vars(o) for o in data]).explode('projected').reset_index(drop=True)
     if not df['projected'].isna().values.all():
         df = pd.concat([df.drop(['projected'], axis=1), df['projected'].apply(pd.Series)], axis=1)
@@ -448,21 +522,22 @@ def format_historic_event(data):
     Returns:
         A pandas formatted DataFrame
     """
+
     df = pd.DataFrame([vars(o) for o in data])
     if not df['properties'].isna().values.all():
         df = pd.concat([df.drop(['properties'], axis=1), df['properties'].apply(pd.Series)], axis=1)
-        df['eventId'] = df['eventId'].astype('Int64').apply(str)
-        df['month'] = df['month'].astype('Int64').apply(str)
-        df['year'] = df['year'].astype('Int64').apply(str)
-        df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
-        df['total'] = df['total'].astype('Int64').apply(str)
-        df['affected'] = df['affected'].astype('Int64').apply(str)
         df.rename(columns={'total': 'propertiesTotal', 'affected': 'propertiesAffected'}, inplace=True)
     else:
-        df['eventId'] = df['eventId'].astype('Int64').apply(str)
         df.drop(['properties'], axis=1, inplace=True)
         df['propertiesTotal'] = pd.NA
         df['propertiesAffected'] = pd.NA
+
+    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['month'] = df['month'].astype('Int64').apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
+    df['propertiesTotal'] = df['propertiesTotal'].astype('Int64').apply(str)
+    df['propertiesAffected'] = df['propertiesAffected'].astype('Int64').apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
@@ -481,16 +556,16 @@ def format_historic_summary_property(data):
     df = pd.DataFrame([vars(o) for o in data]).explode('historic').reset_index(drop=True)
     if not df['historic'].isna().values.all():
         df = pd.concat([df.drop(['historic'], axis=1), df['historic'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
-        df['eventId'] = df['eventId'].astype('Int64').apply(str)
-        df['depth'] = df['depth'].astype('Int64').apply(str)
     else:
-        df['fsid'] = df['fsid'].apply(str)
         df.drop(['historic'], axis=1, inplace=True)
         df['eventId'] = pd.NA
         df['name'] = pd.NA
         df['type'] = pd.NA
         df['depth'] = pd.NA
+
+    df['fsid'] = df['fsid'].apply(str)
+    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['depth'] = df['depth'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth']]
 
@@ -503,16 +578,11 @@ def format_historic_summary(data):
     Returns:
         A pandas formatted DataFrame
     """
-    df = pd.DataFrame([vars(o) for o in data]).explode('historic').reset_index(drop=True)
+    df = pd.json_normalize([vars(o) for o in data]).explode('historic').reset_index(drop=True)
     if not df['historic'].isna().values.all():
         df = pd.concat([df.drop(['historic'], axis=1), df['historic'].apply(pd.Series)], axis=1)
-        df['fsid'] = df['fsid'].apply(str)
         df = df.explode('data').reset_index(drop=True)
         df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        df['eventId'] = df['eventId'].astype('Int64').apply(str)
-        df['type'] = df['type'].apply(str)
-        df['bin'] = df['bin'].astype('Int64').apply(str)
-        df['count'] = df['count'].astype('Int64').apply(str)
     else:
         df['fsid'] = df['fsid'].apply(str)
         df.drop(['historic'], axis=1, inplace=True)
@@ -521,6 +591,12 @@ def format_historic_summary(data):
         df['type'] = pd.NA
         df['bin'] = pd.NA
         df['count'] = pd.NA
+
+    df['fsid'] = df['fsid'].apply(str)
+    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['type'] = df['type'].apply(str)
+    df['bin'] = df['bin'].astype('Int64').apply(str)
+    df['count'] = df['count'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'bin', 'count']]
 
@@ -563,6 +639,7 @@ def format_location_detail_property(data):
     Returns:
         A pandas formatted DataFrame
     """
+
     df = pd.DataFrame([vars(o) for o in data]).explode('neighborhood').reset_index(drop=True)
     df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
 
@@ -626,6 +703,7 @@ def format_location_detail_property(data):
     df['elevation'] = df['city_fips'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
+
     return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
                'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
                'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude']]

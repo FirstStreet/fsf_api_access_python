@@ -10,6 +10,7 @@ import tqdm
 import aiohttp
 import ssl
 import certifi
+from asyncio_throttle import Throttler
 
 # Internal Imports
 import firststreet.errors as e
@@ -22,12 +23,15 @@ class Http:
         requests, and handles any errors during the execution.
         Attributes:
             api_key (str): A string specifying the API key.
+            connection_limit (int): The max number of connections to make
+            rate_limit (int): The max number of requests during the period
+            rate_period (int): The period of time for the limit
             version (str): The version to call the API with
         Methods:
             execute: Sends a request to the First Street Foundation API for the specified endpoint
         """
 
-    def __init__(self, api_key, version=None):
+    def __init__(self, api_key, connection_limit, rate_limit, rate_period, version=None):
         if version is None:
             version = DEFAULT_SUMMARY_VERSION
 
@@ -41,22 +45,27 @@ class Http:
                             'Authorization': 'Bearer %s' % api_key
                         }}
         self.version = version
+        self.connection_limit = connection_limit
+        self.rate_limit = rate_limit
+        self.rate_period = rate_period
 
-    async def endpoint_execute(self, endpoints, limit=100):
+    async def endpoint_execute(self, endpoints):
         """Asynchronously calls each endpoint and returns the JSON responses
         Args:
             endpoints (list): List of endpoints to get
-            limit (int): max number of connections to make
         Returns:
             The list of JSON responses corresponding to each endpoint
         """
+
+        throttler = Throttler(rate_limit=self.rate_limit, period=self.rate_period)
         ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 
-        connector = aiohttp.TCPConnector(limit_per_host=limit, ssl=ssl_ctx)
+        connector = aiohttp.TCPConnector(limit_per_host=self.connection_limit, ssl=ssl_ctx)
         session = aiohttp.ClientSession(connector=connector)
 
+        # Asnycio create tasks for each endpoint
         try:
-            tasks = [asyncio.create_task(self.execute(endpoint, session)) for endpoint in endpoints]
+            tasks = [asyncio.create_task(self.execute(endpoint, session, throttler)) for endpoint in endpoints]
             for t in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks)):
                 await t
             ret = [t.result() for t in tasks]
@@ -66,11 +75,12 @@ class Http:
 
         return ret
 
-    async def execute(self, endpoint, session):
+    async def execute(self, endpoint, session, throttler):
         """Executes the endpoint for the given endpoint with the open session
         Args:
             endpoint (str): The endpoint to get from
             session (ClientSession): The open session
+            throttler (Throttler): The throttle limiter
         Returns:
             The JSON reponse or an empty body if error
         Raises:
@@ -78,50 +88,56 @@ class Http:
         """
         headers = self.options.get('headers')
 
+        # Retry loop
         retry = 0
         while retry < 5:
-
             try:
-                async with session.get(endpoint[0], headers=headers) as response:
 
-                    rate_limit = self._parse_rate_limit(response.headers)
+                # Throttle
+                async with throttler:
+                    async with session.get(endpoint[0], headers=headers) as response:
 
-                    if endpoint[2] == 'tile':
-                        body = await response.read()
+                        # Get rate limit from header
+                        rate_limit = self._parse_rate_limit(response.headers)
 
-                        if response.status != 200 and response.status != 500:
-                            raise self._network_error(self.options, rate_limit,
-                                                      status=response.reason, message=response.status)
-                        elif response.status == 500:
-                            logging.info(
-                                "Error retrieving tile from server. Check if the coordinates provided are correct: {}"
-                                .format(endpoint[1]))
-                            return {"coordinate": endpoint[1], "image": None, 'valid_id': False}
+                        # Read a tile response
+                        if endpoint[2] == 'tile':
+                            body = await response.read()
 
-                        return {"coordinate": endpoint[1], "image": body}
+                            if response.status != 200 and response.status != 500:
+                                raise self._network_error(self.options, rate_limit,
+                                                          status=response.reason, message=response.status)
+                            elif response.status == 500:
+                                logging.info(
+                                    "Error retrieving tile from server. Check if the coordinates provided "
+                                    "are correct: {}".format(endpoint[1]))
+                                return {"coordinate": endpoint[1], "image": None, 'valid_id': False}
 
-                    else:
-                        body = await response.json(content_type=None)
+                            return {"coordinate": endpoint[1], "image": body}
 
-                        if response.status != 200 and response.status != 404 and response.status != 500:
-                            raise self._network_error(self.options, rate_limit, error=body.get('error'))
+                        # Read a json response
+                        else:
+                            body = await response.json(content_type=None)
 
-                        error = body.get("error")
-                        if error:
-                            search_item = endpoint[1]
-                            product = endpoint[2]
-                            product_subtype = endpoint[3]
+                            if response.status != 200 and response.status != 404 and response.status != 500:
+                                raise self._network_error(self.options, rate_limit, error=body.get('error'))
 
-                            if product == 'adaptation' and product_subtype == 'detail':
-                                return {'adaptationId': search_item, 'valid_id': False}
+                            error = body.get("error")
+                            if error:
+                                search_item = endpoint[1]
+                                product = endpoint[2]
+                                product_subtype = endpoint[3]
 
-                            elif product == 'historic' and product_subtype == 'event':
-                                return {'eventId': search_item, 'valid_id': False}
+                                if product == 'adaptation' and product_subtype == 'detail':
+                                    return {'adaptationId': search_item, 'valid_id': False}
 
-                            else:
-                                return {'fsid': search_item, 'valid_id': False}
+                                elif product == 'historic' and product_subtype == 'event':
+                                    return {'eventId': search_item, 'valid_id': False}
 
-                        return body
+                                else:
+                                    return {'fsid': search_item, 'valid_id': False}
+
+                            return body
 
             except asyncio.TimeoutError:
                 logging.info("Timeout error for item: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
