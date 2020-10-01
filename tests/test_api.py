@@ -25,7 +25,7 @@ class TestApi:
     def test_valid_call(self):
         api_key = os.environ['FSF_API_KEY']
         fs = firststreet.FirstStreet(api_key)
-        adap = fs.adaptation.get_detail([29], csv=False, connection_limit=100)
+        adap = fs.adaptation.get_detail([29], csv=False)
         assert len(adap) == 1
         assert adap[0].name == 'Riverfront Park'
 
