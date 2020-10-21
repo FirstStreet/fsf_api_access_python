@@ -164,7 +164,7 @@ class TestLocationDetail:
         assert location[0].state is not None
         assert location[0].footprintId is None
         assert location[0].elevation is not None
-        assert location[0].fema is not None
+        assert location[0].fema is None
         assert location[0].geometry is None
         location = fs.location.get_detail([1206631], "neighborhood", csv=True, output_dir=tmpdir)
         assert len(location) == 1
