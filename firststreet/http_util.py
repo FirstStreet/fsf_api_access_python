@@ -107,8 +107,6 @@ class Http:
                 try:
                     async with session.get(endpoint[0], headers=headers) as response:
 
-                        print(response)
-
                         # Read a tile response
                         if endpoint[2] == 'tile':
                             return await self.tile_response(response, endpoint)

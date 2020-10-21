@@ -361,8 +361,8 @@ The Flood Tiles product give the ability to customize maps by layering on flood 
 tile.<method>
 ```
 
-* `get_probability_depth`(coordinate `tuple of int`, year `int`, return_period `int`, image `bool`, [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Probability Depth Tile` product for the given coordinates, and optionally creates an image file
-* `get_historic_event`(coordinate `tuple of int`, event_id `int`, image `bool`, [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Historic Event Tile` product for the given coordinates, and optionally creates an image file
+* `get_probability_depth`(coordinate `list of tuple of int [(z, x, y)]`, year `int`, return_period `int`, image `bool`, [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Probability Depth Tile` product for the given coordinates, and optionally creates an image file
+* `get_historic_event`(coordinate `list of tuple of int [(z, x, y)]`, event_id `int`, image `bool`, [output_dir `str='cwd'`], [extra_param `str=None`]) - Returns an array of `Historic Event Tile` product for the given coordinates, and optionally creates an image file
    
 <a name="examples"></a>
 # [Examples](#toc)
@@ -497,14 +497,14 @@ tile.<method>
     540651172,1,0,1,0,0
     ```
 
-5. Different Location Types Through the Client:
+5. Different Location Types Through the Command Line:
 
    **Note that the separator for each item must be a semicolon `;`**
     ```sh
     python -m firststreet -p location.get_detail -i "362493883;(40.792505,-73.951949);1220 5th Ave, New York, NY" -l property
     ```
     
-7. Different Locatio Types From File to CSV Through Command Line:
+6. Different Locatio Types From File to CSV Through Command Line:
 
    Content of sample.txt:
    ```text
@@ -516,6 +516,25 @@ tile.<method>
    ```sh
    python -m firststreet -p location.get_summary -f sample.txt -l property
    ```
+
+7. Getting a Tile from the API Tile Product Through the Client:
+    ```python
+    # Contents of sample.py
+    import firststreet
+    fs = firststreet.FirstStreet("api-key")
+    
+    fs.tile.get_probability_depth(year=2050, return_period=500, coordinate=[(14, 2633, 5694)], image=True)
+    tile_image = fs.tile.get_historic_event(event_id=2, coordinate=[(12, 942, 1715)], image=False)
+    ```
+    
+8. Getting a Tile from the API Tile Product Through the Command Line:
+
+   **Note that the separator for each coordinate must be a semicolon `;`, and the spacing within the coordinates**
+   ```sh
+   python -m firststreet -p tile.get_probability_depth -i (12,942,1715);(11,942,1715) -year 2050 -return_period 500
+   python -m firststreet -p tile.get_historic_event -i (12,942,1715) -event_id 14
+   ```
+   
     
 <a name="csv-output"></a>
 # [CSV File Output:](#toc)
