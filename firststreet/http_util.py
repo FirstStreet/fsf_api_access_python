@@ -6,11 +6,14 @@ import asyncio
 
 # External Imports
 import logging
+from json.decoder import JSONDecodeError
+
 import tqdm
 import aiohttp
 import ssl
 import certifi
 from asyncio_throttle import Throttler
+from itertools import islice
 
 # Internal Imports
 import firststreet.errors as e
@@ -28,7 +31,14 @@ class Http:
             rate_period (int): The period of time for the limit
             version (str): The version to call the API with
         Methods:
+            endpoint_execute: Sets up the throttler and session for the asynchronous call
             execute: Sends a request to the First Street Foundation API for the specified endpoint
+            tile_response: Handles the response for a tile
+            product_response: Handles the response for all other products
+            _parse_rate_limit: Parses the rate limiter returned by the header
+            _network_error: Handles any network errors returned by the response
+            limited_as_completed: Limits the number of concurrent coroutines. Prevents Timeout errors due to too
+                many coroutines
         """
 
     def __init__(self, api_key, connection_limit, rate_limit, rate_period, version=None):
@@ -65,10 +75,9 @@ class Http:
 
         # Asnycio create tasks for each endpoint
         try:
-            tasks = [asyncio.create_task(self.execute(endpoint, session, throttler)) for endpoint in endpoints]
-            for t in tqdm.tqdm(asyncio.as_completed(tasks), total=len(tasks)):
-                await t
-            ret = [t.result() for t in tasks]
+            tasks = (asyncio.create_task(self.execute(endpoint, session, throttler)) for endpoint in endpoints)
+            ret = [await t
+                   for t in tqdm.tqdm(self.limited_as_completed(tasks, self.connection_limit), total=len(endpoints))]
 
         finally:
             await session.close()
@@ -91,65 +100,81 @@ class Http:
         # Retry loop
         retry = 0
         while retry < 5:
-            try:
 
-                # Throttle
-                async with throttler:
+            # Throttle
+            async with throttler:
+
+                try:
                     async with session.get(endpoint[0], headers=headers) as response:
 
-                        # Get rate limit from header
-                        rate_limit = self._parse_rate_limit(response.headers)
+                        print(response)
 
                         # Read a tile response
                         if endpoint[2] == 'tile':
-                            body = await response.read()
-
-                            if response.status != 200 and response.status != 500:
-                                raise self._network_error(self.options, rate_limit,
-                                                          status=response.reason, message=response.status)
-                            elif response.status == 500:
-                                logging.info(
-                                    "Error retrieving tile from server. Check if the coordinates provided "
-                                    "are correct: {}".format(endpoint[1]))
-                                return {"coordinate": endpoint[1], "image": None, 'valid_id': False}
-
-                            return {"coordinate": endpoint[1], "image": body}
+                            return await self.tile_response(response, endpoint)
 
                         # Read a json response
                         else:
-                            body = await response.json(content_type=None)
+                            return await self.product_response(response, endpoint)
 
-                            if response.status != 200 and response.status != 404 and response.status != 500:
-                                raise self._network_error(self.options, rate_limit, error=body.get('error'))
+                except (asyncio.TimeoutError, JSONDecodeError) as ex:
+                    logging.info("{} error for item: {} at {}. Retry {}".format(ex.__class__, endpoint[1],
+                                                                                endpoint[0], retry))
+                    retry += 1
+                    await asyncio.sleep(1)
 
-                            error = body.get("error")
-                            if error:
-                                search_item = endpoint[1]
-                                product = endpoint[2]
-                                product_subtype = endpoint[3]
-
-                                if product == 'adaptation' and product_subtype == 'detail':
-                                    return {'adaptationId': search_item, 'valid_id': False}
-
-                                elif product == 'historic' and product_subtype == 'event':
-                                    return {'eventId': search_item, 'valid_id': False}
-
-                                else:
-                                    return {'fsid': search_item, 'valid_id': False}
-
-                            return body
-
-            except asyncio.TimeoutError:
-                logging.info("Timeout error for item: {} at {}. Retry {}".format(endpoint[1], endpoint[0], retry))
-                retry += 1
-                await asyncio.sleep(1)
-
-            except aiohttp.ClientError as ex:
-                logging.error("{} error while getting item: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
-                return {'search_item': endpoint[1]}
+                except aiohttp.ClientError as ex:
+                    logging.error("{} error getting item: {} from {}".format(ex.__class__, endpoint[1], endpoint[0]))
+                    return {'search_item': endpoint[1]}
 
         logging.error("Timeout error after 5 retries for search_item: {} from {}".format(endpoint[1], endpoint[0]))
         return {'search_item': endpoint[1]}
+
+    async def tile_response(self, response, endpoint):
+
+        # Get rate limit from header
+        rate_limit = self._parse_rate_limit(response.headers)
+
+        if response.status != 200 and response.status != 500:
+            raise self._network_error(self.options, rate_limit,
+                                      status=response.reason, message=response.status)
+
+        elif response.status == 500:
+            logging.info(
+                "Error retrieving tile from server. Check if the coordinates provided "
+                "are correct: {}".format(endpoint[1]))
+            return {"coordinate": endpoint[1], "image": None, 'valid_id': False}
+
+        body = await response.read()
+
+        return {"coordinate": endpoint[1], "image": body}
+
+    async def product_response(self, response, endpoint):
+
+        # Get rate limit from header
+        rate_limit = self._parse_rate_limit(response.headers)
+
+        body = await response.json(content_type=None)
+
+        if response.status != 200 and response.status != 404 and response.status != 500:
+            raise self._network_error(self.options, rate_limit, error=body.get('error'))
+
+        error = body.get("error")
+        if error:
+            search_item = endpoint[1]
+            product = endpoint[2]
+            product_subtype = endpoint[3]
+
+            if product == 'adaptation' and product_subtype == 'detail':
+                return {'adaptationId': search_item, 'valid_id': False}
+
+            elif product == 'historic' and product_subtype == 'event':
+                return {'eventId': search_item, 'valid_id': False}
+
+            else:
+                return {'fsid': search_item, 'valid_id': False}
+
+        return body
 
     @staticmethod
     def _parse_rate_limit(headers):
@@ -197,3 +222,39 @@ class Http:
             503: e.OfflineError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}),
         }.get(status,
               e.UnknownError(message=formatted, attachments={"options": options, "rate_limit": rate_limit}))
+
+    @staticmethod
+    def limited_as_completed(coros, limit):
+        """
+        Run the coroutines (or futures) supplied in the
+        iterable coros, ensuring that there are at most
+        limit coroutines running at any time.
+        Return an iterator whose values, when waited for,
+        are Future instances containing the results of
+        the coroutines.
+        Results may be provided in any order, as they
+        become available.
+
+        https://github.com/andybalaam/asyncioplus/blob/master/asyncioplus/limited_as_completed.py
+        """
+        futures = [
+            asyncio.ensure_future(c)
+            for c in islice(coros, 0, limit)
+        ]
+
+        async def first_to_finish():
+            while True:
+                await asyncio.sleep(0)
+                for f in futures:
+                    if f.done():
+                        futures.remove(f)
+                        try:
+                            newf = next(coros)
+                            futures.append(
+                                asyncio.ensure_future(newf))
+                        except StopIteration as e:
+                            pass
+                        return f.result()
+
+        while len(futures) > 0:
+            yield first_to_finish()

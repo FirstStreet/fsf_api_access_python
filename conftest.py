@@ -4,6 +4,9 @@
 # External Imports
 import pytest
 
+# Internal Imports
+from firststreet import Http
+
 pytest_plugins = 'aiohttp.pytest_plugin'
 
 
@@ -22,3 +25,8 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "stress" in item.keywords:
             item.add_marker(skip_stress)
+
+
+@pytest.fixture(scope='session', autouse=True)
+def setup_connection(request):
+    return Http("", 100, 4950, 60)
