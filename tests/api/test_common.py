@@ -26,7 +26,5 @@ class TestApiGeometry:
         assert his[0].geometry is not None
 
     def test_location_geom(self):
-        loc = fs.location.get_detail([395112095], "property", csv=True)
-        assert loc[0].geometry is None
         loc = fs.location.get_detail([39153531702], "tract", csv=True)
         assert loc[0].geometry is not None
