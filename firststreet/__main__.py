@@ -19,30 +19,41 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--product", help="Example: adaptation_detail", required=True)
     parser.add_argument("-api_key", "--api_key", required=False)
     parser.add_argument("-v", "--version", required=False)
-    parser.add_argument("-i", "--search_items", help="Example: 28,29", required=False,)
-    parser.add_argument("-l", "--location", help="Example: property", required=False)
+    # Convert log default to an actual boolean
+    parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
     parser.add_argument("-connection_limit", "--connection_limit", help="Example: 100", required=False, default="100")
     parser.add_argument("-rate_limit", "--rate_limit", help="Example: 5000", required=False, default="20000")
     parser.add_argument("-rate_period", "--rate_period", help="Example: 3600", required=False, default="1")
-    parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
+    parser.add_argument("-o", "--output_dir", help="Example: /output", required=False)
+    parser.add_argument("-s", "--search_items", help="Example: 28,29", required=False,)
+    parser.add_argument("-l", "--location_type", help="Example: property", required=False)
+    parser.add_argument("-y", "--year", required=False)
+    parser.add_argument("-rp", "--return_period", required=False)
+    parser.add_argument("-eid", "--event_id", required=False)
+    # deprecated file parameter. Will be removed in a later version
     parser.add_argument("-f", "--file", help="Example: ./sample.txt", required=False)
+    # deprecated extra_param parameter. Will be removed in a later version
     parser.add_argument("-e", "--extra_param", required=False)
-    parser.add_argument("-year", "--year", required=False)
-    parser.add_argument("-return_period", "--return_period", required=False)
-    parser.add_argument("-event_id", "--event_id", required=False)
 
     argument = parser.parse_args()
 
-    # Merge search_item from file and list input
+    # Reads a file or converts search items into a list
     search_items = []
     if argument.search_items:
-        for search_item in argument.search_items.strip().split(";"):
-            try:
-                search_items.append(ast.literal_eval(search_item))
-            except (SyntaxError, ValueError):
-                search_items.append(search_item)
+
+        # If file, read addresses from file
+        if os.path.isfile(argument.search_items):
+            search_items = read_search_items_from_file(argument.search_items)
+        else:
+            for search_item in argument.search_items.strip().split(";"):
+                try:
+                    search_items.append(ast.literal_eval(search_item))
+                except (SyntaxError, ValueError):
+                    search_items.append(search_item)
 
     if argument.file:
+        logging.warning("'file' argument deprecated and will be removed. Use `-s path_to_file` instead. "
+                        "Ex: `-s testing/sample.txt`")
         search_items += read_search_items_from_file(argument.file)
 
     # Ensure there is at least a product and search item
@@ -70,96 +81,113 @@ if __name__ == "__main__":
         if argument.product == 'adaptation.get_detail':
             fs.adaptation.get_detail(search_items,
                                      csv=True,
+                                     output_dir=argument.output_dir,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'adaptation.get_summary':
             fs.adaptation.get_summary(search_items,
-                                      argument.location,
+                                      argument.location_type,
                                       csv=True,
+                                      output_dir=argument.output_dir,
                                       extra_param=argument.extra_param)
 
-        elif argument.product == 'adaptation.get_details_by_location':
-            fs.adaptation.get_details_by_location(search_items,
-                                                  argument.location,
-                                                  csv=True,
-                                                  extra_param=argument.extra_param)
+        elif argument.product == 'adaptation.get_detail_by_location':
+            fs.adaptation.get_detail_by_location(search_items,
+                                                 argument.location_type,
+                                                 csv=True,
+                                                 output_dir=argument.output_dir,
+                                                 extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_depth':
             fs.probability.get_depth(search_items,
                                      csv=True,
+                                     output_dir=argument.output_dir,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_chance':
             fs.probability.get_chance(search_items,
                                       csv=True,
+                                      output_dir=argument.output_dir,
                                       extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_count_summary':
             fs.probability.get_count_summary(search_items,
                                              csv=True,
+                                             output_dir=argument.output_dir,
                                              extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_cumulative':
             fs.probability.get_cumulative(search_items,
                                           csv=True,
+                                          output_dir=argument.output_dir,
                                           extra_param=argument.extra_param)
 
         elif argument.product == 'probability.get_count':
             fs.probability.get_count(search_items,
-                                     argument.location,
+                                     argument.location_type,
                                      csv=True,
+                                     output_dir=argument.output_dir,
                                      extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_event':
             fs.historic.get_event(search_items,
                                   csv=True,
+                                  output_dir=argument.output_dir,
                                   extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_summary':
             fs.historic.get_summary(search_items,
-                                    argument.location,
+                                    argument.location_type,
                                     csv=True,
+                                    output_dir=argument.output_dir,
                                     extra_param=argument.extra_param)
 
         elif argument.product == 'historic.get_events_by_location':
             fs.historic.get_events_by_location(search_items,
-                                               argument.location,
+                                               argument.location_type,
                                                csv=True,
+                                               output_dir=argument.output_dir,
                                                extra_param=argument.extra_param)
 
         elif argument.product == 'location.get_detail':
             fs.location.get_detail(search_items,
-                                   argument.location,
+                                   argument.location_type,
                                    csv=True,
+                                   output_dir=argument.output_dir,
                                    extra_param=argument.extra_param)
 
         elif argument.product == 'location.get_summary':
             fs.location.get_summary(search_items,
-                                    argument.location,
+                                    argument.location_type,
                                     csv=True,
+                                    output_dir=argument.output_dir,
                                     extra_param=argument.extra_param)
 
         elif argument.product == 'fema.get_nfip':
             fs.fema.get_nfip(search_items,
-                             argument.location,
+                             argument.location_type,
                              csv=True,
+                             output_dir=argument.output_dir,
                              extra_param=argument.extra_param)
 
         elif argument.product == 'environmental.get_precipitation':
             fs.environmental.get_precipitation(search_items,
                                                csv=True,
+                                               output_dir=argument.output_dir,
                                                extra_param=argument.extra_param)
 
         elif argument.product == 'tile.get_probability_depth':
-            fs.tile.get_probability_depth(year=int(argument.year), return_period=int(argument.return_period),
-                                          coordinate=search_items,
+            fs.tile.get_probability_depth(year=int(argument.year),
+                                          return_period=int(argument.return_period),
+                                          search_items=search_items,
+                                          output_dir=argument.output_dir,
                                           image=True)
 
         elif argument.product == 'tile.get_historic_event':
-            fs.tile.get_historic_event(event_id=int(argument.event_id), coordinate=search_items,
+            fs.tile.get_historic_event(event_id=int(argument.event_id),
+                                       search_items=search_items,
+                                       output_dir=argument.output_dir,
                                        image=True)
-
-            # AND FILES
 
         else:
             logging.error("Product not found. Please check that the argument"

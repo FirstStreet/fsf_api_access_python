@@ -302,23 +302,23 @@ class TestAdaptationSummaryDetail:
 
     def test_empty(self):
         with pytest.raises(InvalidArgument):
-            fs.adaptation.get_details_by_location([], "")
+            fs.adaptation.get_detail_by_location([], "")
 
     def test_empty_fsid(self):
         with pytest.raises(InvalidArgument):
-            fs.adaptation.get_details_by_location([], "property")
+            fs.adaptation.get_detail_by_location([], "property")
 
     def test_empty_type(self):
         with pytest.raises(InvalidArgument):
-            fs.adaptation.get_details_by_location([1935265], "")
+            fs.adaptation.get_detail_by_location([1935265], "")
 
     def test_wrong_fsid_type(self):
         with pytest.raises(InvalidArgument):
-            fs.adaptation.get_details_by_location(190836953, "city")
+            fs.adaptation.get_detail_by_location(190836953, "city")
 
     def test_wrong_fsid_number(self):
         fsid = [11]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
         assert adaptation[0][0].fsid == fsid[0]
@@ -329,7 +329,7 @@ class TestAdaptationSummaryDetail:
 
     def test_incorrect_lookup_type(self, tmpdir):
         fsid = [1935265]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "state", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "state", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
         assert adaptation[0][0].fsid == fsid[0]
@@ -340,11 +340,11 @@ class TestAdaptationSummaryDetail:
 
     def test_wrong_adaptation_type(self):
         with pytest.raises(TypeError):
-            fs.adaptation.get_details_by_location([1935265], 190)
+            fs.adaptation.get_detail_by_location([1935265], 190)
 
     def test_single(self):
         fsid = [1935265]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
         assert adaptation[0][0].fsid == fsid[0]
@@ -355,7 +355,7 @@ class TestAdaptationSummaryDetail:
 
     def test_multiple(self):
         fsid = [1935265, 1714000]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 2
         assert len(adaptation[1]) == 5
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
@@ -373,7 +373,7 @@ class TestAdaptationSummaryDetail:
 
     def test_single_csv(self, tmpdir):
         fsid = [1935265]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
         assert adaptation[0][0].fsid == fsid[0]
@@ -384,7 +384,7 @@ class TestAdaptationSummaryDetail:
 
     def test_multiple_csv(self, tmpdir):
         fsid = [1935265, 1714000]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 2
         assert len(adaptation[1]) == 5
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
@@ -402,7 +402,7 @@ class TestAdaptationSummaryDetail:
 
     def test_mixed_invalid(self):
         fsid = [1935265, 000000000]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city")
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 2
         assert len(adaptation[1]) == 2
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
@@ -419,7 +419,7 @@ class TestAdaptationSummaryDetail:
 
     def test_mixed_invalid_csv(self, tmpdir):
         fsid = [1935265, 000000000]
-        adaptation = fs.adaptation.get_details_by_location(fsid, "city", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 2
         assert len(adaptation[1]) == 2
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
@@ -435,42 +435,42 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][1].valid_id is True
 
     def test_coordinate_invalid(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([(41.70808, -72.860217)], "property",
-                                                           csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([(41.70808, -72.860217)], "property",
+                                                          csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert not adaptation[0][0].adaptation
         assert adaptation[0][0].valid_id is False
 
     def test_single_coordinate(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([(40.7079652311, -74.0021455387)], "property",
-                                                           csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([(40.7079652311, -74.0021455387)], "property",
+                                                          csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert adaptation[0][0].adaptation is not None
         assert adaptation[0][0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location(["Shimik, Nunavut"], "property",
-                                                           csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(["Shimik, Nunavut"], "property",
+                                                          csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert not adaptation[0][0].adaptation
         assert adaptation[0][0].valid_id is False
 
     def test_address_invalid_500(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location(["Toronto, Ontario, Canada"], "property",
-                                                           csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(["Toronto, Ontario, Canada"], "property",
+                                                          csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert not adaptation[0][0].adaptation
         assert adaptation[0][0].valid_id is False
 
     def test_single_address(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location(["247 Water St, New York, New York"], "property",
-                                                           csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location(["247 Water St, New York, New York"], "property",
+                                                          csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert adaptation[0][0].adaptation is not None
         assert adaptation[0][0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
-        adaptation = fs.adaptation.get_details_by_location([395133768], "property", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([395133768], "property", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
         assert adaptation[0][0].valid_id is True
@@ -492,7 +492,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 395133768
         assert adaptation[0][0].properties is None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([7924], "neighborhood", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([7924], "neighborhood", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 6
         assert adaptation[0][0].valid_id is True
@@ -515,7 +515,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 7924
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([1935265], "city", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([1935265], "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
         assert adaptation[0][0].valid_id is True
@@ -538,7 +538,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 1935265
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([50158], "zcta", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([50158], "zcta", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 4
         assert adaptation[0][0].valid_id is True
@@ -561,7 +561,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 50158
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([39061007100], "tract", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([39061007100], "tract", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
         assert adaptation[0][0].valid_id is True
@@ -584,7 +584,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 39061007100
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([19047], "county", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([19047], "county", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 3
         assert adaptation[0][0].valid_id is True
@@ -607,7 +607,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 19047
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([3915], "cd", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([3915], "cd", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 5
         assert adaptation[0][0].valid_id is True
@@ -630,7 +630,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].fsid == 3915
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
-        adaptation = fs.adaptation.get_details_by_location([39], "state", csv=True, output_dir=tmpdir)
+        adaptation = fs.adaptation.get_detail_by_location([39], "state", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 299
         assert adaptation[0][0].valid_id is True

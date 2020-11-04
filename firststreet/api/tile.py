@@ -21,14 +21,14 @@ class Tile(Api):
             get_historic_event: Retrieves a list of Probability Depth for the given list of IDs
         """
 
-    def get_probability_depth(self, year, return_period, coordinate, image=False, output_dir=None, extra_param=None):
+    def get_probability_depth(self, search_items, year, return_period, image=False, output_dir=None, extra_param=None):
         """Retrieves probability depth tile data from the First Street Foundation API given a list of search_items
          and returns a list of Probability Depth Tile objects.
 
         Args:
             year (int): The year to get the tile
             return_period (int): The return period to get the tile
-            coordinate (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
+            search_items (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             image (bool): To output extracted image to a png or not
             output_dir (str): The output directory to save the generated tile
             extra_param (str): Extra parameter to be added to the url
@@ -50,12 +50,12 @@ class Tile(Api):
         elif not isinstance(return_period, int):
             raise TypeError("return period is not an int")
         elif return_period not in [500, 100, 20, 5, 2]:
-            logging.error("Year provided is not one of: 500, 100, 20, 5, 2. "
+            logging.error("Return period provided is not one of: 500, 100, 20, 5, 2. "
                           "(2 year return period is only available for coastal areas.)")
-            raise InvalidArgument(year)
+            raise InvalidArgument(return_period)
 
         # Get data from api and create objects
-        api_datas = self.call_api(coordinate, "tile", "probability", tile_product="depth", year=year,
+        api_datas = self.call_api(search_items, "tile", "probability", tile_product="depth", year=year,
                                   return_period=return_period, extra_param=extra_param)
 
         if image:
@@ -84,13 +84,13 @@ class Tile(Api):
 
         return product
 
-    def get_historic_event(self, event_id, coordinate, image=False, output_dir=None, extra_param=None):
+    def get_historic_event(self, search_items, event_id, image=False, output_dir=None, extra_param=None):
         """Retrieves historic event tile data from the First Street Foundation API given a list of search_items
          and returns a list of Historic Event Tile objects.
 
         Args:
+            search_items (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             event_id (int): A First Street Foundation eventId
-            coordinate (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             image (bool): To output extracted image to a png or not
             output_dir (str): The output directory to save the generated tile
             extra_param (str): Extra parameter to be added to the url
@@ -98,8 +98,8 @@ class Tile(Api):
         Returns:
             A list of Probability Count
         Raises:
-            InvalidArgument: The location provided is empty
-            TypeError: The location provided is not a string
+            InvalidArgument: The event id provided is empty
+            TypeError: The event id provided is not an int
         """
 
         if not event_id:
@@ -108,7 +108,7 @@ class Tile(Api):
             raise TypeError("event id is not an int")
 
         # Get data from api and create objects
-        api_datas = self.call_api(coordinate, "tile", "historic", tile_product="event", event_id=event_id,
+        api_datas = self.call_api(search_items, "tile", "historic", tile_product="event", event_id=event_id,
                                   extra_param=extra_param)
 
         if image:

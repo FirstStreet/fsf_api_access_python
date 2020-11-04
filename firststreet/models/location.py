@@ -142,7 +142,6 @@ class LocationDetailCounty(LocationDetail):
         self.cd = response.get('cd')
         self.state = response.get('state')
         self.geometry = Geometry(response.get('geometry'))
-        self.district = response.get('district')
 
 
 class LocationDetailCd(LocationDetail):

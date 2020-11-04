@@ -43,33 +43,35 @@ class Api:
         Returns:
             A list of JSON responses
         """
-        # Not a list
+        # Not a list. This means it's a file
         if not isinstance(search_item, list):
 
             # Check if it's a file
             if isinstance(search_item, str):
-                if os.path.isfile(os.getcwd() + "/" + search_item):
+                if os.path.isfile(search_item):
 
                     # Get search items from file
-                    search_item = read_search_items_from_file(os.getcwd() + "/" + search_item)
+                    search_item = read_search_items_from_file(search_item)
 
                 else:
                     raise InvalidArgument("File provided is not a valid file. "
-                                          "Please check the file name. '{}'".format(os.path.curdir + str(search_item)))
-            else:
-                raise InvalidArgument("File provided is not a list or a valid file. "
-                                      "Please check the file name. '{}'".format(os.path.curdir + str(search_item)))
+                                          "Please check the file name and path. '{}'".format(str(search_item)))
 
-        if tile_product:
-            if not all(isinstance(t, tuple) for t in search_item):
-                raise TypeError("Input must be a list of coordinates in a tuple of (z, x, y). "
-                                "Provided Arg: {}".format(search_item))
-
-            if not all(isinstance(coord, int) for t in search_item for coord in t):
-                raise TypeError("Each coordinate in the tuple must be an integer. Provided Arg: {}".format(search_item))
-
-            if not all(0 < t[0] <= 18 for t in search_item):
-                raise TypeError("Max zoom is 18. Provided Arg: {}".format(search_item))
+            # # Check tuple
+            # elif tile_product and not os.path.isfile(search_item):
+            #     if not all(isinstance(t, tuple) for t in search_item):
+            #         raise TypeError("Input must be a list of coordinates in a tuple of (z, x, y). "
+            #                         "Provided Arg: {}".format(search_item))
+            #
+            #     if not all(isinstance(coord, int) for t in search_item for coord in t):
+            #         raise TypeError("Each coordinate in the tuple must be an integer. Provided Arg: {}".format(search_item))
+            #
+            #     if not all(0 < t[0] <= 18 for t in search_item):
+            #         raise TypeError("Max zoom is 18. Provided Arg: {}".format(search_item))
+            #
+            # else:
+            #     raise InvalidArgument("File provided is not a list or a valid file. "
+            #                           "Please check the file name and path. '{}'".format(str(search_item)))
 
         # No items found
         if not search_item:
