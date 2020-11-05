@@ -177,6 +177,28 @@ if __name__ == "__main__":
                                                extra_param=argument.extra_param)
 
         elif argument.product == 'tile.get_probability_depth':
+            if not argument.year:
+                logging.error("get_probability_depth is missing the year argument")
+                sys.exit()
+
+            try:
+                int(argument.year)
+            except ValueError:
+                logging.error("The year argument could not be converted to an int. "
+                              "Provided argument: {}".format(argument.year))
+                sys.exit()
+
+            if not argument.return_period:
+                logging.error("get_probability_depth is missing the return_period argument")
+                sys.exit()
+
+            try:
+                int(argument.return_period)
+            except ValueError:
+                logging.error("The return_period argument could not be converted to an int. "
+                              "Provided argument: {}".format(argument.return_period))
+                sys.exit()
+
             fs.tile.get_probability_depth(year=int(argument.year),
                                           return_period=int(argument.return_period),
                                           search_items=search_items,
@@ -184,6 +206,18 @@ if __name__ == "__main__":
                                           image=True)
 
         elif argument.product == 'tile.get_historic_event':
+
+            if not argument.event_id:
+                logging.error("get_probability_depth is missing the event_id argument")
+                sys.exit()
+
+            try:
+                int(argument.event_id)
+            except ValueError:
+                logging.error("The event_id argument could not be converted to an int. "
+                              "Provided argument: {}".format(argument.event_id))
+                sys.exit()
+
             fs.tile.get_historic_event(event_id=int(argument.event_id),
                                        search_items=search_items,
                                        output_dir=argument.output_dir,

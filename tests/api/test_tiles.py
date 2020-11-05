@@ -19,19 +19,19 @@ class TestProbabilityTiles:
 
     def test_empty(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=[])
+            fs.tile.get_probability_depth(year=2050, return_period=5, search_items=[])
 
     def test_wrong_coord_type(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=(12, 942, 1715))
+            fs.tile.get_probability_depth(year=2050, return_period=5, search_items=(12, 942, 1715))
 
     def test_wrong_coord_tuple_type(self):
         with pytest.raises(TypeError):
-            fs.tile.get_probability_depth(year=2050, return_period=500, coordinate=[500])
+            fs.tile.get_probability_depth(year=2050, return_period=500, search_items=[500])
 
     def test_invalid(self):
         coord = [(1, 1, 1)]
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=coord)
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=coord)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         assert tile[0].image is None
@@ -39,23 +39,23 @@ class TestProbabilityTiles:
 
     def test_wrong_year_type(self):
         with pytest.raises(TypeError):
-            fs.tile.get_probability_depth(year="year", return_period=5, coordinate=[(12, 942, 1715)])
+            fs.tile.get_probability_depth(year="year", return_period=5, search_items=[(12, 942, 1715)])
 
     def test_wrong_return_period_type(self):
         with pytest.raises(TypeError):
-            fs.tile.get_probability_depth(year=2050, return_period="rp", coordinate=[(12, 942, 1715)])
+            fs.tile.get_probability_depth(year=2050, return_period="rp", search_items=[(12, 942, 1715)])
 
     def test_bad_year(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_probability_depth(year=1000, return_period=5, coordinate=[(12, 942, 1715)])
+            fs.tile.get_probability_depth(year=1000, return_period=5, search_items=[(12, 942, 1715)])
 
     def test_bad_return_period(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_probability_depth(year=1000, return_period=5, coordinate=[(12, 942, 1715)])
+            fs.tile.get_probability_depth(year=1000, return_period=5, search_items=[(12, 942, 1715)])
 
     def test_single(self):
         coord = [(12, 942, 1715)]
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=coord)
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=coord)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         assert tile[0].image is not None
@@ -63,7 +63,7 @@ class TestProbabilityTiles:
 
     def test_multiple(self):
         coord = [(12, 942, 1715), (17, 30990, 54379)]
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=coord)
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=coord)
         assert len(tile) == 2
         tile.sort(key=lambda x: x.coordinate)
         assert tile[0].coordinate == coord[0]
@@ -75,7 +75,7 @@ class TestProbabilityTiles:
 
     def test_single_image(self):
         coord = [(12, 942, 1715)]
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=coord, image=True)
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=coord, image=True)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         assert tile[0].image is not None
@@ -83,7 +83,7 @@ class TestProbabilityTiles:
 
     def test_mixed_invalid(self):
         coord = [(12, 942, 1715), (1, 1, 1)]
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=coord)
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=coord)
         assert len(tile) == 2
         tile.sort(key=lambda x: x.coordinate, reverse=True)
         assert tile[0].coordinate == coord[0]
@@ -94,7 +94,7 @@ class TestProbabilityTiles:
         assert tile[1].valid_id is False
 
     def test_one_of_each(self):
-        tile = fs.tile.get_probability_depth(year=2050, return_period=5, coordinate=[(12, 942, 1715)])
+        tile = fs.tile.get_probability_depth(year=2050, return_period=5, search_items=[(12, 942, 1715)])
         assert len(tile) == 1
         assert tile[0].valid_id is True
         assert tile[0].coordinate == (12, 942, 1715)
@@ -107,33 +107,33 @@ class TestHistoricTiles:
 
     def test_empty(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_historic_event(event_id=2, coordinate=[])
+            fs.tile.get_historic_event(event_id=2, search_items=[])
 
     def test_wrong_coord_type(self):
         with pytest.raises(InvalidArgument):
-            fs.tile.get_historic_event(event_id=2, coordinate=(12, 942, 1715))
+            fs.tile.get_historic_event(event_id=2, search_items=(12, 942, 1715))
 
     def test_invalid(self):
         coord = [(12, 1, 1)]
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=coord)
+        tile = fs.tile.get_historic_event(event_id=2, search_items=coord)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         # No way to test if image is bad
 
     def test_wrong_event_id_type(self):
         with pytest.raises(TypeError):
-            fs.tile.get_historic_event(event_id="event_id", coordinate=[(12, 942, 1715)])
+            fs.tile.get_historic_event(event_id="event_id", search_items=[(12, 942, 1715)])
 
     def test_bad_event(self):
         coord = [(12, 942, 1715)]
-        tile = fs.tile.get_historic_event(event_id=99999, coordinate=coord)
+        tile = fs.tile.get_historic_event(event_id=99999, search_items=coord)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         # No way to test if image is bad
 
     def test_single(self):
         coord = [(12, 942, 1715)]
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=coord)
+        tile = fs.tile.get_historic_event(event_id=2, search_items=coord)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         assert tile[0].image is not None
@@ -141,7 +141,7 @@ class TestHistoricTiles:
 
     def test_multiple(self):
         coord = [(12, 942, 1715), (17, 30990, 54379)]
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=coord)
+        tile = fs.tile.get_historic_event(event_id=2, search_items=coord)
         assert len(tile) == 2
         tile.sort(key=lambda x: x.coordinate)
         assert tile[0].coordinate == coord[0]
@@ -153,7 +153,7 @@ class TestHistoricTiles:
 
     def test_single_image(self):
         coord = [(12, 942, 1715)]
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=coord, image=True)
+        tile = fs.tile.get_historic_event(event_id=2, search_items=coord, image=True)
         assert len(tile) == 1
         assert tile[0].coordinate == coord[0]
         assert tile[0].image is not None
@@ -161,7 +161,7 @@ class TestHistoricTiles:
 
     def test_mixed_invalid(self):
         coord = [(12, 942, 1715), (2, 1, 1)]
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=coord)
+        tile = fs.tile.get_historic_event(event_id=2, search_items=coord)
         assert len(tile) == 2
         tile.sort(key=lambda x: x.coordinate, reverse=True)
         assert tile[0].coordinate == coord[0]
@@ -171,7 +171,7 @@ class TestHistoricTiles:
         # No way to test if image is bad
 
     def test_one_of_each(self):
-        tile = fs.tile.get_historic_event(event_id=2, coordinate=[(12, 942, 1715)])
+        tile = fs.tile.get_historic_event(event_id=2, search_items=[(12, 942, 1715)])
         assert len(tile) == 1
         assert tile[0].valid_id is True
         assert tile[0].coordinate == (12, 942, 1715)

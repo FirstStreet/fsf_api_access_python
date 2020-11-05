@@ -203,7 +203,7 @@ def format_adaptation_summary(data):
     df = pd.json_normalize([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
-    return df[['fsid', 'valid_id', 'adaptation', 'properties']]
+    return df[['fsid', 'valid_id', 'adaptation']]
 
 
 def format_adaptation_summary_detail(data):
@@ -904,7 +904,7 @@ def format_location_detail_county(data):
     """
     df = pd.DataFrame([vars(o) for o in data]).explode('city').explode('zcta') \
         .explode('cd').reset_index(drop=True)
-    df.rename(columns={'fsid': 'fsid_placeholder'}, inplace=True)
+    df.rename(columns={'fsid': 'fsid_placeholder', 'name': 'name_placeholder'}, inplace=True)
 
     if not df['city'].isna().values.all():
         df = pd.concat([df.drop(['city'], axis=1), df['city'].apply(pd.Series)], axis=1)
@@ -938,7 +938,7 @@ def format_location_detail_county(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
-    df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
+    df.rename(columns={'fsid_placeholder': 'fsid', 'name_placeholder': 'name'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
     df['zipCode'] = df['zipCode'].astype('Int64').apply(str)
@@ -946,7 +946,7 @@ def format_location_detail_county(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'valid_id', 'city_fips', 'city_name', 'zipCode', 'fips', 'isCoastal', 'cd_fips',
+    return df[['fsid', 'valid_id', 'name', 'isCoastal', 'city_fips', 'city_name', 'zipCode', 'fips', 'cd_fips',
                'cd_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
 
 

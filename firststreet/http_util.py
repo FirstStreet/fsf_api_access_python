@@ -13,7 +13,6 @@ import aiohttp
 import ssl
 import certifi
 from asyncio_throttle import Throttler
-from itertools import islice
 
 # Internal Imports
 import firststreet.errors as e
@@ -102,6 +101,7 @@ class Http:
         Raises:
             _network_error: if an error occurs
         """
+
         headers = self.options.get('headers')
 
         # Retry loop
