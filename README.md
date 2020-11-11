@@ -6,6 +6,8 @@ The First Street Foundation API Access (Python) is a wrapper used to bulk extrac
 
 **Notice:** This API wrapper is subject to change.
 
+Please see the [wiki pages **here**](https://github.com/FirstStreet/fsf_api_access_python/wiki) for the most up to date information.
+
 <a name="toc"></a>
 # Table of contents
 - **[Installation](#installation)**
