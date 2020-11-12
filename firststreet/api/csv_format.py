@@ -700,7 +700,7 @@ def format_location_detail_property(data):
     df['cd_fips'] = df['cd_fips'].astype('Int64').apply(str)
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['footprintId'] = df['footprintId'].astype('Int64').apply(str)
-    df['elevation'] = df['city_fips'].apply(str)
+    df['elevation'] = df['elevation'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
