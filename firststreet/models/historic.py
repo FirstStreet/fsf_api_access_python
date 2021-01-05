@@ -15,7 +15,7 @@ class HistoricEvent(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.eventId = response.get('eventId')
+        self.eventId = str(response.get('eventId'))
         self.name = response.get('name')
         self.month = response.get('month')
         self.year = response.get('year')
@@ -34,5 +34,5 @@ class HistoricSummary(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.historic = response.get('historic')

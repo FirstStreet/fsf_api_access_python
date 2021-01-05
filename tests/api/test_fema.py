@@ -37,7 +37,7 @@ class TestFemaNfip:
         fsid = [19027]
         fema = fs.fema.get_nfip(fsid, "tract")
         assert len(fema) == 1
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is None
         assert fema[0].valid_id is False
 
@@ -45,7 +45,7 @@ class TestFemaNfip:
         fsid = [19055950100]
         fema = fs.fema.get_nfip(fsid, "county", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is None
         assert fema[0].valid_id is False
 
@@ -57,7 +57,7 @@ class TestFemaNfip:
         fsid = [19055950100]
         fema = fs.fema.get_nfip(fsid, "tract")
         assert len(fema) == 1
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
         assert fema[0].valid_id is True
 
@@ -66,9 +66,9 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip(fsid, "tract")
         assert len(fema) == 2
         fema.sort(key=lambda x: x.fsid)
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
-        assert fema[1].fsid == fsid[1]
+        assert fema[1].fsid == str(fsid[1])
         assert fema[1].claimCount is not None
         assert fema[0].valid_id is True
         assert fema[1].valid_id is True
@@ -77,7 +77,7 @@ class TestFemaNfip:
         fsid = [19055950100]
         fema = fs.fema.get_nfip(fsid, "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
         assert fema[0].valid_id is True
 
@@ -86,9 +86,9 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip(fsid, "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 2
         fema.sort(key=lambda x: x.fsid)
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
-        assert fema[1].fsid == fsid[1]
+        assert fema[1].fsid == str(fsid[1])
         assert fema[1].claimCount is not None
         assert fema[0].valid_id is True
         assert fema[1].valid_id is True
@@ -98,9 +98,9 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip(fsid, "tract")
         assert len(fema) == 2
         fema.sort(key=lambda x: x.fsid, reverse=True)
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
-        assert fema[1].fsid == fsid[1]
+        assert fema[1].fsid == str(fsid[1])
         assert fema[1].claimCount is None
         assert fema[0].valid_id is True
         assert fema[1].valid_id is False
@@ -110,9 +110,9 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip(fsid, "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 2
         fema.sort(key=lambda x: x.fsid, reverse=True)
-        assert fema[0].fsid == fsid[0]
+        assert fema[0].fsid == str(fsid[0])
         assert fema[0].claimCount is not None
-        assert fema[1].fsid == fsid[1]
+        assert fema[1].fsid == str(fsid[1])
         assert fema[1].claimCount is None
         assert fema[0].valid_id is True
         assert fema[1].valid_id is False
@@ -151,7 +151,7 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip([44074], "zcta", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].valid_id is True
-        assert fema[0].fsid == 44074
+        assert fema[0].fsid == "44074"
         assert fema[0].claimCount is not None
         assert fema[0].policyCount is not None
         assert fema[0].buildingPaid is not None
@@ -162,7 +162,7 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip([39013012300], "tract", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].valid_id is True
-        assert fema[0].fsid == 39013012300
+        assert fema[0].fsid == "39013012300"
         assert fema[0].claimCount is not None
         assert fema[0].policyCount is not None
         assert fema[0].buildingPaid is not None
@@ -173,7 +173,7 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip([39093], "county", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].valid_id is True
-        assert fema[0].fsid == 39093
+        assert fema[0].fsid == "39093"
         assert fema[0].claimCount is not None
         assert fema[0].policyCount is not None
         assert fema[0].buildingPaid is not None
@@ -184,7 +184,7 @@ class TestFemaNfip:
         fema = fs.fema.get_nfip([39], "state", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].valid_id is True
-        assert fema[0].fsid == 39
+        assert fema[0].fsid == "39"
         assert fema[0].claimCount is not None
         assert fema[0].policyCount is not None
         assert fema[0].buildingPaid is not None

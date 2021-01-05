@@ -29,7 +29,7 @@ class TestProbabilityChance:
         fsid = [0000000]
         probability = fs.probability.get_chance(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].chance is None
         assert probability[0].valid_id is False
 
@@ -37,7 +37,7 @@ class TestProbabilityChance:
         fsid = [190836953]
         probability = fs.probability.get_chance(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
 
@@ -46,8 +46,8 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
         assert probability[1].chance is not None
@@ -57,7 +57,7 @@ class TestProbabilityChance:
         fsid = [190836953]
         probability = fs.probability.get_chance(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
 
@@ -66,8 +66,8 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
         assert probability[1].chance is not None
@@ -78,8 +78,8 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
         assert probability[1].chance is None
@@ -90,8 +90,8 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].chance is not None
         assert probability[0].valid_id is True
         assert probability[1].chance is None
@@ -131,7 +131,7 @@ class TestProbabilityChance:
         probability = fs.probability.get_chance([390000257], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 390000257
+        assert probability[0].fsid == "390000257"
         assert probability[0].chance is not None
         assert probability[0].chance[0].get("year") is not None
         assert probability[0].chance[0].get("data") is not None
@@ -164,7 +164,7 @@ class TestProbabilityCount:
         fsid = [1867176]
         probability = fs.probability.get_count(fsid, "property")
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].count is None
         assert probability[0].valid_id is False
 
@@ -172,7 +172,7 @@ class TestProbabilityCount:
         fsid = [190836953]
         probability = fs.probability.get_count(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].count is None
         assert probability[0].valid_id is False
 
@@ -180,7 +180,7 @@ class TestProbabilityCount:
         fsid = [1867176]
         probability = fs.probability.get_count(fsid, 'city')
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
 
@@ -189,8 +189,8 @@ class TestProbabilityCount:
         probability = fs.probability.get_count(fsid, 'city')
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
         assert probability[1].count is not None
@@ -200,7 +200,7 @@ class TestProbabilityCount:
         fsid = [1867176]
         probability = fs.probability.get_count(fsid, 'city', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
 
@@ -209,8 +209,8 @@ class TestProbabilityCount:
         probability = fs.probability.get_count(fsid, 'city', csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
         assert probability[1].count is not None
@@ -221,8 +221,8 @@ class TestProbabilityCount:
         probability = fs.probability.get_count(fsid, 'city')
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
         assert probability[1].count is None
@@ -233,8 +233,8 @@ class TestProbabilityCount:
         probability = fs.probability.get_count(fsid, 'city', csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].count is not None
         assert probability[0].valid_id is True
         assert probability[1].count is None
@@ -279,7 +279,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([7935], 'neighborhood', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 7935
+        assert probability[0].fsid == "7935"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -293,7 +293,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([1959835], 'city', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 1959835
+        assert probability[0].fsid == "1959835"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -307,7 +307,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([44203], 'zcta', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 44203
+        assert probability[0].fsid == "44203"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -321,7 +321,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([39035103400], 'tract', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 39035103400
+        assert probability[0].fsid == "39035103400"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -335,7 +335,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([39047], 'county', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 39047
+        assert probability[0].fsid == "39047"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -349,7 +349,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([3904], 'cd', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 3904
+        assert probability[0].fsid == "3904"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -363,7 +363,7 @@ class TestProbabilityCount:
         probability = fs.probability.get_count([39], 'state', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 39
+        assert probability[0].fsid == "39"
         assert probability[0].count is not None
         assert probability[0].count[0].get("year") is not None
         assert probability[0].count[0].get("data") is not None
@@ -390,7 +390,7 @@ class TestProbabilityCountSummary:
         fsid = [0000000]
         probability = fs.probability.get_count_summary(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].state is None
         assert probability[0].valid_id is False
 
@@ -398,7 +398,7 @@ class TestProbabilityCountSummary:
         fsid = [394406220]
         probability = fs.probability.get_count_summary(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
 
@@ -407,8 +407,8 @@ class TestProbabilityCountSummary:
         probability = fs.probability.get_count_summary(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
         assert probability[1].state is not None
@@ -418,7 +418,7 @@ class TestProbabilityCountSummary:
         fsid = [394406220]
         probability = fs.probability.get_count_summary(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
 
@@ -427,8 +427,8 @@ class TestProbabilityCountSummary:
         probability = fs.probability.get_count_summary(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
         assert probability[1].state is not None
@@ -439,8 +439,8 @@ class TestProbabilityCountSummary:
         probability = fs.probability.get_count_summary(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
         assert probability[1].state is None
@@ -451,8 +451,8 @@ class TestProbabilityCountSummary:
         probability = fs.probability.get_count_summary(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].state is not None
         assert probability[0].valid_id is True
         assert probability[1].state is None
@@ -493,7 +493,7 @@ class TestProbabilityCountSummary:
         probability = fs.probability.get_count_summary([394406220], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 394406220
+        assert probability[0].fsid == "394406220"
         assert probability[0].neighborhood is not None
         assert probability[0].city is not None
         assert probability[0].state is not None
@@ -517,7 +517,7 @@ class TestProbabilityCumulative:
         fsid = [0000000]
         probability = fs.probability.get_cumulative(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].cumulative is None
         assert probability[0].valid_id is False
 
@@ -525,7 +525,7 @@ class TestProbabilityCumulative:
         fsid = [190836953]
         probability = fs.probability.get_cumulative(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
 
@@ -534,8 +534,8 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
         assert probability[1].cumulative is not None
@@ -545,7 +545,7 @@ class TestProbabilityCumulative:
         fsid = [190836953]
         probability = fs.probability.get_cumulative(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
 
@@ -554,8 +554,8 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
         assert probability[1].cumulative is not None
@@ -566,8 +566,8 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
         assert probability[1].cumulative is None
@@ -578,8 +578,8 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].cumulative is not None
         assert probability[0].valid_id is True
         assert probability[1].cumulative is None
@@ -619,7 +619,7 @@ class TestProbabilityCumulative:
         probability = fs.probability.get_cumulative([390000439], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 390000439
+        assert probability[0].fsid == "390000439"
         assert probability[0].cumulative is not None
         assert probability[0].cumulative[0].get("year") is not None
         assert probability[0].cumulative[0].get("data") is not None
@@ -644,7 +644,7 @@ class TestProbabilityDepth:
         fsid = [0000000]
         probability = fs.probability.get_depth(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].depth is None
         assert probability[0].valid_id is False
 
@@ -652,7 +652,7 @@ class TestProbabilityDepth:
         fsid = [190836953]
         probability = fs.probability.get_depth(fsid)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
 
@@ -661,8 +661,8 @@ class TestProbabilityDepth:
         probability = fs.probability.get_depth(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
         assert probability[1].depth is not None
@@ -672,7 +672,7 @@ class TestProbabilityDepth:
         fsid = [190836953]
         probability = fs.probability.get_depth(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 1
-        assert probability[0].fsid == fsid[0]
+        assert probability[0].fsid == str(fsid[0])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
 
@@ -681,8 +681,8 @@ class TestProbabilityDepth:
         probability = fs.probability.get_depth(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
         assert probability[1].depth is not None
@@ -693,8 +693,8 @@ class TestProbabilityDepth:
         probability = fs.probability.get_depth(fsid)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
         assert probability[1].depth is None
@@ -705,8 +705,8 @@ class TestProbabilityDepth:
         probability = fs.probability.get_depth(fsid, csv=True, output_dir=tmpdir)
         assert len(probability) == 2
         probability.sort(key=lambda x: x.fsid, reverse=True)
-        assert probability[0].fsid == fsid[0]
-        assert probability[1].fsid == fsid[1]
+        assert probability[0].fsid == str(fsid[0])
+        assert probability[1].fsid == str(fsid[1])
         assert probability[0].depth is not None
         assert probability[0].valid_id is True
         assert probability[1].depth is None
@@ -746,7 +746,7 @@ class TestProbabilityDepth:
         probability = fs.probability.get_depth([390000227], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
-        assert probability[0].fsid == 390000227
+        assert probability[0].fsid == "390000227"
         assert probability[0].depth is not None
         assert probability[0].depth[0].get("year") is not None
         assert probability[0].depth[0].get("data") is not None

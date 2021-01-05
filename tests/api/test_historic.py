@@ -29,7 +29,7 @@ class TestHistoricEvent:
         event_id = [0000]
         historic = fs.historic.get_event(event_id)
         assert len(historic) == 1
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is None
         assert historic[0].valid_id is False
 
@@ -37,18 +37,18 @@ class TestHistoricEvent:
         event_id = [9]
         historic = fs.historic.get_event(event_id)
         assert len(historic) == 1
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
         assert historic[0].valid_id is True
 
     def test_multiple(self):
-        event_id = [9, 13]
+        event_id = [13, 14]
         historic = fs.historic.get_event(event_id)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.eventId)
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
-        assert historic[1].eventId == event_id[1]
+        assert historic[1].eventId == str(event_id[1])
         assert historic[1].properties is not None
         assert historic[0].valid_id is True
         assert historic[1].valid_id is True
@@ -57,18 +57,18 @@ class TestHistoricEvent:
         event_id = [9]
         historic = fs.historic.get_event(event_id, csv=True, output_dir=tmpdir)
         assert len(historic) == 1
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
         assert historic[0].valid_id is True
 
     def test_multiple_csv(self, tmpdir):
-        event_id = [9, 13]
+        event_id = [13, 14]
         historic = fs.historic.get_event(event_id, csv=True, output_dir=tmpdir)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.eventId)
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
-        assert historic[1].eventId == event_id[1]
+        assert historic[1].eventId == str(event_id[1])
         assert historic[1].properties is not None
         assert historic[0].valid_id is True
         assert historic[1].valid_id is True
@@ -78,9 +78,9 @@ class TestHistoricEvent:
         historic = fs.historic.get_event(event_id)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.eventId, reverse=True)
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
-        assert historic[1].eventId == event_id[1]
+        assert historic[1].eventId == str(event_id[1])
         assert not historic[1].properties
         assert historic[0].valid_id is True
         assert historic[1].valid_id is False
@@ -90,9 +90,9 @@ class TestHistoricEvent:
         historic = fs.historic.get_event(event_id, csv=True, output_dir=tmpdir)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.eventId, reverse=True)
-        assert historic[0].eventId == event_id[0]
+        assert historic[0].eventId == str(event_id[0])
         assert historic[0].properties is not None
-        assert historic[1].eventId == event_id[1]
+        assert historic[1].eventId == str(event_id[1])
         assert not historic[1].properties
         assert historic[0].valid_id is True
         assert historic[1].valid_id is False
@@ -101,7 +101,7 @@ class TestHistoricEvent:
         historic = fs.historic.get_event([2], csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].eventId == 2
+        assert historic[0].eventId == "2"
         assert historic[0].name is not None
         assert historic[0].type is not None
         assert historic[0].month is not None
@@ -135,7 +135,7 @@ class TestHistoricSummary:
         fsid = [1867176]
         historic = fs.historic.get_summary(fsid, "property")
         assert len(historic) == 1
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert not historic[0].historic
         assert historic[0].valid_id is False
 
@@ -143,7 +143,7 @@ class TestHistoricSummary:
         fsid = [190836953]
         historic = fs.historic.get_summary(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert not historic[0].historic
         assert historic[0].valid_id is False
 
@@ -155,7 +155,7 @@ class TestHistoricSummary:
         fsid = [190836953]
         historic = fs.historic.get_summary(fsid, "property")
         assert len(historic) == 1
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
         assert historic[0].valid_id is True
 
@@ -164,9 +164,9 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary(fsid, "property")
         assert len(historic) == 2
         historic.sort(key=lambda x: x.fsid)
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
-        assert historic[1].fsid == fsid[1]
+        assert historic[1].fsid == str(fsid[1])
         assert historic[1].historic is not None
         assert historic[0].valid_id is True
         assert historic[1].valid_id is True
@@ -175,7 +175,7 @@ class TestHistoricSummary:
         fsid = [190836953]
         historic = fs.historic.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
         assert historic[0].valid_id is True
 
@@ -184,9 +184,9 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.fsid)
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
-        assert historic[1].fsid == fsid[1]
+        assert historic[1].fsid == str(fsid[1])
         assert historic[1].historic is not None
         assert historic[0].valid_id is True
         assert historic[1].valid_id is True
@@ -196,9 +196,9 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary(fsid, "property")
         assert len(historic) == 2
         historic.sort(key=lambda x: x.fsid, reverse=True)
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
-        assert historic[1].fsid == fsid[1]
+        assert historic[1].fsid == str(fsid[1])
         assert not historic[1].historic
         assert historic[0].valid_id is True
         assert historic[1].valid_id is False
@@ -208,9 +208,9 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 2
         historic.sort(key=lambda x: x.fsid, reverse=True)
-        assert historic[0].fsid == fsid[0]
+        assert historic[0].fsid == str(fsid[0])
         assert historic[0].historic is not None
-        assert historic[1].fsid == fsid[1]
+        assert historic[1].fsid == str(fsid[1])
         assert not historic[1].historic
         assert historic[0].valid_id is True
         assert historic[1].valid_id is False
@@ -250,7 +250,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([511447411], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 511447411
+        assert historic[0].fsid == "511447411"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -259,7 +259,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([540225], "neighborhood", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 540225
+        assert historic[0].fsid == "540225"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -270,7 +270,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([1982200], "city", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 1982200
+        assert historic[0].fsid == "1982200"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -281,7 +281,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([50156], "zcta", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 50156
+        assert historic[0].fsid == "50156"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -292,7 +292,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([19153004900], "tract", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 19153004900
+        assert historic[0].fsid == "19153004900"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -303,7 +303,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([19163], "county", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 19163
+        assert historic[0].fsid == "19163"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -314,7 +314,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([1901], "cd", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 1901
+        assert historic[0].fsid == "1901"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -325,7 +325,7 @@ class TestHistoricSummary:
         historic = fs.historic.get_summary([39], "state", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert historic[0].valid_id is True
-        assert historic[0].fsid == 39
+        assert historic[0].fsid == "39"
         assert historic[0].historic is not None
         assert historic[0].historic[0].get("eventId") is not None
         assert historic[0].historic[0].get("name") is not None
@@ -358,7 +358,7 @@ class TestHistoricSummaryDetail:
         historic = fs.historic.get_events_by_location([11], "city")
         assert len(historic[0]) == 1
         assert len(historic[1]) == 1
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert not historic[0][0].historic
         assert historic[0][0].valid_id is False
         assert not historic[1][0].properties
@@ -369,7 +369,7 @@ class TestHistoricSummaryDetail:
         historic = fs.historic.get_events_by_location(fsid, "state", csv=True, output_dir=tmpdir)
         assert len(historic[0]) == 1
         assert len(historic[1]) == 1
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert not historic[0][0].historic
         assert historic[0][0].valid_id is False
         assert not historic[1][0].properties
@@ -384,7 +384,7 @@ class TestHistoricSummaryDetail:
         historic = fs.historic.get_events_by_location(fsid, "city")
         assert len(historic[0]) == 1
         assert len(historic[1]) == 1
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
         assert historic[0][0].valid_id is True
         assert historic[1][0].properties is not None
@@ -397,9 +397,9 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 2
         historic[0].sort(key=lambda x: x.fsid)
         historic[1].sort(key=lambda x: x.eventId)
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
-        assert historic[0][1].fsid == fsid[1]
+        assert historic[0][1].fsid == str(fsid[1])
         assert historic[0][1].historic is not None
         assert historic[1][0].properties is not None
         assert historic[1][1].properties is not None
@@ -415,7 +415,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         historic[0].sort(key=lambda x: x.fsid)
         historic[1].sort(key=lambda x: x.eventId)
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
         assert historic[1][0].properties is not None
         assert historic[0][0].valid_id is True
@@ -428,9 +428,9 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 2
         historic[0].sort(key=lambda x: x.fsid)
         historic[1].sort(key=lambda x: x.eventId)
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
-        assert historic[0][1].fsid == fsid[1]
+        assert historic[0][1].fsid == str(fsid[1])
         assert historic[0][1].historic is not None
         assert historic[1][0].properties is not None
         assert historic[1][1].properties is not None
@@ -446,9 +446,9 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         historic[0].sort(key=lambda x: x.fsid, reverse=True)
         historic[1].sort(key=lambda x: x.eventId, reverse=True)
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
-        assert historic[0][1].fsid == fsid[1]
+        assert historic[0][1].fsid == str(fsid[1])
         assert not historic[0][1].historic
         assert historic[1][0].properties is not None
         assert historic[0][0].valid_id is True
@@ -462,9 +462,9 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         historic[0].sort(key=lambda x: x.fsid, reverse=True)
         historic[1].sort(key=lambda x: x.eventId, reverse=True)
-        assert historic[0][0].fsid == fsid[0]
+        assert historic[0][0].fsid == str(fsid[0])
         assert historic[0][0].historic is not None
-        assert historic[0][1].fsid == fsid[1]
+        assert historic[0][1].fsid == str(fsid[1])
         assert not historic[0][1].historic
         assert historic[1][0].properties is not None
         assert historic[0][0].valid_id is True
@@ -527,7 +527,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 2
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 511447411
+        assert historic[0][0].fsid == "511447411"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -547,7 +547,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 540225
+        assert historic[0][0].fsid == "540225"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -569,7 +569,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 1982200
+        assert historic[0][0].fsid == "1982200"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -591,7 +591,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 50156
+        assert historic[0][0].fsid == "50156"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -613,7 +613,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 2
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 19153004900
+        assert historic[0][0].fsid == "19153004900"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -635,7 +635,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 1
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 19163
+        assert historic[0][0].fsid == "19163"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -657,7 +657,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 2
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 1901
+        assert historic[0][0].fsid == "1901"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None
@@ -679,7 +679,7 @@ class TestHistoricSummaryDetail:
         assert len(historic[1]) == 4
         assert historic[0][0].valid_id is True
         assert historic[1][0].valid_id is True
-        assert historic[0][0].fsid == 39
+        assert historic[0][0].fsid == "39"
         assert historic[0][0].historic is not None
         assert historic[0][0].historic[0].get("eventId") is not None
         assert historic[0][0].historic[0].get("name") is not None

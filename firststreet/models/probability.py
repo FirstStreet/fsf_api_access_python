@@ -14,7 +14,7 @@ class ProbabilityChance(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.chance = response.get('chance')
 
 
@@ -27,7 +27,7 @@ class ProbabilityCount(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.count = response.get('count')
 
 
@@ -40,7 +40,7 @@ class ProbabilityCountSummary(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.state = response.get('state')
         if self.state and any(isinstance(el, list) for el in self.state):
             self.state = [item for sublist in self.state for item in sublist]
@@ -73,7 +73,7 @@ class ProbabilityCumulative(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.cumulative = response.get('cumulative')
 
 
@@ -86,5 +86,5 @@ class ProbabilityDepth(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.depth = response.get('depth')

@@ -37,7 +37,7 @@ class TestLocationDetail:
         fsid = [1867176]
         location = fs.location.get_detail(fsid, "property")
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].state is None
         assert location[0].valid_id is False
 
@@ -45,7 +45,7 @@ class TestLocationDetail:
         fsid = [190836953]
         location = fs.location.get_detail(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].name is None
         assert location[0].valid_id is False
 
@@ -57,7 +57,7 @@ class TestLocationDetail:
         fsid = [190836953]
         location = fs.location.get_detail(fsid, "property")
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].state is not None
         assert location[0].valid_id is True
 
@@ -66,8 +66,8 @@ class TestLocationDetail:
         location = fs.location.get_detail(fsid, "property")
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].state is not None
         assert location[1].state is not None
         assert location[0].valid_id is True
@@ -77,7 +77,7 @@ class TestLocationDetail:
         fsid = [190836953]
         location = fs.location.get_detail(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].state is not None
         assert location[0].valid_id is True
 
@@ -86,8 +86,8 @@ class TestLocationDetail:
         location = fs.location.get_detail(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].state is not None
         assert location[1].state is not None
         assert location[0].valid_id is True
@@ -98,8 +98,8 @@ class TestLocationDetail:
         location = fs.location.get_detail(fsid, "property")
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid, reverse=True)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].state is not None
         assert location[1].state is None
         assert location[0].valid_id is True
@@ -110,8 +110,8 @@ class TestLocationDetail:
         location = fs.location.get_detail(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid, reverse=True)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].state is not None
         assert location[1].state is None
         assert location[0].valid_id is True
@@ -151,7 +151,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([511447411], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 511447411
+        assert location[0].fsid == "511447411"
         assert location[0].streetNumber is not None
         assert location[0].route is not None
         assert location[0].city is not None
@@ -169,7 +169,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([1206631], "neighborhood", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 1206631
+        assert location[0].fsid == "1206631"
         assert location[0].city is not None
         assert location[0].name is not None
         assert location[0].subtype is not None
@@ -179,7 +179,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([3915406], "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 3915406
+        assert location[0].fsid == "3915406"
         assert location[0].name is not None
         assert location[0].lsad is not None
         assert location[0].zcta is not None
@@ -190,7 +190,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([44654], "zcta", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 44654
+        assert location[0].fsid == "44654"
         assert location[0].name is not None
         assert location[0].county is not None
         assert location[0].city is not None
@@ -206,7 +206,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([39077], "county", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 39077
+        assert location[0].fsid == "39077"
         assert location[0].fips is not None
         assert location[0].name is not None
         assert location[0].isCoastal is not None
@@ -218,7 +218,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([3904], "cd", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 3904
+        assert location[0].fsid == "3904"
         assert location[0].district is not None
         assert location[0].congress is not None
         assert location[0].county is not None
@@ -227,7 +227,7 @@ class TestLocationDetail:
         location = fs.location.get_detail([39], "state", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 39
+        assert location[0].fsid == "39"
         assert location[0].name is not None
         assert location[0].fips is not None
         assert location[0].geometry is not None
@@ -255,7 +255,7 @@ class TestLocationSummary:
         fsid = [1867176]
         location = fs.location.get_summary(fsid, "property")
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].adaptation is None
         assert location[0].valid_id is False
 
@@ -263,7 +263,7 @@ class TestLocationSummary:
         fsid = [190836953]
         location = fs.location.get_summary(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].adaptation is None
         assert location[0].valid_id is False
 
@@ -275,7 +275,7 @@ class TestLocationSummary:
         fsid = [190836953]
         location = fs.location.get_summary(fsid, "property")
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].adaptation is not None
         assert location[0].valid_id is True
 
@@ -284,8 +284,8 @@ class TestLocationSummary:
         location = fs.location.get_summary(fsid, "property")
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].adaptation is not None
         assert location[1].adaptation is not None
         assert location[0].valid_id is True
@@ -295,7 +295,7 @@ class TestLocationSummary:
         fsid = [190836953]
         location = fs.location.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
-        assert location[0].fsid == fsid[0]
+        assert location[0].fsid == str(fsid[0])
         assert location[0].adaptation is not None
         assert location[0].valid_id is True
 
@@ -304,8 +304,8 @@ class TestLocationSummary:
         location = fs.location.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].adaptation is not None
         assert location[1].adaptation is not None
         assert location[0].valid_id is True
@@ -316,8 +316,8 @@ class TestLocationSummary:
         location = fs.location.get_summary(fsid, "property")
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid, reverse=True)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].adaptation is not None
         assert location[1].adaptation is None
         assert location[0].valid_id is True
@@ -328,8 +328,8 @@ class TestLocationSummary:
         location = fs.location.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(location) == 2
         location.sort(key=lambda x: x.fsid, reverse=True)
-        assert location[0].fsid == fsid[0]
-        assert location[1].fsid == fsid[1]
+        assert location[0].fsid == str(fsid[0])
+        assert location[1].fsid == str(fsid[1])
         assert location[0].adaptation is not None
         assert location[1].adaptation is None
         assert location[0].valid_id is True
@@ -370,7 +370,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([395112095], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 395112095
+        assert location[0].fsid == "395112095"
         assert location[0].floodFactor is not None
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
@@ -379,7 +379,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([631054], "neighborhood", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 631054
+        assert location[0].fsid == "631054"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -390,7 +390,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([3958002], "city", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 3958002
+        assert location[0].fsid == "3958002"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -401,7 +401,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([43935], "zcta", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 43935
+        assert location[0].fsid == "43935"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -412,7 +412,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([39153531702], "tract", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 39153531702
+        assert location[0].fsid == "39153531702"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -423,7 +423,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([39027], "county", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 39027
+        assert location[0].fsid == "39027"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -434,7 +434,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([3903], "cd", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 3903
+        assert location[0].fsid == "3903"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None
@@ -445,7 +445,7 @@ class TestLocationSummary:
         location = fs.location.get_summary([39], "state", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == 39
+        assert location[0].fsid == "39"
         assert location[0].riskDirection is not None
         assert location[0].historic is not None
         assert location[0].environmentalRisk is not None

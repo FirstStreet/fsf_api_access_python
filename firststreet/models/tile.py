@@ -40,4 +40,4 @@ class HistoricEventTile(Tile):
 
     def __init__(self, response, event_id):
         super().__init__(response)
-        self.event_id = event_id
+        self.event_id = str(event_id)

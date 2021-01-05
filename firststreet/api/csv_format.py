@@ -183,7 +183,7 @@ def format_adaptation_detail(data):
         A pandas formatted DataFrame
     """
     df = pd.json_normalize([vars(o) for o in data]).explode('type').explode('scenario').reset_index(drop=True)
-    df['adaptationId'] = df['adaptationId'].astype('Int64').apply(str)
+    df['adaptationId'] = df['adaptationId'].apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
@@ -532,7 +532,7 @@ def format_historic_event(data):
         df['propertiesTotal'] = pd.NA
         df['propertiesAffected'] = pd.NA
 
-    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['eventId'] = df['eventId'].apply(str)
     df['month'] = df['month'].astype('Int64').apply(str)
     df['year'] = df['year'].astype('Int64').apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
@@ -564,7 +564,7 @@ def format_historic_summary_property(data):
         df['depth'] = pd.NA
 
     df['fsid'] = df['fsid'].apply(str)
-    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['eventId'] = df['eventId'].apply(str)
     df['depth'] = df['depth'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth']]
@@ -593,7 +593,7 @@ def format_historic_summary(data):
         df['count'] = pd.NA
 
     df['fsid'] = df['fsid'].apply(str)
-    df['eventId'] = df['eventId'].astype('Int64').apply(str)
+    df['eventId'] = df['eventId'].apply(str)
     df['type'] = df['type'].apply(str)
     df['bin'] = df['bin'].astype('Int64').apply(str)
     df['count'] = df['count'].astype('Int64').apply(str)

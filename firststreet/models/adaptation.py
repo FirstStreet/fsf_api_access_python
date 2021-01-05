@@ -15,7 +15,7 @@ class AdaptationDetail(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.adaptationId = response.get('adaptationId')
+        self.adaptationId = str(response.get('adaptationId'))
         self.name = response.get('name')
         self.type = response.get('type')
         self.scenario = response.get('scenario')
@@ -34,6 +34,6 @@ class AdaptationSummary(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.adaptation = response.get('adaptation')
         self.properties = response.get('properties')

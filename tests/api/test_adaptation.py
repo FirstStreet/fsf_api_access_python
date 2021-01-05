@@ -29,7 +29,7 @@ class TestAdaptationDetail:
         adaptation_id = [0000]
         adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 1
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is None
         assert adaptation[0].valid_id is False
 
@@ -37,7 +37,7 @@ class TestAdaptationDetail:
         adaptation_id = [2739]
         adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 1
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
         assert adaptation[0].valid_id is True
 
@@ -46,9 +46,9 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.adaptationId)
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
-        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].adaptationId == str(adaptation_id[1])
         assert adaptation[1].type is not None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is True
@@ -57,7 +57,7 @@ class TestAdaptationDetail:
         adaptation_id = [2739]
         adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
         assert adaptation[0].valid_id is True
 
@@ -66,9 +66,9 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.adaptationId)
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
-        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].adaptationId == str(adaptation_id[1])
         assert adaptation[1].type is not None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is True
@@ -78,9 +78,9 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail(adaptation_id)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
-        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].adaptationId == str(adaptation_id[1])
         assert adaptation[1].type is None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is False
@@ -90,9 +90,9 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail(adaptation_id, csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0].adaptationId == adaptation_id[0]
+        assert adaptation[0].adaptationId == str(adaptation_id[0])
         assert adaptation[0].type is not None
-        assert adaptation[1].adaptationId == adaptation_id[1]
+        assert adaptation[1].adaptationId == str(adaptation_id[1])
         assert adaptation[1].type is None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is False
@@ -101,7 +101,7 @@ class TestAdaptationDetail:
         adaptation = fs.adaptation.get_detail([29], csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
         assert adaptation[0].valid_id is True
-        assert adaptation[0].adaptationId == 29
+        assert adaptation[0].adaptationId == "29"
         assert adaptation[0].name is not None
         assert adaptation[0].type is not None
         assert adaptation[0].scenario is not None
@@ -141,7 +141,7 @@ class TestAdaptationSummary:
         fsid = [1867176]
         adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 1
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert not adaptation[0].adaptation
         assert adaptation[0].valid_id is False
 
@@ -149,7 +149,7 @@ class TestAdaptationSummary:
         fsid = [190836953]
         adaptation = fs.adaptation.get_summary(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert not adaptation[0].adaptation
         assert adaptation[0].valid_id is False
 
@@ -161,7 +161,7 @@ class TestAdaptationSummary:
         fsid = [395133768]
         adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 1
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
         assert adaptation[0].valid_id is True
 
@@ -170,9 +170,9 @@ class TestAdaptationSummary:
         adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.fsid, reverse=True)
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
-        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].fsid == str(fsid[1])
         assert adaptation[1].adaptation is not None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is True
@@ -181,7 +181,7 @@ class TestAdaptationSummary:
         fsid = [395133768]
         adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
         assert adaptation[0].valid_id is True
 
@@ -190,9 +190,9 @@ class TestAdaptationSummary:
         adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.fsid, reverse=True)
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
-        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].fsid == str(fsid[1])
         assert adaptation[1].adaptation is not None
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is True
@@ -202,9 +202,9 @@ class TestAdaptationSummary:
         adaptation = fs.adaptation.get_summary(fsid, "property")
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.fsid, reverse=True)
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
-        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].fsid == str(fsid[1])
         assert not adaptation[1].adaptation
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is False
@@ -214,9 +214,9 @@ class TestAdaptationSummary:
         adaptation = fs.adaptation.get_summary(fsid, "property", csv=True, output_dir=tmpdir)
         assert len(adaptation) == 2
         adaptation.sort(key=lambda x: x.fsid, reverse=True)
-        assert adaptation[0].fsid == fsid[0]
+        assert adaptation[0].fsid == str(fsid[0])
         assert adaptation[0].adaptation is not None
-        assert adaptation[1].fsid == fsid[1]
+        assert adaptation[1].fsid == str(fsid[1])
         assert not adaptation[1].adaptation
         assert adaptation[0].valid_id is True
         assert adaptation[1].valid_id is False
@@ -321,7 +321,7 @@ class TestAdaptationSummaryDetail:
         adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert not adaptation[0][0].adaptation
         assert not adaptation[1][0].type
         assert adaptation[0][0].valid_id is False
@@ -332,7 +332,7 @@ class TestAdaptationSummaryDetail:
         adaptation = fs.adaptation.get_detail_by_location(fsid, "state", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 1
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert not adaptation[0][0].adaptation
         assert not adaptation[1][0].type
         assert adaptation[0][0].valid_id is False
@@ -347,7 +347,7 @@ class TestAdaptationSummaryDetail:
         adaptation = fs.adaptation.get_detail_by_location(fsid, "city")
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
         assert adaptation[1][0].type is not None
         assert adaptation[0][0].valid_id is True
@@ -360,9 +360,9 @@ class TestAdaptationSummaryDetail:
         assert len(adaptation[1]) == 5
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
         adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
-        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].fsid == str(fsid[1])
         assert adaptation[0][1].adaptation is not None
         assert adaptation[1][0].type is not None
         assert adaptation[1][1].type is not None
@@ -376,7 +376,7 @@ class TestAdaptationSummaryDetail:
         adaptation = fs.adaptation.get_detail_by_location(fsid, "city", csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert len(adaptation[1]) == 2
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
         assert adaptation[1][0].type is not None
         assert adaptation[0][0].valid_id is True
@@ -389,9 +389,9 @@ class TestAdaptationSummaryDetail:
         assert len(adaptation[1]) == 5
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
         adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
-        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].fsid == str(fsid[1])
         assert adaptation[0][1].adaptation is not None
         assert adaptation[1][0].type is not None
         assert adaptation[1][1].type is not None
@@ -407,9 +407,9 @@ class TestAdaptationSummaryDetail:
         assert len(adaptation[1]) == 2
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
         adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
-        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].fsid == str(fsid[1])
         assert not adaptation[0][1].adaptation
         assert adaptation[1][0].type is not None
         assert adaptation[0][0].valid_id is True
@@ -424,9 +424,9 @@ class TestAdaptationSummaryDetail:
         assert len(adaptation[1]) == 2
         adaptation[0].sort(key=lambda x: x.fsid, reverse=True)
         adaptation[1].sort(key=lambda x: x.adaptationId, reverse=True)
-        assert adaptation[0][0].fsid == fsid[0]
+        assert adaptation[0][0].fsid == str(fsid[0])
         assert adaptation[0][0].adaptation is not None
-        assert adaptation[0][1].fsid == fsid[1]
+        assert adaptation[0][1].fsid == str(fsid[1])
         assert not adaptation[0][1].adaptation
         assert adaptation[1][0].type is not None
         assert adaptation[0][0].valid_id is True
@@ -489,7 +489,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 395133768
+        assert adaptation[0][0].fsid == "395133768"
         assert adaptation[0][0].properties is None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([7924], "neighborhood", csv=True, output_dir=tmpdir)
@@ -512,7 +512,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 7924
+        assert adaptation[0][0].fsid == "7924"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([1935265], "city", csv=True, output_dir=tmpdir)
@@ -535,7 +535,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 1935265
+        assert adaptation[0][0].fsid == "1935265"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([50158], "zcta", csv=True, output_dir=tmpdir)
@@ -558,7 +558,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 50158
+        assert adaptation[0][0].fsid == "50158"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([39061007100], "tract", csv=True, output_dir=tmpdir)
@@ -581,7 +581,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 39061007100
+        assert adaptation[0][0].fsid == "39061007100"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([19047], "county", csv=True, output_dir=tmpdir)
@@ -604,7 +604,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 19047
+        assert adaptation[0][0].fsid == "19047"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([3915], "cd", csv=True, output_dir=tmpdir)
@@ -627,7 +627,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 3915
+        assert adaptation[0][0].fsid == "3915"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None
         adaptation = fs.adaptation.get_detail_by_location([39], "state", csv=True, output_dir=tmpdir)
@@ -650,6 +650,6 @@ class TestAdaptationSummaryDetail:
         assert adaptation[1][0].serving.get("cd") is not None
         assert adaptation[1][0].serving.get("state") is not None
         assert adaptation[1][0].geometry is not None
-        assert adaptation[0][0].fsid == 39
+        assert adaptation[0][0].fsid == "39"
         assert adaptation[0][0].properties is not None
         assert adaptation[0][0].adaptation is not None

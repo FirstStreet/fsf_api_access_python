@@ -27,7 +27,7 @@ class LocationDetailProperty(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.streetNumber = response.get('streetNumber')
         self.route = response.get('route')
         self.city = response.get('city')
@@ -56,7 +56,7 @@ class LocationDetailNeighborhood(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.city = response.get('city')
         self.subtype = response.get('subtype')
         self.county = response.get('county')
@@ -77,7 +77,7 @@ class LocationDetailCity(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.lsad = response.get('lsad')
         self.zcta = response.get('zcta')
         self.neighborhood = response.get('neighborhood')
@@ -96,7 +96,7 @@ class LocationDetailZcta(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.city = response.get('city')
         self.county = response.get('county')
         self.state = response.get('state')
@@ -113,7 +113,7 @@ class LocationDetailTract(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.fips = response.get('fips')
         self.county = response.get('county')
         self.state = response.get('state')
@@ -129,7 +129,7 @@ class LocationDetailCounty(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.name = response.get('name')
         self.city = response.get('city')
         self.zcta = response.get('zcta')
@@ -153,7 +153,7 @@ class LocationDetailCd(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.county = response.get('county')
         self.congress = response.get('congress')
         self.state = response.get('state')
@@ -170,7 +170,7 @@ class LocationDetailState(LocationDetail):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.fips = response.get('fips')
         self.geometry = Geometry(response.get('geometry'))
         self.name = response.get('name')
@@ -185,7 +185,7 @@ class LocationSummary(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.riskDirection = response.get('riskDirection')
         self.environmentalRisk = response.get('environmentalRisk')
         self.historic = response.get('historic')

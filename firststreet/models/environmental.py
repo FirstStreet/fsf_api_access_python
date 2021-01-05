@@ -14,5 +14,5 @@ class EnvironmentalPrecipitation(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get("fsid")
+        self.fsid = str(response.get("fsid"))
         self.projected = response.get("projected")

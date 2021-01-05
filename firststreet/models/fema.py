@@ -14,7 +14,7 @@ class FemaNfip(Api):
 
     def __init__(self, response):
         super().__init__(response)
-        self.fsid = response.get('fsid')
+        self.fsid = str(response.get('fsid'))
         self.claimCount = response.get('claimCount')
         self.policyCount = response.get('policyCount')
         self.buildingPaid = response.get('buildingPaid')
