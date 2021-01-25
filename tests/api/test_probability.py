@@ -110,7 +110,7 @@ class TestProbabilityChance:
         assert probability[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        probability = fs.probability.get_chance(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        probability = fs.probability.get_chance(["Shimik, Nunavut, Canada"], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].chance is None
         assert probability[0].valid_id is False
@@ -255,7 +255,7 @@ class TestProbabilityCount:
         assert probability[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        probability = fs.probability.get_count(["Shimik, Nunavut"], "city",
+        probability = fs.probability.get_count(["Shimik, Nunavut, Canada"], "city",
                                                csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].count is None
@@ -287,9 +287,9 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("bin") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([1959835], 'city', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
@@ -303,7 +303,7 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([44203], 'zcta', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
@@ -316,8 +316,8 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data")[0].get("bin") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([39035103400], 'tract', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
@@ -330,7 +330,7 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data")[0].get("bin") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([39047], 'county', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
@@ -344,8 +344,8 @@ class TestProbabilityCount:
         assert probability[0].count[0].get("data")[0].get("data")[0].get("bin") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count") is not None
         assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("low") is not None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is None
-        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("mid") is not None
+        assert probability[0].count[0].get("data")[0].get("data")[0].get("count").get("high") is not None
         probability = fs.probability.get_count([3904], 'cd', csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].valid_id is True
@@ -471,7 +471,7 @@ class TestProbabilityCountSummary:
         assert probability[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        probability = fs.probability.get_count_summary(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        probability = fs.probability.get_count_summary(["Shimik, Nunavut, Canada"], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].state is None
         assert probability[0].valid_id is False
@@ -598,7 +598,7 @@ class TestProbabilityCumulative:
         assert probability[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        probability = fs.probability.get_cumulative(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        probability = fs.probability.get_cumulative(["Shimik, Nunavut, Canada"], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].cumulative is None
         assert probability[0].valid_id is False
@@ -725,7 +725,7 @@ class TestProbabilityDepth:
         assert probability[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        probability = fs.probability.get_depth(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        probability = fs.probability.get_depth(["Shimik, Nunavut, Canada"], csv=True, output_dir=tmpdir)
         assert len(probability) == 1
         assert probability[0].depth is None
         assert probability[0].valid_id is False

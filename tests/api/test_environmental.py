@@ -111,7 +111,7 @@ class TestEnvironmentalEvent:
         assert environmental[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        environmental = fs.environmental.get_precipitation(["Shimik, Nunavut"], csv=True, output_dir=tmpdir)
+        environmental = fs.environmental.get_precipitation(["NotACounty"], csv=True, output_dir=tmpdir)
         assert len(environmental) == 1
         assert environmental[0].projected is None
         assert environmental[0].valid_id is False

@@ -130,7 +130,7 @@ class TestLocationDetail:
         assert location[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        location = fs.location.get_detail(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        location = fs.location.get_detail(["Shimik, Nunavut, Canada"], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].state is None
         assert location[0].valid_id is False
@@ -348,7 +348,7 @@ class TestLocationSummary:
         assert location[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        location = fs.location.get_summary(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        location = fs.location.get_summary(["Shimik, Nunavut, Canada"], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].adaptation is None
         assert location[0].valid_id is False

@@ -130,7 +130,7 @@ class TestFemaNfip:
         assert fema[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        fema = fs.fema.get_nfip(["Shimik, Nunavut"], "county", csv=True, output_dir=tmpdir)
+        fema = fs.fema.get_nfip(["NotATract"], "county", csv=True, output_dir=tmpdir)
         assert len(fema) == 1
         assert fema[0].claimCount is None
         assert fema[0].valid_id is False

@@ -235,7 +235,7 @@ class TestAdaptationSummary:
         assert adaptation[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        adaptation = fs.adaptation.get_summary(["Shimik, Nunavut"], "property",
+        adaptation = fs.adaptation.get_summary(["Shimik, Nunavut, Canada"], "property",
                                                csv=True, output_dir=tmpdir)
         assert len(adaptation) == 1
         assert not adaptation[0].adaptation
@@ -449,7 +449,7 @@ class TestAdaptationSummaryDetail:
         assert adaptation[0][0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        adaptation = fs.adaptation.get_detail_by_location(["Shimik, Nunavut"], "property",
+        adaptation = fs.adaptation.get_detail_by_location(["Shimik, Nunavut, Canada"], "property",
                                                           csv=True, output_dir=tmpdir)
         assert len(adaptation[0]) == 1
         assert not adaptation[0][0].adaptation

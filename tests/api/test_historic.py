@@ -228,7 +228,7 @@ class TestHistoricSummary:
         assert historic[0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        historic = fs.historic.get_summary(["Shimik, Nunavut"], "property", csv=True, output_dir=tmpdir)
+        historic = fs.historic.get_summary(["Shimik, Nunavut, Canada"], "property", csv=True, output_dir=tmpdir)
         assert len(historic) == 1
         assert not historic[0].historic
         assert historic[0].valid_id is False
@@ -492,7 +492,7 @@ class TestHistoricSummaryDetail:
         assert historic[0][0].valid_id is True
 
     def test_address_invalid_404(self, tmpdir):
-        historic = fs.historic.get_events_by_location(["Shimik, Nunavut"], "property",
+        historic = fs.historic.get_events_by_location(["Shimik, Nunavut, Canada"], "property",
                                                       csv=True, output_dir=tmpdir)
         assert len(historic[0]) == 1
         assert len(historic[1]) == 1
