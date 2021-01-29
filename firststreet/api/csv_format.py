@@ -186,10 +186,29 @@ def format_adaptation_detail(data):
     df['adaptationId'] = df['adaptationId'].apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
+    if "serving" in df and df.serving.isnull().all():
+        df["serving_property"] = pd.NA
+        df["serving_neighborhood"] = pd.NA
+        df["serving_zcta"] = pd.NA
+        df["serving_tract"] = pd.NA
+        df["serving_city"] = pd.NA
+        df["serving_county"] = pd.NA
+        df["serving_cd"] = pd.NA
+        df["serving_state"] = pd.NA
+    else:
+        df = df.rename(columns={"serving.property": "serving_property",
+                                "serving.neighborhood": "serving_neighborhood",
+                                "serving.zcta": "serving_zcta",
+                                "serving.tract": "serving_tract",
+                                "serving.city": "serving_city",
+                                "serving.county": "serving_county",
+                                "serving.cd": "serving_cd",
+                                "serving.state": "serving_state"})
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
-    return df[['adaptationId', 'valid_id', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod',
-               'latitude', 'longitude']]
+    return df[['adaptationId', 'valid_id', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod', 'serving_property',
+               'serving_neighborhood', 'serving_zcta', 'serving_tract', 'serving_city', 'serving_county', 'serving_cd',
+               'serving_state', 'latitude', 'longitude']]
 
 
 def format_adaptation_summary(data):
