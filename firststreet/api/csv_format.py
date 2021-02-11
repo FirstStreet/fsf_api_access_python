@@ -152,21 +152,22 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
     else:
         df['valid_id'] = df['valid_id'].fillna(True)
 
-    df.fillna(pd.NA).astype(str).to_csv(output_dir + '/' + file_name, index=False)
+    df = df.fillna(pd.NA).astype(str)
+    df.to_csv(output_dir + '/' + file_name, index=False)
     logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
 
 
 def get_geom_center(geom):
 
     if hasattr(geom, "center"):
-        if isinstance(geom.center, shapely.geometry.MultiPolygon):
+        if isinstance(geom.center, shapely.geometry.MultiPolygon) and not geom.center.is_empty:
             return {"latitude": geom.center.centroid.y, "longitude": geom.center.centroid.x}
 
         elif isinstance(geom.center, shapely.geometry.Point):
             return {"latitude": geom.center.y, "longitude": geom.center.x}
 
         else:
-            raise NotImplementedError
+            return {"latitude": pd.NA, "longitude": pd.NA}
 
     elif hasattr(geom, "y") and hasattr(geom, "x"):
         return {"latitude": geom.y, "longitude": geom.x}
@@ -186,7 +187,8 @@ def format_adaptation_detail(data):
     df['adaptationId'] = df['adaptationId'].apply(str)
     df['returnPeriod'] = df['returnPeriod'].astype('Int64').apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
-    if "serving" in df and df.serving.isnull().all():
+    if ("serving.property" not in df and "serving" in df and df["serving"].isnull().all()) or \
+            ("serving.property" in df and df["serving.property"].isnull().all()):
         df["serving_property"] = pd.NA
         df["serving_neighborhood"] = pd.NA
         df["serving_zcta"] = pd.NA
@@ -204,6 +206,7 @@ def format_adaptation_detail(data):
                                 "serving.county": "serving_county",
                                 "serving.cd": "serving_cd",
                                 "serving.state": "serving_state"})
+
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
     return df[['adaptationId', 'valid_id', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod', 'serving_property',
@@ -222,7 +225,11 @@ def format_adaptation_summary(data):
     df = pd.json_normalize([vars(o) for o in data]).explode('adaptation').reset_index(drop=True)
     df['fsid'] = df['fsid'].apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
-    return df[['fsid', 'valid_id', 'adaptation']]
+
+    if "properties" not in df or df.properties.isnull().all():
+        df["properties"] = pd.NA
+
+    return df[['fsid', 'valid_id', 'adaptation', 'properties']]
 
 
 def format_adaptation_summary_detail(data):
