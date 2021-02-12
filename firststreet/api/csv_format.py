@@ -590,7 +590,7 @@ def format_historic_summary_property(data):
         df['depth'] = pd.NA
 
     df['fsid'] = df['fsid'].apply(str)
-    df['eventId'] = df['eventId'].apply(str)
+    df['eventId'] = df['eventId'].astype('Int64').apply(str)
     df['depth'] = df['depth'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth']]
