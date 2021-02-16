@@ -80,7 +80,7 @@ class Historic(Api):
             api_datas_event = self.call_api(search_item, "historic", "event", None, extra_param=extra_param)
 
         else:
-            api_datas_event = [{"eventId": None}]
+            api_datas_event = [{"eventId": None, "valid_id": False}]
 
         event = [HistoricEvent(api_data) for api_data in api_datas_event]
 
