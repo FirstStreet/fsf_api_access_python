@@ -74,107 +74,117 @@ if __name__ == "__main__":
         rate_limit = int(argument.rate_limit)
         rate_period = int(argument.rate_period)
 
-        fs = firststreet.FirstStreet(api_key, version=argument.version, connection_limit=limit,
-                                     rate_limit=rate_limit, rate_period=rate_period,
+        formatted_params = {}
+
+        if argument.extra_param:
+            for element in argument.extra_param.split(";"):
+                key, value = element.split(":")
+                formatted_params[key] = ast.literal_eval(value)
+
+        fs = firststreet.FirstStreet(api_key,
+                                     version=argument.version,
+                                     connection_limit=limit,
+                                     rate_limit=rate_limit,
+                                     rate_period=rate_period,
                                      log=bool(strtobool(argument.log)))
 
         if argument.product == 'adaptation.get_detail':
             fs.adaptation.get_detail(search_items,
                                      csv=True,
                                      output_dir=argument.output_dir,
-                                     extra_param=argument.extra_param)
+                                     extra_param=formatted_params)
 
         elif argument.product == 'adaptation.get_summary':
             fs.adaptation.get_summary(search_items,
                                       argument.location_type,
                                       csv=True,
                                       output_dir=argument.output_dir,
-                                      extra_param=argument.extra_param)
+                                      extra_param=formatted_params)
 
         elif argument.product == 'adaptation.get_detail_by_location':
             fs.adaptation.get_detail_by_location(search_items,
                                                  argument.location_type,
                                                  csv=True,
                                                  output_dir=argument.output_dir,
-                                                 extra_param=argument.extra_param)
+                                                 extra_param=formatted_params)
 
         elif argument.product == 'probability.get_depth':
             fs.probability.get_depth(search_items,
                                      csv=True,
                                      output_dir=argument.output_dir,
-                                     extra_param=argument.extra_param)
+                                     extra_param=formatted_params)
 
         elif argument.product == 'probability.get_chance':
             fs.probability.get_chance(search_items,
                                       csv=True,
                                       output_dir=argument.output_dir,
-                                      extra_param=argument.extra_param)
+                                      extra_param=formatted_params)
 
         elif argument.product == 'probability.get_count_summary':
             fs.probability.get_count_summary(search_items,
                                              csv=True,
                                              output_dir=argument.output_dir,
-                                             extra_param=argument.extra_param)
+                                             extra_param=formatted_params)
 
         elif argument.product == 'probability.get_cumulative':
             fs.probability.get_cumulative(search_items,
                                           csv=True,
                                           output_dir=argument.output_dir,
-                                          extra_param=argument.extra_param)
+                                          extra_param=formatted_params)
 
         elif argument.product == 'probability.get_count':
             fs.probability.get_count(search_items,
                                      argument.location_type,
                                      csv=True,
                                      output_dir=argument.output_dir,
-                                     extra_param=argument.extra_param)
+                                     extra_param=formatted_params)
 
         elif argument.product == 'historic.get_event':
             fs.historic.get_event(search_items,
                                   csv=True,
                                   output_dir=argument.output_dir,
-                                  extra_param=argument.extra_param)
+                                  extra_param=formatted_params)
 
         elif argument.product == 'historic.get_summary':
             fs.historic.get_summary(search_items,
                                     argument.location_type,
                                     csv=True,
                                     output_dir=argument.output_dir,
-                                    extra_param=argument.extra_param)
+                                    extra_param=formatted_params)
 
         elif argument.product == 'historic.get_events_by_location':
             fs.historic.get_events_by_location(search_items,
                                                argument.location_type,
                                                csv=True,
                                                output_dir=argument.output_dir,
-                                               extra_param=argument.extra_param)
+                                               extra_param=formatted_params)
 
         elif argument.product == 'location.get_detail':
             fs.location.get_detail(search_items,
                                    argument.location_type,
                                    csv=True,
                                    output_dir=argument.output_dir,
-                                   extra_param=argument.extra_param)
+                                   extra_param=formatted_params)
 
         elif argument.product == 'location.get_summary':
             fs.location.get_summary(search_items,
                                     argument.location_type,
                                     csv=True,
                                     output_dir=argument.output_dir,
-                                    extra_param=argument.extra_param)
+                                    extra_param=formatted_params)
 
         elif argument.product == 'fema.get_nfip':
             fs.fema.get_nfip(search_items,
                              argument.location_type,
                              csv=True,
                              output_dir=argument.output_dir,
-                             extra_param=argument.extra_param)
+                             extra_param=formatted_params)
 
         elif argument.product == 'environmental.get_precipitation':
             fs.environmental.get_precipitation(search_items,
                                                csv=True,
                                                output_dir=argument.output_dir,
-                                               extra_param=argument.extra_param)
+                                               extra_param=formatted_params)
 
         elif argument.product == 'tile.get_probability_depth':
             if not argument.year:
@@ -222,6 +232,25 @@ if __name__ == "__main__":
                                        search_items=search_items,
                                        output_dir=argument.output_dir,
                                        image=True)
+
+        elif argument.product == 'aal.get_summary':
+            fs.aal.get_summary(search_items,
+                               argument.location_type,
+                               csv=True,
+                               output_dir=argument.output_dir,
+                               extra_param=formatted_params)
+
+        elif argument.product == 'avm.get_avm':
+            fs.avm.get_avm(search_items,
+                           csv=True,
+                           output_dir=argument.output_dir,
+                           extra_param=formatted_params)
+
+        elif argument.product == 'avm.get_provider':
+            fs.avm.get_provider(search_items,
+                                csv=True,
+                                output_dir=argument.output_dir,
+                                extra_param=formatted_params)
 
         else:
             logging.error("Product not found. Please check that the argument"

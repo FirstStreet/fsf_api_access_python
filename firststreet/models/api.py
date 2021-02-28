@@ -14,3 +14,8 @@ class Api:
             self.valid_id = response.get('valid_id')
         else:
             self.valid_id = True
+
+        if response.get('error') is not None:
+            self.error = response.get('error')
+        else:
+            self.error = None

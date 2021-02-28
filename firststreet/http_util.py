@@ -161,11 +161,32 @@ class Http:
 
         body = await response.json(content_type=None)
 
-        if response.status != 200 and response.status != 404 and response.status != 500:
-            raise self._network_error(self.options, rate_limit, error=body.get('error'))
+        try:
+            if response.status != 200 and response.status != 404 and response.status != 500:
+                raise self._network_error(self.options, rate_limit, error=body.get('error'))
 
-        error = body.get("error")
-        if error:
+            error = body.get("error")
+            if error:
+                search_item = endpoint[1]
+                product = endpoint[2]
+                product_subtype = endpoint[3]
+
+                if product == 'adaptation' and product_subtype == 'detail':
+                    return {'adaptationId': search_item, 'valid_id': False, 'error': error['message']}
+
+                elif product == 'historic' and product_subtype == 'event':
+                    return {'eventId': search_item, 'valid_id': False, 'error': error['message']}
+
+                elif product == 'economic/avm' and product_subtype == 'provider':
+                    return {'providerID': search_item, 'valid_id': False, 'error': error['message']}
+
+                elif product == 'economic/aal' and product_subtype == 'summary':
+                    return {'fsid': search_item, 'valid_id': False, 'error': error['message']}
+
+                else:
+                    return {'fsid': search_item, 'valid_id': False, 'error': error['message']}
+
+        except AttributeError:
             search_item = endpoint[1]
             product = endpoint[2]
             product_subtype = endpoint[3]

@@ -3,6 +3,7 @@
 
 # Standard Imports
 import asyncio
+import urllib.parse
 
 # Internal Imports
 import os
@@ -39,7 +40,7 @@ class Api:
             year (int/None): The year for probability depth tiles (if suitable)
             return_period (int/None): The return period for probability depth tiles (if suitable)
             event_id (int/None): The event_id for historic tiles (if suitable)
-            extra_param (str): Extra parameter to be added to the url
+            extra_param (dict): Extra parameter to be added to the url
         Returns:
             A list of JSON responses
         """
@@ -66,7 +67,8 @@ class Api:
                                     "Provided Arg: {}".format(search_item))
 
                 if not all(isinstance(coord, int) for t in search_item for coord in t):
-                    raise TypeError("Each coordinate in the tuple must be an integer. Provided Arg: {}".format(search_item))
+                    raise TypeError("Each coordinate in the tuple must be an integer. Provided Arg: {}"
+                                    .format(search_item))
 
                 if not all(0 < t[0] <= 18 for t in search_item):
                     raise TypeError("Max zoom is 18. Provided Arg: {}".format(search_item))
@@ -75,8 +77,9 @@ class Api:
 
         # Ensure for historic and adaptation the search items are EventIDs or AdaptationIDs
         if ((product == "adaptation" and product_subtype == "detail") or
-            (product == "historic" and product_subtype == "event")) and \
-            not all(isinstance(t, int) for t in search_item):
+            (product == "historic" and product_subtype == "event") or
+            (product == "economic/avm" and product_subtype == "provider")) and \
+                not all(isinstance(t, int) for t in search_item):
             raise TypeError("Input must be an integer for this product. "
                             "Provided Arg: {}".format(search_item))
 
@@ -104,17 +107,22 @@ class Api:
 
             if not tile_product:
 
+                if not extra_param:
+                    formatted_params = ""
+                else:
+                    formatted_params = urllib.parse.urlencode(extra_param)
+
                 # fsid
                 if isinstance(item, int):
-                    endpoint = endpoint + "/{}".format(item) + "?{}".format(extra_param)
+                    endpoint = endpoint + "/{}".format(item) + "?{}".format(formatted_params)
 
                 # lat/lng
                 elif isinstance(item, tuple):
-                    endpoint = endpoint + "?lat={}&lng={}&{}".format(item[0], item[1], extra_param)
+                    endpoint = endpoint + "?lat={}&lng={}&{}".format(item[0], item[1], formatted_params)
 
                 # address
                 elif isinstance(item, str):
-                    endpoint = endpoint + "?address={}&{}".format(item, extra_param)
+                    endpoint = endpoint + "?address={}&{}".format(item, formatted_params)
 
             endpoints.append((endpoint, item, product, product_subtype))
 

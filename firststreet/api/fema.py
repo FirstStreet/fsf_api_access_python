@@ -28,7 +28,7 @@ class Fema(Api):
             location_type (str): The location lookup type
             csv (bool): To output extracted data to a csv or not
             output_dir (str): The output directory to save the generated csvs
-            extra_param (str): Extra parameter to be added to the url
+            extra_param (dict): Extra parameter to be added to the url
 
         Returns:
             A list of Fema Nfip

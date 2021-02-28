@@ -143,6 +143,32 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         else:
             raise NotImplementedError
 
+    elif product == 'economic_aal':
+
+        if product_subtype == 'summary':
+
+            if location_type == 'property':
+                df = format_aal_summary_property(data)
+
+            else:
+                df = format_aal_summary(data)
+
+        else:
+            raise NotImplementedError
+
+    elif product == 'economic_avm':
+
+        if product_subtype == 'avm':
+
+            df = format_avm(data)
+
+        elif product_subtype == "provider":
+
+            df = format_avm_provider(data)
+
+        else:
+            raise NotImplementedError
+
     else:
         raise NotImplementedError
 
@@ -151,6 +177,10 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         df = df.drop(columns=['valid_id'])
     else:
         df['valid_id'] = df['valid_id'].fillna(True)
+
+    # Export CSVs
+    if 'error' in df and df['error'].isnull().all():
+        df = df.drop(columns=['error'])
 
     df = df.fillna(pd.NA).astype(str)
     df.to_csv(output_dir + '/' + file_name, index=False)
@@ -211,7 +241,7 @@ def format_adaptation_detail(data):
 
     return df[['adaptationId', 'valid_id', 'name', 'type', 'scenario', 'conveyance', 'returnPeriod', 'serving_property',
                'serving_neighborhood', 'serving_zcta', 'serving_tract', 'serving_city', 'serving_county', 'serving_cd',
-               'serving_state', 'latitude', 'longitude']]
+               'serving_state', 'latitude', 'longitude', 'error']]
 
 
 def format_adaptation_summary(data):
@@ -229,7 +259,7 @@ def format_adaptation_summary(data):
     if "properties" not in df or df.properties.isnull().all():
         df["properties"] = pd.NA
 
-    return df[['fsid', 'valid_id', 'adaptation', 'properties']]
+    return df[['fsid', 'valid_id', 'adaptation', 'properties', 'error']]
 
 
 def format_adaptation_summary_detail(data):
@@ -245,7 +275,7 @@ def format_adaptation_summary_detail(data):
     detail = format_adaptation_detail(data[1])
 
     return pd.merge(summary, detail, left_on=['adaptation', 'valid_id'], right_on=['adaptationId', 'valid_id'],
-                    how='left').drop('adaptationId', axis=1)
+                    how='left').drop('adaptationId', axis=1).rename(columns={"error_x": "error"}).drop('error_y', axis=1)
 
 
 def format_probability_chance(data):
@@ -269,12 +299,13 @@ def format_probability_chance(data):
             # Add FSID to row
             row_df['fsid'] = d.fsid
             row_df['valid_id'] = d.valid_id
+            row_df['error'] = d.error
 
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
         except TypeError:
-            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['threshold'] = pd.NA
             row_df['data.low'] = pd.NA
@@ -295,7 +326,7 @@ def format_probability_chance(data):
     if df['high'] is None:
         df['high'] = df['high'].round(3)
 
-    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high', 'error']]
 
 
 def format_probability_count(data):
@@ -319,12 +350,13 @@ def format_probability_count(data):
             # Add FSID to row
             row_df['fsid'] = d.fsid
             row_df['valid_id'] = d.valid_id
+            row_df['error'] = d.error
 
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
         except TypeError:
-            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['data.returnPeriod'] = pd.NA
             row_df['bin'] = pd.NA
@@ -345,7 +377,7 @@ def format_probability_count(data):
     df['mid'] = df['mid'].astype('Int64').apply(str)
     df['high'] = df['high'].astype('Int64').apply(str)
 
-    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'bin', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'bin', 'low', 'mid', 'high', 'error']]
 
 
 def format_probability_count_summary(data):
@@ -356,7 +388,7 @@ def format_probability_count_summary(data):
     Returns:
         A pandas formatted DataFrame
     """
-    listed_data = [{'fsid': attr.fsid, 'valid_id': attr.valid_id,
+    listed_data = [{'fsid': attr.fsid, 'valid_id': attr.valid_id, 'error': attr.error,
                     'location': [{'location': 'state', 'data': attr.state},
                                  {'location': 'city', 'data': attr.city},
                                  {'location': 'zcta', 'data': attr.zcta},
@@ -379,11 +411,12 @@ def format_probability_count_summary(data):
             # Add FSID to row
             row_df['fsid'] = d["fsid"]
             row_df['valid_id'] = d["valid_id"]
+            row_df['error'] = d["error"]
 
             depth_list.append(row_df)
 
         except TypeError:
-            row_df = pd.DataFrame([[str(d["fsid"]), d["valid_id"]]], columns=['fsid', 'valid_id'])
+            row_df = pd.DataFrame([[str(d["fsid"]), d["valid_id"], d["error"]]], columns=['fsid', 'valid_id', 'error'])
             row_df['location'] = pd.NA
             row_df['location.fsid'] = pd.NA
             row_df['location.name'] = pd.NA
@@ -411,7 +444,7 @@ def format_probability_count_summary(data):
     df['high'] = df['high'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'location', 'location_fips',
-               'location_name', 'subtype', 'year', 'low', 'mid', 'high']]
+               'location_name', 'subtype', 'year', 'low', 'mid', 'high', 'error']]
 
 
 def format_probability_cumulative(data):
@@ -435,12 +468,13 @@ def format_probability_cumulative(data):
             # Add FSID to row
             row_df['fsid'] = d.fsid
             row_df['valid_id'] = d.valid_id
+            row_df['error'] = d.error
 
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
         except TypeError:
-            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['threshold'] = pd.NA
             row_df['data.low'] = pd.NA
@@ -461,7 +495,7 @@ def format_probability_cumulative(data):
     if df['high'] is None:
         df['high'] = df['high'].round(3)
 
-    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'threshold', 'low', 'mid', 'high', 'error']]
 
 
 def format_probability_depth(data):
@@ -485,12 +519,13 @@ def format_probability_depth(data):
             # Add FSID to row
             row_df['fsid'] = d.fsid
             row_df['valid_id'] = d.valid_id
+            row_df['error'] = d.error
 
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
         except TypeError:
-            row_df = pd.DataFrame([[str(d.fsid), d.valid_id]], columns=['fsid', 'valid_id'])
+            row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['returnPeriod'] = pd.NA
             row_df['data.low'] = pd.NA
@@ -508,7 +543,7 @@ def format_probability_depth(data):
     df['mid'] = df['mid'].astype('Int64').apply(str)
     df['high'] = df['high'].astype('Int64').apply(str)
 
-    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'returnPeriod', 'low', 'mid', 'high', 'error']]
 
 
 def format_environmental_precipitation(data):
@@ -537,7 +572,7 @@ def format_environmental_precipitation(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    return df[['fsid', 'valid_id', 'year', 'low', 'mid', 'high']]
+    return df[['fsid', 'valid_id', 'year', 'low', 'mid', 'high', 'error']]
 
 
 def format_historic_event(data):
@@ -568,7 +603,7 @@ def format_historic_event(data):
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
     return df[['eventId', 'valid_id', 'name', 'month', 'year', 'returnPeriod', 'type', 'propertiesTotal',
-               'propertiesAffected', 'latitude', 'longitude']]
+               'propertiesAffected', 'latitude', 'longitude', 'error']]
 
 
 def format_historic_summary_property(data):
@@ -593,7 +628,7 @@ def format_historic_summary_property(data):
     df['eventId'] = df['eventId'].astype('Int64').apply(str)
     df['depth'] = df['depth'].astype('Int64').apply(str)
 
-    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth']]
+    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'depth', 'error']]
 
 
 def format_historic_summary(data):
@@ -624,7 +659,7 @@ def format_historic_summary(data):
     df['bin'] = df['bin'].astype('Int64').apply(str)
     df['count'] = df['count'].astype('Int64').apply(str)
 
-    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'bin', 'count']]
+    return df[['fsid', 'valid_id', 'eventId', 'name', 'type', 'bin', 'count', 'error']]
 
 
 def format_historic_summary_event_property(data):
@@ -639,7 +674,8 @@ def format_historic_summary_event_property(data):
     summary = format_historic_summary_property(data[0])
     event = format_historic_event(data[1])
 
-    return pd.merge(summary, event, on=['eventId', 'valid_id'], how='left')
+    return pd.merge(summary, event, on=['eventId', 'valid_id', 'name', 'type'], how='left')\
+        .rename(columns={"error_x": "error"}).drop(['error_y'], axis=1)
 
 
 def format_historic_summary_event(data):
@@ -654,7 +690,8 @@ def format_historic_summary_event(data):
     summary = format_historic_summary(data[0])
     event = format_historic_event(data[1])
 
-    return pd.merge(summary, event, on=['eventId', 'valid_id'], how='left')
+    return pd.merge(summary, event, on=['eventId', 'valid_id', 'name', 'type'], how='left')\
+        .rename(columns={"error_x": "error"}).drop(['error_y'], axis=1)
 
 
 def format_location_detail_property(data):
@@ -731,8 +768,8 @@ def format_location_detail_property(data):
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
     return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
-               'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
-               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude']]
+               'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips', 'cd_name',
+               'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_neighborhood(data):
@@ -778,7 +815,7 @@ def format_location_detail_neighborhood(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'subtype',
-               'state_fips', 'state_name', 'latitude', 'longitude']]
+               'state_fips', 'state_name', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_city(data):
@@ -834,7 +871,7 @@ def format_location_detail_city(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'name', 'lsad', 'zipCode', 'neighborhood_fips', 'neighborhood_name',
-               'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
+               'county_fips', 'county_name', 'state_fips', 'state_name', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_zcta(data):
@@ -880,7 +917,7 @@ def format_location_detail_zcta(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'name', 'city_fips', 'city_name', 'county_fips', 'county_name', 'state_fips',
-               'state_name', 'latitude', 'longitude']]
+               'state_name', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_tract(data):
@@ -917,7 +954,7 @@ def format_location_detail_tract(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'fips', 'county_fips', 'county_name', 'state_fips', 'state_name',
-               'latitude', 'longitude']]
+               'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_county(data):
@@ -973,7 +1010,7 @@ def format_location_detail_county(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'name', 'isCoastal', 'city_fips', 'city_name', 'zipCode', 'fips', 'cd_fips',
-               'cd_name', 'state_fips', 'state_name', 'latitude', 'longitude']]
+               'cd_name', 'state_fips', 'state_name', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_cd(data):
@@ -1010,7 +1047,7 @@ def format_location_detail_cd(data):
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
     return df[['fsid', 'valid_id', 'district', 'county_fips', 'county_name', 'state_fips', 'state_name',
-               'latitude', 'longitude']]
+               'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_state(data):
@@ -1025,7 +1062,7 @@ def format_location_detail_state(data):
     df['fsid'] = df['fsid'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
-    return df[['fsid', 'valid_id', 'name', 'fips', 'latitude', 'longitude']]
+    return df[['fsid', 'valid_id', 'name', 'fips', 'latitude', 'longitude', 'error']]
 
 
 def format_location_summary_property(data):
@@ -1043,7 +1080,8 @@ def format_location_summary_property(data):
     df['historic'] = df['historic'].astype('Int64').apply(str)
     df['adaptation'] = df['adaptation'].astype('Int64').apply(str)
     df['floodFactor'] = df['floodFactor'].astype('Int64').apply(str)
-    return df[['fsid', 'valid_id', 'floodFactor', 'riskDirection', 'environmentalRisk', 'historic', 'adaptation']]
+    return df[['fsid', 'valid_id', 'floodFactor', 'riskDirection', 'environmentalRisk', 'historic',
+               'adaptation', 'error']]
 
 
 def format_location_summary(data):
@@ -1072,7 +1110,7 @@ def format_location_summary(data):
     df['propertiesTotal'] = df['propertiesTotal'].astype('Int64').apply(str)
     df['propertiesAtRisk'] = df['propertiesAtRisk'].astype('Int64').apply(str)
     return df[['fsid', 'valid_id', 'riskDirection', 'environmentalRisk', 'propertiesTotal',
-               'propertiesAtRisk', 'historic']]
+               'propertiesAtRisk', 'historic', 'error']]
 
 
 def format_fema_nfip(data):
@@ -1093,4 +1131,124 @@ def format_fema_nfip(data):
     df['contentCoverage'] = df['contentCoverage'].astype('Int64').apply(str)
     df['iccPaid'] = df['iccPaid'].astype('Int64').apply(str)
     return df[['fsid', 'valid_id', 'claimCount', 'policyCount', 'buildingPaid', 'contentPaid', 'buildingCoverage',
-               'contentCoverage', 'iccPaid']]
+               'contentCoverage', 'iccPaid', 'error']]
+
+
+def format_aal_summary_property(data):
+    """Reformat the list of data to Location Summary format for property
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+    df = pd.json_normalize([vars(o) for o in data]).explode('annual_loss')
+    df = df.explode('depth_loss')
+
+    if not df[['annual_loss', 'depth_loss']].isna().values.all():
+        df = pd.concat([df.drop(['annual_loss'], axis=1), df['annual_loss'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['depth_loss'], axis=1), df['depth_loss'].apply(pd.Series)], axis=1)
+    else:
+        df['fsid'] = df['fsid'].apply(str)
+        df.drop(['annual_loss'], axis=1, inplace=True)
+        df.drop(['depth_loss'], axis=1, inplace=True)
+        df['depth'] = pd.NA
+        df['data'] = pd.NA
+        df['year'] = pd.NA
+        df['low'] = pd.NA
+        df['mid'] = pd.NA
+        df['high'] = pd.NA
+
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['low'] = df['low'].astype('Int64').apply(str)
+    df['mid'] = df['mid'].astype('Int64').apply(str)
+    df['high'] = df['high'].astype('Int64').apply(str)
+    df['depth'] = df['depth'].astype('Int64').apply(str)
+    df['data'] = df['data'].astype('Int64').apply(str)
+
+    return df[['fsid', 'valid_id', 'depth', 'data', 'year', 'low', 'mid', 'high', 'error']]
+
+
+def format_aal_summary(data):
+    """Reformat the list of data to AAL format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+    df = pd.json_normalize([vars(o) for o in data]).explode('annual_loss')
+
+    if not df[['annual_loss']].isna().values.all():
+        df = pd.concat([df.drop(['annual_loss'], axis=1), df['annual_loss'].apply(pd.Series)], axis=1)
+        df = pd.concat([df.drop(['totalLoss'], axis=1), df['totalLoss'].apply(pd.Series)], axis=1)
+        df.rename(columns={'low': 'total_loss_low', 'mid': 'total_loss_mid', 'high': 'total_loss_high'}, inplace=True)
+        df = pd.concat([df.drop(['count'], axis=1), df['count'].apply(pd.Series)], axis=1)
+        df.rename(columns={'low': 'count_low', 'mid': 'count_mid', 'high': 'count_high'}, inplace=True)
+    else:
+        df['fsid'] = df['fsid'].apply(str)
+        df.drop(['annual_loss'], axis=1, inplace=True)
+        df['year'] = pd.NA
+        df['floodFactor'] = pd.NA
+        df['total_loss_low'] = pd.NA
+        df['total_loss_mid'] = pd.NA
+        df['total_loss_high'] = pd.NA
+        df['count_low'] = pd.NA
+        df['count_mid'] = pd.NA
+        df['count_high'] = pd.NA
+
+    df = df.sort_values(by=['fsid', 'floodFactor', 'year'])
+    df['fsid'] = df['fsid'].apply(str)
+    df['year'] = df['year'].astype('Int64').apply(str)
+    df['floodFactor'] = df['floodFactor'].astype('Int64').apply(str)
+    df['total_loss_low'] = df['total_loss_low'].astype('Int64').apply(str)
+    df['total_loss_mid'] = df['total_loss_mid'].astype('Int64').apply(str)
+    df['total_loss_high'] = df['total_loss_high'].astype('Int64').apply(str)
+    df['count_low'] = df['count_low'].astype('Int64').apply(str)
+    df['count_mid'] = df['count_mid'].astype('Int64').apply(str)
+    df['count_high'] = df['count_high'].astype('Int64').apply(str)
+
+    return df[['fsid', 'valid_id', 'year', 'total_loss_low', 'total_loss_mid', 'total_loss_high', 'count_low',
+               'count_mid', 'count_high', 'floodFactor', 'error']]
+
+
+def format_avm(data):
+    """Reformat the list of data to AVM format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+    df = pd.json_normalize([vars(o) for o in data])
+
+    if 'avm.mid' in df:
+        df.rename(columns={'avm.mid': 'avm_mid'}, inplace=True)
+    else:
+        df['fsid'] = df['fsid'].apply(str)
+        df['avm_mid'] = pd.NA
+
+    if 'avm' in df:
+        df.drop(['avm'], axis=1, inplace=True)
+    df['fsid'] = df['fsid'].apply(str)
+    df['avm_mid'] = df['avm_mid'].astype('Int64').apply(str)
+    df['provider_id'] = df['provider_id'].astype('Int64').apply(str)
+
+    return df[['fsid', 'valid_id', 'avm_mid', "provider_id", 'error']]
+
+
+def format_avm_provider(data):
+    """Reformat the list of data to AVM Provider format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+    df = pd.json_normalize([vars(o) for o in data])
+
+    df['provider_id'] = df['provider_id'].astype('Int64').apply(str)
+
+    return df[['provider_id', 'valid_id', 'provider_name', "provider_logo", 'error']]

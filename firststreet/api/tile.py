@@ -31,7 +31,7 @@ class Tile(Api):
             search_items (list of tuple): A list of coordinates in the form of [(x_1, y_1, z_1), (x_2, y_2, z_2), ...]
             image (bool): To output extracted image to a png or not
             output_dir (str): The output directory to save the generated tile
-            extra_param (str): Extra parameter to be added to the url
+            extra_param (dict): Extra parameter to be added to the url
 
         Returns:
             A list of Probability Depth tiles
@@ -93,7 +93,7 @@ class Tile(Api):
             event_id (int): A First Street Foundation eventId
             image (bool): To output extracted image to a png or not
             output_dir (str): The output directory to save the generated tile
-            extra_param (str): Extra parameter to be added to the url
+            extra_param (dict): Extra parameter to be added to the url
 
         Returns:
             A list of Probability Count
