@@ -274,8 +274,9 @@ def format_adaptation_summary_detail(data):
     summary = format_adaptation_summary(data[0])
     detail = format_adaptation_detail(data[1])
 
-    return pd.merge(summary, detail, left_on=['adaptation', 'valid_id'], right_on=['adaptationId', 'valid_id'],
-                    how='left').drop('adaptationId', axis=1).rename(columns={"error_x": "error"}).drop('error_y', axis=1)
+    return pd.merge(summary, detail, left_on=['adaptation', 'valid_id'],
+                    right_on=['adaptationId', 'valid_id'], how='left').drop('adaptationId', axis=1)\
+        .rename(columns={"error_x": "error"}).drop('error_y', axis=1)
 
 
 def format_probability_chance(data):
@@ -1160,15 +1161,16 @@ def format_aal_summary_property(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
+    df.rename(columns={'data': 'damage'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['year'] = df['year'].astype('Int64').apply(str)
     df['low'] = df['low'].astype('Int64').apply(str)
     df['mid'] = df['mid'].astype('Int64').apply(str)
     df['high'] = df['high'].astype('Int64').apply(str)
     df['depth'] = df['depth'].astype('Int64').apply(str)
-    df['data'] = df['data'].astype('Int64').apply(str)
+    df['damage'] = df['damage'].astype('Int64').apply(str)
 
-    return df[['fsid', 'valid_id', 'depth', 'data', 'year', 'low', 'mid', 'high', 'error']]
+    return df[['fsid', 'valid_id', 'depth', 'damage', 'year', 'low', 'mid', 'high', 'error']]
 
 
 def format_aal_summary(data):
@@ -1199,10 +1201,11 @@ def format_aal_summary(data):
         df['count_mid'] = pd.NA
         df['count_high'] = pd.NA
 
-    df = df.sort_values(by=['fsid', 'floodFactor', 'year'])
+    df.rename(columns={'floodFactor': 'floodFactor_gr2'}, inplace=True)
+    df = df.sort_values(by=['fsid', 'floodFactor_gr2', 'year'])
     df['fsid'] = df['fsid'].apply(str)
     df['year'] = df['year'].astype('Int64').apply(str)
-    df['floodFactor'] = df['floodFactor'].astype('Int64').apply(str)
+    df['floodFactor_gr2'] = df['floodFactor_gr2'].astype('Int64').apply(str)
     df['total_loss_low'] = df['total_loss_low'].astype('Int64').apply(str)
     df['total_loss_mid'] = df['total_loss_mid'].astype('Int64').apply(str)
     df['total_loss_high'] = df['total_loss_high'].astype('Int64').apply(str)
@@ -1211,7 +1214,7 @@ def format_aal_summary(data):
     df['count_high'] = df['count_high'].astype('Int64').apply(str)
 
     return df[['fsid', 'valid_id', 'year', 'total_loss_low', 'total_loss_mid', 'total_loss_high', 'count_low',
-               'count_mid', 'count_high', 'floodFactor', 'error']]
+               'count_mid', 'count_high', 'floodFactor_gr2', 'error']]
 
 
 def format_avm(data):
