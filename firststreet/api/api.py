@@ -130,4 +130,7 @@ class Api:
         loop = asyncio.get_event_loop()
         response = loop.run_until_complete(self._http.endpoint_execute(endpoints))
 
+        if product == "economic/aal":
+            return zip(response, search_item)
+
         return response

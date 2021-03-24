@@ -48,16 +48,13 @@ class AAL(Api):
 
         api_datas = self.call_api(search_items, "economic/aal", "summary", location_type, extra_param=extra_param)
 
-        if location_type == "property":
-            product = []
-            for api_data, fsid in zip(api_datas, search_items):
-                api_data["fsid"] = fsid
-                product.append(AALSummaryProperty(api_data))
+        product = []
+        for api_data, fsid in api_datas:
+            api_data["fsid"] = fsid
 
-        else:
-            product = []
-            for api_data, fsid in zip(api_datas, search_items):
-                api_data["fsid"] = fsid
+            if location_type == "property":
+                product.append(AALSummaryProperty(api_data))
+            else:
                 product.append(AALSummaryOther(api_data))
 
         if csv:

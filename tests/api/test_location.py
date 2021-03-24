@@ -148,10 +148,10 @@ class TestLocationDetail:
         assert location[0].valid_id is True
 
     def test_one_of_each(self, tmpdir):
-        location = fs.location.get_detail([511447411], "property", csv=True, output_dir=tmpdir)
+        location = fs.location.get_detail([395112095], "property", csv=True, output_dir=tmpdir)
         assert len(location) == 1
         assert location[0].valid_id is True
-        assert location[0].fsid == "511447411"
+        assert location[0].fsid == "395112095"
         assert location[0].streetNumber is not None
         assert location[0].route is not None
         assert location[0].city is not None
@@ -162,8 +162,8 @@ class TestLocationDetail:
         assert location[0].county is not None
         assert location[0].cd is not None
         assert location[0].state is not None
-        assert location[0].footprintId is None
-        assert location[0].elevation is not None
+        assert location[0].footprintId is not None
+        assert location[0].elevation is None
         assert location[0].fema is not None
         assert location[0].geometry is not None
         location = fs.location.get_detail([1206631], "neighborhood", csv=True, output_dir=tmpdir)

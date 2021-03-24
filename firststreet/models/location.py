@@ -41,6 +41,10 @@ class LocationDetailProperty(LocationDetail):
         self.footprintId = response.get('footprintId')
         self.elevation = response.get('elevation')
         self.fema = response.get('fema')
+        self.floorElevation = response.get('floorElevation')
+        self.building = response.get('building')
+        self.floodType = response.get('floodType')
+        self.residential = response.get('residential')
         if response.get('geometry'):
             self.geometry = Geometry(response.get('geometry')).center
         else:

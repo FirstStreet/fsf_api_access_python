@@ -22,6 +22,8 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         output_dir (str): The output directory to save the generated csvs
     """
 
+    logging.info("Generating CSV file")
+
     date = datetime.datetime.today().strftime('%Y_%m_%d_%H_%M_%S')
 
     # Set file name to the current date, time, and product
@@ -765,12 +767,18 @@ def format_location_detail_property(data):
     df['state_fips'] = df['state_fips'].astype('Int64').apply(str).apply(lambda x: x.zfill(2))
     df['footprintId'] = df['footprintId'].astype('Int64').apply(str)
     df['elevation'] = df['elevation'].apply(str)
+    df['fema'] = df['fema'].apply(str)
+    df['floorElevation'] = df['floorElevation'].apply(str)
+    df['building'] = df['building'].apply(str)
+    df['floodType'] = df['floodType'].apply(str)
+    df['residential'] = df['residential'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
-    return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode', 'neighborhood_fips',
-               'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips', 'cd_name',
-               'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'latitude', 'longitude', 'error']]
+    return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode',
+               'neighborhood_fips', 'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
+               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'floorElevation', 'building',
+               'floodType', 'residential', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_neighborhood(data):
@@ -1111,7 +1119,7 @@ def format_location_summary(data):
     df['propertiesTotal'] = df['propertiesTotal'].astype('Int64').apply(str)
     df['propertiesAtRisk'] = df['propertiesAtRisk'].astype('Int64').apply(str)
     return df[['fsid', 'valid_id', 'riskDirection', 'environmentalRisk', 'propertiesTotal',
-               'propertiesAtRisk', 'historic', 'error']]
+               'propertiesAtRisk', 'historic', 'adaptation', 'error']]
 
 
 def format_fema_nfip(data):
@@ -1148,7 +1156,14 @@ def format_aal_summary_property(data):
 
     if not df[['annual_loss', 'depth_loss']].isna().values.all():
         df = pd.concat([df.drop(['annual_loss'], axis=1), df['annual_loss'].apply(pd.Series)], axis=1)
-        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        if 'data' in df.columns:
+            df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+        else:
+            df['year'] = pd.NA
+            df['low'] = pd.NA
+            df['mid'] = pd.NA
+            df['high'] = pd.NA
+
         df = pd.concat([df.drop(['depth_loss'], axis=1), df['depth_loss'].apply(pd.Series)], axis=1)
     else:
         df['fsid'] = df['fsid'].apply(str)

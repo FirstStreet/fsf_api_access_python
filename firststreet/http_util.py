@@ -112,7 +112,7 @@ class Http:
             async with throttler:
 
                 try:
-                    async with session.get(endpoint[0], headers=headers) as response:
+                    async with session.get(endpoint[0], headers=headers, ssl=False) as response:
 
                         # Read a tile response
                         if endpoint[2] == 'tile':
