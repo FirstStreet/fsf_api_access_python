@@ -757,6 +757,14 @@ def format_location_detail_property(data):
         df['state_fips'] = pd.NA
         df['state_name'] = pd.NA
 
+    if not df['building'].isna().values.all():
+        df = pd.concat([df.drop(['building'], axis=1), df['building'].apply(pd.Series)], axis=1)
+    else:
+        df.drop(['building'], axis=1, inplace=True)
+        df['basement'] = pd.NA
+        df['units'] = pd.NA
+        df['stories'] = pd.NA
+
     df.rename(columns={'fsid_placeholder': 'fsid'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['city_fips'] = df['city_fips'].astype('Int64').apply(str)
@@ -769,16 +777,18 @@ def format_location_detail_property(data):
     df['elevation'] = df['elevation'].apply(str)
     df['fema'] = df['fema'].apply(str)
     df['floorElevation'] = df['floorElevation'].apply(str)
-    df['building'] = df['building'].apply(str)
     df['floodType'] = df['floodType'].apply(str)
     df['residential'] = df['residential'].apply(str)
     df['geometry'] = df['geometry'].apply(get_geom_center)
+    df['basement'] = df['basement'].apply(str)
+    df['units'] = df['units'].apply(str)
+    df['stories'] = df['stories'].apply(str)
     df = pd.concat([df.drop(['geometry'], axis=1), df['geometry'].apply(pd.Series)], axis=1)
 
     return df[['fsid', 'valid_id', 'streetNumber', 'route', 'city_fips', 'city_name', 'zipCode',
                'neighborhood_fips', 'neighborhood_name', 'tract_fips', 'county_fips', 'county_name', 'cd_fips',
-               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'floorElevation', 'building',
-               'floodType', 'residential', 'latitude', 'longitude', 'error']]
+               'cd_name', 'state_fips', 'state_name', 'footprintId', 'elevation', 'fema', 'floorElevation', 'basement',
+               'units', 'stories', 'floodType', 'residential', 'latitude', 'longitude', 'error']]
 
 
 def format_location_detail_neighborhood(data):
