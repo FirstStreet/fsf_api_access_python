@@ -66,7 +66,8 @@ if __name__ == "__main__":
                                         'tile.get_historic_event',
                                         'aal.get_summary',
                                         'avm.get_avm',
-                                        'avm.get_provider']:
+                                        'avm.get_provider',
+                                        'economic.get_property_nfip']:
                 logging.error("Product not found. Please check that the argument"
                               " provided is correct: {}".format(argument.product))
                 input("Press Enter to continue...")
@@ -386,6 +387,12 @@ if __name__ == "__main__":
                                         csv=True,
                                         output_dir=argument.output_dir,
                                         extra_param=formatted_params)
+
+                elif argument.product == 'economic.get_property_nfip':
+                    fs.economic.get_property_nfip(search_items,
+                                                  csv=True,
+                                                  output_dir=argument.output_dir,
+                                                  extra_param=formatted_params)
 
                 else:
                     logging.error("Product not found. Please check that the argument"

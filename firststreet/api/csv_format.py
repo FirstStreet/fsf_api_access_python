@@ -171,6 +171,15 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         else:
             raise NotImplementedError
 
+    elif product == 'economic':
+
+        if product_subtype == 'nfip':
+
+            df = format_economic_nfip_premium(data)
+
+        else:
+            raise NotImplementedError
+
     else:
         raise NotImplementedError
 
@@ -1280,3 +1289,29 @@ def format_avm_provider(data):
     df['provider_id'] = df['provider_id'].astype('Int64').apply(str)
 
     return df[['provider_id', 'valid_id', 'provider_name', "provider_logo", 'error']]
+
+
+def format_economic_nfip_premium(data):
+    """Reformat the list of data to AVM Provider format
+
+    Args:
+        data (list): A list of FSF object
+    Returns:
+        A pandas formatted DataFrame
+    """
+    df = pd.json_normalize([vars(o) for o in data]).explode("data")
+
+    if not df[['data']].isna().values.all():
+        df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
+    else:
+        df.drop(['data'], axis=1, inplace=True)
+        df['estimate'] = pd.NA
+        df['building'] = pd.NA
+        df['contents'] = pd.NA
+
+    df['fsid'] = df['fsid'].apply(str)
+    df['estimate'] = df['estimate'].astype('Int64').apply(str)
+    df['building'] = df['building'].astype('Int64').apply(str)
+    df['contents'] = df['contents'].astype('Int64').apply(str)
+
+    return df[['fsid', 'valid_id', 'estimate', "building", 'contents', 'error']]

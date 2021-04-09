@@ -13,8 +13,7 @@ from firststreet.api.historic import Historic
 from firststreet.api.location import Location
 from firststreet.api.probability import Probability
 from firststreet.api.tile import Tile
-from firststreet.api.aal import AAL
-from firststreet.api.avm import AVM
+from firststreet.api.economic import AAL, AVM, Economic
 from firststreet.errors import MissingAPIKeyError
 from firststreet.http_util import Http
 
@@ -61,3 +60,4 @@ class FirstStreet:
         self.tile = Tile(self.http)
         self.aal = AAL(self.http)
         self.avm = AVM(self.http)
+        self.economic = Economic(self.http)
