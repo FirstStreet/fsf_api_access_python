@@ -41,7 +41,7 @@ class FirstStreet:
             MissingAPIError: If the API is not provided
     """
 
-    def __init__(self, api_key=None, connection_limit=100, rate_limit=20000, rate_period=1, version=None, log=True):
+    def __init__(self, api_key=None, connection_limit=100, rate_limit=5000, rate_period=60, version=None, log=True):
 
         if not api_key:
             raise MissingAPIKeyError('Missing API Key.')
