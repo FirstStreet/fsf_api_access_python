@@ -1185,7 +1185,7 @@ def format_aal_summary_property(data):
             if pd.isnull(dl):
                 return pd.NA, pd.NA
             return dl['depth'], dl['data']
-        df['depth'], df['data'] = zip(*df['depth_loss'].apply(expand_dl))
+        df['depth'], df['damage'] = zip(*df['depth_loss'].apply(expand_dl))
         df.drop(['depth_loss'], axis=1)
     else:
         df['fsid'] = df['fsid'].apply(str)
@@ -1198,7 +1198,6 @@ def format_aal_summary_property(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    df.rename(columns={'data': 'damage'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['year'] = df['year'].astype('Int64').apply(str)
     df['low'] = df['low'].astype('Int64').apply(str)
