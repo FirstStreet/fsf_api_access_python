@@ -1174,16 +1174,19 @@ def format_aal_summary_property(data):
     df = df.explode('depth_loss')
 
     if not df[['annual_loss', 'depth_loss']].isna().values.all():
-        df = pd.concat([df.drop(['annual_loss'], axis=1), df['annual_loss'].apply(pd.Series)], axis=1)
-        if 'data' in df.columns:
-            df = pd.concat([df.drop(['data'], axis=1), df['data'].apply(pd.Series)], axis=1)
-        else:
-            df['year'] = pd.NA
-            df['low'] = pd.NA
-            df['mid'] = pd.NA
-            df['high'] = pd.NA
+        def expand_al(al):
+            if pd.isnull(al):
+                return pd.NA, pd.NA, pd.NA, pd.NA
+            return al['year'], al['data']['low'], al['data']['mid'], al['data']['high']
+        df['year'], df['low'], df['mid'], df['high'] = zip(*df['annual_loss'].apply(expand_al))
+        df.drop(['annual_loss'], axis=1)
 
-        df = pd.concat([df.drop(['depth_loss'], axis=1), df['depth_loss'].apply(pd.Series)], axis=1)
+        def expand_dl(dl):
+            if pd.isnull(dl):
+                return pd.NA, pd.NA
+            return dl['depth'], dl['data']
+        df['depth'], df['damage'] = zip(*df['depth_loss'].apply(expand_dl))
+        df.drop(['depth_loss'], axis=1)
     else:
         df['fsid'] = df['fsid'].apply(str)
         df.drop(['annual_loss'], axis=1, inplace=True)
@@ -1195,7 +1198,6 @@ def format_aal_summary_property(data):
         df['mid'] = pd.NA
         df['high'] = pd.NA
 
-    df.rename(columns={'data': 'damage'}, inplace=True)
     df['fsid'] = df['fsid'].apply(str)
     df['year'] = df['year'].astype('Int64').apply(str)
     df['low'] = df['low'].astype('Int64').apply(str)
