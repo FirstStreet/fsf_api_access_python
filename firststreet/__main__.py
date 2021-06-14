@@ -24,12 +24,11 @@ if __name__ == "__main__":
         parser.add_argument("-p", "--product", help="Example: adaptation_detail", required=False)
         parser.add_argument("-api_key", "--api_key", required=False)
         parser.add_argument("-v", "--version", required=False)
-        # Convert log default to an actual boolean
         parser.add_argument("-log", "--log", help="Example: False", required=False, default="True")
         parser.add_argument("-connection_limit", "--connection_limit", help="Example: 100",
                             required=False, default="100")
-        parser.add_argument("-rate_limit", "--rate_limit", help="Example: 5000", required=False, default="20000")
-        parser.add_argument("-rate_period", "--rate_period", help="Example: 3600", required=False, default="1")
+        parser.add_argument("-rate_limit", "--rate_limit", help="Example: 4990", required=False, default="4990")
+        parser.add_argument("-rate_period", "--rate_period", help="Example: 60", required=False, default="60")
         parser.add_argument("-o", "--output_dir", help="Example: /output", required=False)
         parser.add_argument("-s", "--search_items", help="Example: 28,29", required=False,)
         parser.add_argument("-l", "--location_type", help="Example: property", required=False)
@@ -156,16 +155,23 @@ if __name__ == "__main__":
                 sys.exit()
 
         # Adjust the connection variables
-        connection_adjust = input("Adjust connection parameters (Y/N)? Defaults to 100 connections, with a rate limit "
-                                  "of 5000 calls per 60 seconds: ")
-        if connection_adjust.lower() == "y":
-            argument.connection_limit = input("Input new connection limit (default 100): ")
-            argument.rate_limit = input("Input new rate limit (default 5000): ")
-            argument.rate_period = input("Input new rate period in seconds (default 60): ")
-        else:
-            argument.connection_limit = 100
-            argument.rate_limit = 5000
-            argument.rate_period = 60
+        if not argument.connection_limit and not argument.rate_limit and not argument.rate_period:
+            connection_adjust = input("Adjust connection parameters (Y/N)? Defaults to 100 connections, with a rate "
+                                      "limit of 4990 calls per 60 seconds: ")
+            if connection_adjust.lower() == "y":
+                input_params = input("Input new connection limit (default 100): ")
+                if input_params != '':
+                    argument.connection_limit = "providerid:{}".format(input_params)
+                input_params = input("Input new rate limit (default 5000): ")
+                if input_params != '':
+                    argument.rate_limit = "providerid:{}".format(input_params)
+                input_params = input("Input new rate period in seconds (default 60): ")
+                if input_params != '':
+                    argument.rate_period = "providerid:{}".format(input_params)
+            else:
+                argument.connection_limit = 100
+                argument.rate_limit = 4990
+                argument.rate_period = 60
 
         # Adjust the output directory
         if not argument.output_dir:
@@ -182,7 +188,12 @@ if __name__ == "__main__":
             if os.path.isfile(argument.search_items):
                 search_items = read_search_items_from_file(argument.search_items)
             else:
-                for search_item in argument.search_items.strip().split(";"):
+                items = argument.search_items.strip().split(";")
+                if len(items) == 1:
+                    logging.warning("Could not find the file '{}'. Treating the input as a search_item instead. "
+                                    "If this is unexpected, check the spelling or path of the input"
+                                    .format(argument.search_items))
+                for search_item in items:
                     try:
                         search_items.append(ast.literal_eval(search_item))
                     except (SyntaxError, ValueError):

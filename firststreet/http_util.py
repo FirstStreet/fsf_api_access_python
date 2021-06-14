@@ -141,7 +141,7 @@ class Http:
 
         if response.status != 200 and response.status != 500:
             raise self._network_error(self.options, rate_limit,
-                                      status=response.reason, message=response.status)
+                                      status=response.reason, endpoint=endpoint, message=response.status)
 
         elif response.status == 500:
             logging.info(
@@ -162,7 +162,7 @@ class Http:
 
         try:
             if response.status != 200 and response.status != 404 and response.status != 500:
-                raise self._network_error(self.options, rate_limit, error=body.get('error'))
+                raise self._network_error(self.options, rate_limit, endpoint, error=body.get('error'))
 
             error = body.get("error")
             if error:
@@ -213,11 +213,12 @@ class Http:
                 'reset': headers.get('x-ratelimit-reset'), 'requestId': headers.get('x-request-id')}
 
     @staticmethod
-    def _network_error(options, rate_limit, error=None, status=None, message=None):
+    def _network_error(options, rate_limit, endpoint, error=None, status=None, message=None):
         """Handles any network errors as a result of the First Street Foundation API
         Args:
             options (dict): The options used in the header of the response
             rate_limit (dict): The rate limit information
+            endpoint (str): The failing endpoint
             error (dict): The body returned from the request call
             status (str): The status error from the response
             message (str): The message error from the response
@@ -229,10 +230,11 @@ class Http:
             message = error.get('message')
 
         if not status == 429:
-            formatted = "Network Error {}: {}".format(status, message)
+            formatted = "Network Error {}: {}. {}".format(status, message, endpoint)
         else:
-            formatted = "Network Error {}: {}. Limit: {}. Remaining: {}. Reset: {}".format(status,
+            formatted = "Network Error {}: {}. {}. Limit: {}. Remaining: {}. Reset: {}".format(status,
                                                                                            message,
+                                                                                           endpoint,
                                                                                            rate_limit.get('limit'),
                                                                                            rate_limit.get('remaining'),
                                                                                            rate_limit.get('reset'))

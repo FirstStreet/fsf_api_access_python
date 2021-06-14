@@ -41,7 +41,7 @@ class Location(Api):
         """
 
         if not location_type:
-            raise InvalidArgument("No loocation type provided: {}".format(location_type))
+            raise InvalidArgument("No location type provided: {}".format(location_type))
         elif not isinstance(location_type, str):
             raise TypeError("location is not a string")
 

@@ -6,10 +6,10 @@ import datetime
 import logging
 import os
 import pathlib
-import shapely.geometry
 
 # External Imports
 import pandas as pd
+import shapely.geometry
 
 
 def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
