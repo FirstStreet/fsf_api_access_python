@@ -5,6 +5,7 @@
 import datetime
 import logging
 import os
+import pathlib
 import shapely.geometry
 
 # External Imports
@@ -33,7 +34,8 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         file_name = "_".join([date, product, product_subtype]) + ".csv"
 
     if not output_dir:
-        output_dir = os.getcwd() + "/output_data"
+        output_dir = pathlib.Path(os.getcwd()) / "output_data"
+    output_dir = pathlib.Path(output_dir)
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -194,8 +196,8 @@ def to_csv(data, product, product_subtype, location_type=None, output_dir=None):
         df = df.drop(columns=['error'])
 
     df = df.fillna(pd.NA).astype(str)
-    df.to_csv(output_dir + '/' + file_name, index=False)
-    logging.info("CSV generated to '{}'.".format(output_dir + '/' + file_name))
+    df.to_csv(output_dir / file_name, index=False)
+    logging.info("CSV generated to '{}'.".format(output_dir / file_name))
 
 
 def get_geom_center(geom):
