@@ -1,0 +1,1 @@
+pyinstaller --onefile firststreet/__main__.py

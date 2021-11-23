@@ -318,7 +318,7 @@ def format_probability_chance(data):
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
-        except TypeError:
+        except (TypeError, NotImplementedError):
             row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['threshold'] = pd.NA
@@ -369,7 +369,7 @@ def format_probability_count(data):
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
-        except TypeError:
+        except (TypeError, NotImplementedError):
             row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['data.returnPeriod'] = pd.NA
@@ -429,7 +429,7 @@ def format_probability_count_summary(data):
 
             depth_list.append(row_df)
 
-        except TypeError:
+        except (TypeError, NotImplementedError):
             row_df = pd.DataFrame([[str(d["fsid"]), d["valid_id"], d["error"]]], columns=['fsid', 'valid_id', 'error'])
             row_df['location'] = pd.NA
             row_df['location.fsid'] = pd.NA
@@ -487,7 +487,7 @@ def format_probability_cumulative(data):
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
-        except TypeError:
+        except (TypeError, NotImplementedError):
             row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['threshold'] = pd.NA
@@ -538,7 +538,7 @@ def format_probability_depth(data):
             # Add rows to df - return periods matched to depths across scenarios
             depth_list.append(row_df)
 
-        except TypeError:
+        except (TypeError, NotImplementedError):
             row_df = pd.DataFrame([[str(d.fsid), d.valid_id, d.error]], columns=['fsid', 'valid_id', 'error'])
             row_df['year'] = pd.NA
             row_df['returnPeriod'] = pd.NA
@@ -1194,7 +1194,7 @@ def format_aal_summary_property(data):
         df.drop(['annual_loss'], axis=1, inplace=True)
         df.drop(['depth_loss'], axis=1, inplace=True)
         df['depth'] = pd.NA
-        df['data'] = pd.NA
+        df['damage'] = pd.NA
         df['year'] = pd.NA
         df['low'] = pd.NA
         df['mid'] = pd.NA
